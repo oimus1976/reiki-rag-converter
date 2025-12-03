@@ -1,0 +1,44 @@
+name: E2E Tests
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  e2e:
+    name: Python ${{ matrix.python-version }} E2E
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.11", "3.12"]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install dependencies
+        run: |
+          pip install bs4 chardet pytest
+
+      - name: Run E2E tests
+        run: |
+          pytest -q
+
+      # ---- optional: save artifacts when tests fail ----
+      - name: Upload artifacts on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-artifacts-${{ matrix.python-version }}
+          path: |
+            e2e_output/
+            **/validate_logs/
+            **/converted/
