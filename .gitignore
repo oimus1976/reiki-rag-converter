@@ -45,6 +45,7 @@ logs_*/
 output_*/
 converted_*/
 *.txt
+!requirements.txt
 
 # test 用生成物
 tests/tmp/
