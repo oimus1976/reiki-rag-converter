@@ -4,6 +4,16 @@
 
 ---
 
+## v2.7.1-doc3 — 2025-12-04
+
+### Added
+- `requirements.txt` を追加し、パッケージ依存関係を明確化  
+- `.gitignore` を更新して `requirements.txt` を追跡対象に修正
+
+### No functional changes
+
+---
+
 ## v2.7.1-doc2 — 2025-12-04
 
 ### Documentation
