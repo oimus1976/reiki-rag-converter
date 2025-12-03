@@ -1,0 +1,41 @@
+{
+  "exceptions": [
+    "E001"
+  ],
+  "structures": [
+    {
+      "event": "table_in_main",
+      "index": 9
+    }
+  ],
+  "classes": [
+    "article",
+    "b-edge",
+    "b-on",
+    "bb-on",
+    "br-on",
+    "brackets-color1",
+    "clause",
+    "cm",
+    "date",
+    "fixed-colspec",
+    "head",
+    "inline",
+    "item",
+    "l-edge",
+    "num",
+    "number",
+    "p",
+    "quote",
+    "r-edge",
+    "s-head",
+    "start",
+    "t-edge",
+    "table-wrapper",
+    "table_frame",
+    "title",
+    "title-irregular",
+    "top",
+    "word-space"
+  ]
+}

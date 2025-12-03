@@ -1,0 +1,28 @@
+{
+  "exceptions": [
+    "E001"
+  ],
+  "structures": [],
+  "classes": [
+    "article",
+    "brackets-color1",
+    "clause",
+    "cm",
+    "date",
+    "form-title",
+    "form_section",
+    "head",
+    "inline",
+    "item",
+    "num",
+    "number",
+    "p",
+    "quote",
+    "s-head",
+    "title",
+    "title-irregular",
+    "word-space",
+    "xref_frame",
+    "xref_thumb"
+  ]
+}
