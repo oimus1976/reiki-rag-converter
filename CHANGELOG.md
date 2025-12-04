@@ -4,6 +4,13 @@
 
 ---
 
+## [Unreleased]
+- Add synthetic HTML design doc (Design_synthetic_html_v0.1)
+  - 定義パターン P1〜P6 を収録
+  - OSS用の安全な synthetic テストセットの設計開始
+
+---
+
 ## v2.7.1-doc3 — 2025-12-04
 
 ### Added
