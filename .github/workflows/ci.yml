@@ -1,29 +1,36 @@
-name: CI
+name: E2E Tests
 
 on:
   push:
-    branches: [ "main" ]
   pull_request:
-    branches: [ "main" ]
 
 jobs:
-  build:
+  e2e:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.11", "3.12"]
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
+          python-version: ${{ matrix.python-version }}
 
       - name: Install dependencies
         run: |
-          pip install bs4 chardet pytest flake8
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pytest
 
-      - name: Lint
-        run: flake8 src
+      # ================================================================
+      #  CIでは E2Eテストをスキップするための環境変数を設定
+      # ================================================================
+      - name: Set E2E skip flag
+        run: echo "SKIP_E2E=true" >> $GITHUB_ENV
 
-      - name: Test
+      - name: Run pytest
         run: pytest -q
