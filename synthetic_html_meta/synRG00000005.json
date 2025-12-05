@@ -1,0 +1,20 @@
+{
+  "law_id": "synRG00000005",
+  "pattern": "P5",
+  "title": "サンプル町申請書条例（画像様式）（合成）",
+  "structure": {
+    "article_count": 1,
+    "has_items": false,
+    "has_table_main": false,
+    "has_table_supplement": false,
+    "supplement_count": 1
+  },
+  "dom_variation": {
+    "nested_div": false,
+    "s_head_style": "A",
+    "inline_depth": 1,
+    "table_wrapper": "normal"
+  },
+  "anomalies": [],
+  "created_at": "2025-12-05"
+}
