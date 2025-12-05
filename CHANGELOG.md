@@ -3,6 +3,24 @@
 バージョンは [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) に準拠しています。
 
 
+---
+
+## v0.5.3 (2025-12-06)
+### Validate Module
+- FIX: JSON 出力時に `set` 型が含まれると serialization error が発生していた問題を修正  
+  - `_to_serializable()` を実装し、set → sorted list、tuple → list など安全に再帰変換
+  - これにより synthetic_html（P1〜P10）で validate が完全に安定
+- FIX: `write_json()` を JSON 互換データのみ書き込む形に変更
+- IMPROVED: validate の終了コードが例外に依存せず常に `0` となり、CI の安定性が向上
+
+### Test / CI
+- UPDATE: synthetic_html ディレクトリの E2E テストが validate v0.5.3 に対応
+- UPDATE: GitHub Actions（e2e.yml）が新仕様の validate を参照し安定化
+
+### Documentation
+- UPDATE: Exception Check Design を **v3.2** に更新  
+  - イベント／例外分類の明確化  
+  - JSON 出力仕様の修正（set → list）を正式反映  
 
 ---
 
