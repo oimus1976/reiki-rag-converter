@@ -2,6 +2,12 @@
 このプロジェクトにおける全変更履歴をまとめた公式 CHANGELOG です。  
 バージョンは [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) に準拠しています。
 
+
+---
+
+## [Unreleased]
+- Add Design_synthetic_html_v0.2 (P1–P10, DOM variation, generator & meta spec)
+
 ---
 
 ## [Unreleased]
