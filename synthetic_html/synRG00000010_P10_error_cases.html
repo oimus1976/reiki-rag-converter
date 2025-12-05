@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>【エラー用】サンプル町テスト条例</title>
+  <link rel="stylesheet" href="reiki.css">
+</head>
+<body>
+<div id="wrapper">
+  <div id="container">
+    <div id="primary" class="joubun showhistory">
+      <div id="primaryInner">
+        <!-- 本来あるはずの #primaryInner2 が存在しない（NO_PRIMARY_INNER 想定） -->
+
+        <div class="unknown-x">
+          <p>このブロックは未知クラス unknown-x を含むため、例外検出のテストに用いる。</p>
+        </div>
+
+        <!-- 附則メタだけ定義されており、本文が存在しない（S101_SUPP_WITHOUT_BODY 想定） -->
+        <p class="s-head">
+          <span class="title">附則</span>
+          <span class="date">（令和5年4月1日 条例第99号）</span>
+        </p>
+
+      </div><!-- /#primaryInner -->
+    </div><!-- /#primary -->
+  </div><!-- /#container -->
+</div><!-- /#wrapper -->
+</body>
+</html>
