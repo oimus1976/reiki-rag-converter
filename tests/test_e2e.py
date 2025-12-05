@@ -3,6 +3,8 @@ import subprocess
 from pathlib import Path
 import pytest
 
+pytestmark = pytest.mark.skip("実HTML向けの旧E2Eテスト。synthetic E2E へ移行したため現在はスキップ。")
+
 # ================================================================
 #  CI 対策：実条例HTMLは公開できないため、CI では E2E をスキップする
 # ================================================================
