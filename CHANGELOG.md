@@ -3,6 +3,12 @@
 バージョンは [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) に準拠しています。
 
 
+
+---
+
+## [Unreleased]
+- Add synthetic HTML v0.2 assets (P7–P10), meta templates, and generator v0.1
+
 ---
 
 ## [Unreleased]
