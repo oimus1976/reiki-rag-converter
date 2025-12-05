@@ -2,18 +2,19 @@ name: E2E Tests
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ main ]
   pull_request:
+    branches: [ main ]
 
 jobs:
-  e2e:
+  python-e2e:
     runs-on: ubuntu-latest
     strategy:
       matrix:
         python-version: ["3.10", "3.11", "3.12"]
 
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Set up Python
@@ -23,17 +24,10 @@ jobs:
 
       - name: Install dependencies
         run: |
-          python -m pip install --upgrade pip
+          pip install --upgrade pip
           pip install -r requirements.txt
           pip install pytest
 
-      # ================================================================
-      #  CI では実条例HTMLが存在しないので E2E を完全スキップ
-      # ================================================================
-      - name: Set E2E skip flag
-        run: echo "SKIP_E2E=true" >> $GITHUB_ENV
-
-      - name: Run pytest (E2E skipped)
-        env:
-          SKIP_E2E: "true"
-        run: pytest -q
+      - name: Run synthetic E2E tests
+        run: |
+          python -m pytest -q
