@@ -1,0 +1,25 @@
+---
+id: synRG00000004_P4_multi_supplement
+title: 
+number: 条例第4号
+promulgation_date: 令和5年4月1日
+promulgation_date_normalized: 2023-04-01
+source_html: synRG00000004_P4_multi_supplement.html
+converted_at: 2025-12-05 15:45:19
+converter_version: 2.7
+tags:
+  - 例規
+  - 条例
+---
+
+サンプル町組織運営条例（合成）
+令和5年4月1日
+条例第4号
+（目的） 第1条 この条例は、組織運営に関する基本的事項を定める。
+（責務） 第2条 職員は、前条の目的達成に努めなければならない。
+## 附則（（令和5年4月1日 条例第4号））
+
+１ この条例は、公布の日から施行する。
+## 附則（令和6年条例第12号）抄
+
+１ 第2条中「努めなければならない。」を「努めるものとする。」に改める。

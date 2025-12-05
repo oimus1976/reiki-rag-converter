@@ -1,0 +1,21 @@
+---
+id: synRG00000006_P6_ul_list
+title: 
+number: 条例第6号
+promulgation_date: 令和5年4月1日
+promulgation_date_normalized: 2023-04-01
+source_html: synRG00000006_P6_ul_list.html
+converted_at: 2025-12-05 15:45:19
+converter_version: 2.7
+tags:
+  - 例規
+  - 条例
+---
+
+サンプル町業務基準条例（リスト構造）（合成）
+令和5年4月1日
+条例第6号
+（基準） 第1条 次の各号に掲げる事項を遵守しなければならない。 一 安全な作業環境を確保すること。 二 正確な記録を保存すること。 三 町民の権利利益を損なわないこと。
+## 附則（（令和5年4月1日 条例第6号））
+
+１ この条例は、公布の日から施行する。

@@ -1,0 +1,22 @@
+---
+id: synRG00000001_P1_basic
+title: 
+number: 条例第1号
+promulgation_date: 令和5年4月1日
+promulgation_date_normalized: 2023-04-01
+source_html: synRG00000001_P1_basic.html
+converted_at: 2025-12-05 15:45:18
+converter_version: 2.7
+tags:
+  - 例規
+  - 条例
+---
+
+サンプル町基本条例（合成）
+令和5年4月1日
+条例第1号
+（目的） 第1条 この条例は、サンプル町の基本的事項を定めるものとする。
+（委任） 第2条 この条例の施行に関し必要な事項は、規則で定める。
+## 附則（（令和5年4月1日 条例第1号））
+
+１ この条例は、公布の日から施行する。

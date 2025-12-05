@@ -1,0 +1,22 @@
+---
+id: synRG00000005_P5_form_image
+title: 
+number: 条例第5号
+promulgation_date: 令和5年4月1日
+promulgation_date_normalized: 2023-04-01
+source_html: synRG00000005_P5_form_image.html
+converted_at: 2025-12-05 15:45:19
+converter_version: 2.7
+tags:
+  - 例規
+  - 条例
+---
+
+サンプル町申請書条例（画像様式）（合成）
+令和5年4月1日
+条例第5号
+（様式） 第1条 申請書の様式は、別記様式第1号による。
+別記様式第1号（サンプル申請書）
+## 附則（（令和5年4月1日 条例第5号））
+
+１ この条例は、公布の日から施行する。
