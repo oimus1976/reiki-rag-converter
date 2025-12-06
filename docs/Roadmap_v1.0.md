@@ -1,8 +1,16 @@
 ---
-title: reiki-rag-converter Roadmap
-version: 1.0
+title: Roadmap
+version: v1.0
+doc_type: status
+project: reiki-rag-converter
+created: 2025-12-05
 updated: 2025-12-06
-status: stable
+author: Sumio Nishioka + ChatGPT
+tags:
+  - roadmap
+  - planning
+  - oss
+  - reiki-rag-converter
 ---
 
 # reiki-rag-converter — Roadmap v1.0

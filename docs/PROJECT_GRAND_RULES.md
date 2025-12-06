@@ -1,3 +1,18 @@
+---
+title: PROJECT_GRAND_RULES
+version: v1.0
+doc_type: governance
+project: reiki-rag-converter
+created: 2025-12-06
+updated: 2025-12-06
+author: Sumio Nishioka + ChatGPT
+tags:
+  - ai-assisted-development
+  - governance
+  - oss
+  - reiki-rag-converter
+---
+
 # PROJECT GRAND RULES
 本ドキュメントは、reiki-rag-converter プロジェクトにおける  
 ChatGPT の応答品質・整合性・持続性を担保するための  

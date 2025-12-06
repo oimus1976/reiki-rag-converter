@@ -1,9 +1,16 @@
 ---
 title: E2Eテスト設計書（validate → convert）
-version: 1.1
+version: v1.1
+doc_type: reference
 project: reiki-rag-converter
-updated: 2025-12-04
-status: active
+created: 2025-12-01
+updated: 2025-12-06
+author: Sumio Nishioka + ChatGPT
+tags:
+  - testing
+  - reference
+  - oss
+  - reiki-rag-converter
 ---
 
 # E2Eテスト設計書 v1.1  

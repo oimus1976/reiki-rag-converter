@@ -1,11 +1,16 @@
 ---
-title: synthetic HTML 設計書
+title: Design_synthetic_HTML_v0.2
+version: v0.2
+doc_type: design
 project: reiki-rag-converter
-category: design
-version: 0.2
-status: active
 created: 2025-12-04
-updated: 2025-12-05
+updated: 2025-12-06
+author: Sumio Nishioka + ChatGPT
+tags:
+  - design
+  - convert
+  - oss
+  - reiki-rag-converter
 ---
 
 # 1. 改訂概要（v0.1 → v0.2）

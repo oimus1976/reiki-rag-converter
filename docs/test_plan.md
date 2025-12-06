@@ -1,8 +1,16 @@
 ---
-title: テスト計画書
-version: 1.0
+title: test_plan
+version: v1.0
+doc_type: reference
 project: reiki-rag-converter
-updated: 2025-12-02
+created: 2025-12-02
+updated: 2025-12-06
+author: Sumio Nishioka + ChatGPT
+tags:
+  - testing
+  - reference
+  - oss
+  - reiki-rag-converter
 ---
 
 # テスト計画書  

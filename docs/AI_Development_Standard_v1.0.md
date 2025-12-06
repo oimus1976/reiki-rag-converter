@@ -1,3 +1,18 @@
+---
+title: AI_Development_Standard
+version: v1.0
+doc_type: standard
+project: reiki-rag-converter
+created: 2025-12-06
+updated: 2025-12-06
+author: Sumio Nishioka + ChatGPT
+tags:
+  - development-standard
+  - ai-assisted-development
+  - oss
+  - reiki-rag-converter
+---
+
 # AI Development Standard（v1.0）
 本書は、AI（ChatGPT 等）を開発プロジェクトの正式メンバーとして統合するための  
 行動規範・設計原則・品質保証基準・進行管理方式を体系化した  

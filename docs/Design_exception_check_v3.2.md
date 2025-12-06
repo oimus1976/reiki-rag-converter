@@ -1,9 +1,16 @@
 ---
-title: "Exception Check Design v3.2"
-version: "3.2"
-status: "stable"
-updated: "2025-12-06"
-authors: ["reiki-rag-converter development team"]
+title: Exception Check Design v3.2
+version: v3.2
+doc_type: design
+project: reiki-rag-converter
+created: 2025-12-01
+updated: 2025-12-06
+author: Sumio Nishioka + ChatGPT
+tags:
+  - design
+  - convert
+  - oss
+  - reiki-rag-converter
 ---
 
 # Exception Check Design v3.2  

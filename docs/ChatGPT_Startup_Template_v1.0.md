@@ -1,3 +1,18 @@
+---
+title: ChatGPT_Startup_Template
+version: v1.0
+doc_type: template
+project: reiki-rag-converter
+created: 2025-12-06
+updated: 2025-12-06
+author: Sumio Nishioka + ChatGPT
+tags:
+  - ai-assisted-development
+  - oss
+  - startup-template
+  - reiki-rag-converter
+---
+
 # ChatGPT Startup Template v1.0
 **reiki-rag-converter / Official Development Startup Protocol**  
 （ChatGPT を OSS 開発アーキテクトとして正しく起動させるためのテンプレート）

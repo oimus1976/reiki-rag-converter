@@ -1,13 +1,16 @@
 ---
-title: synthetic_generator 設計書（v0.2）
-version: 0.2
-status: draft
-updated: 2025-12-06
+title: Design_synthetic_generator_v0.2
+version: v0.2
+doc_type: design
 project: reiki-rag-converter
+created: 2025-12-05
+updated: 2025-12-06
+author: Sumio Nishioka + ChatGPT
 tags:
-  - synthetic_html
-  - generator
   - design
+  - convert
+  - oss
+  - reiki-rag-converter
 ---
 
 # synthetic_generator_v0.2 設計書

@@ -1,9 +1,16 @@
 ---
-title: convert_reiki 設計書（v2.6）
-version: 2.6
-status: stable
+title: Design_convert_v2.6
+version: v2.6
+doc_type: design
 project: reiki-rag-converter
-updated: 2025-12-02
+created: 2025-12-01
+updated: 2025-12-06
+author: Sumio Nishioka + ChatGPT
+tags:
+  - design
+  - convert
+  - oss
+  - reiki-rag-converter
 ---
 
 # convert_reiki 設計書 v2.6  

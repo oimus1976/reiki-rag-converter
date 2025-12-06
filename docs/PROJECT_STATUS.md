@@ -1,8 +1,15 @@
 ---
-title: Project Status
+title: PROJECT_STATUS
+version: v1.1
+doc_type: status
 project: reiki-rag-converter
-version: 1.1
+created: 2025-12-06
 updated: 2025-12-06
+author: Sumio Nishioka + ChatGPT
+tags:
+  - project-management
+  - oss
+  - reiki-rag-converter
 ---
 
 ---
