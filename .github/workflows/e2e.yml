@@ -39,6 +39,15 @@ jobs:
             exit 1
           fi
       # ---------------------------------------------------------
+        
+      # ---------------------------------------------------------
+      # Step 1: synthetic generator v0.2 の動作確認
+      # ---------------------------------------------------------
+      - name: Generate synthetic HTML (v0.2)
+        run: |
+          python src/synthetic_generator_v0.2.py \
+            --meta-dir synthetic_html_meta/v0.2 \
+            --output-dir synthetic_html
 
       - name: Run pytest
         run: |

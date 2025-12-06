@@ -33,13 +33,15 @@ venv/
 htmlcov/
 
 #-------------------------------------
-# プロジェクト固有（生成物）
+# 生成物（コミット不要）
 #-------------------------------------
 
-# validate 出力
+# validate の一時出力（構造ログ）
 logs_*/
 *logs*/
-*.json
+
+# ただし meta.json は追跡するため *.json を無効にしない
+# ※ remove: *.json
 
 # convert 出力
 output_*/
@@ -54,16 +56,11 @@ tests/output/
 #-------------------------------------
 # サンプルデータ（例規HTML）
 #-------------------------------------
-
-# ユーザー個別の HTML 置き場は無視
 reiki_honbun/*
-
-# ただし README や ドキュメントに必要なら特定 HTML は許可
 !reiki_honbun/k518RG00000012.html
 !reiki_honbun/k518RG00000055.html
 !reiki_honbun/k518RG00000080.html
 
-# サンプルセット
 samples/html/*
 
 #-------------------------------------
@@ -84,31 +81,21 @@ samples/html/*
 #-------------------------------------
 # OS毎の不要ファイル
 #-------------------------------------
-# macOS
 .DS_Store
 .AppleDouble
 .LSOverride
-
-# Windows
 Thumbs.db
 ehthumbs.db
 Desktop.ini
-
-# Linux
 *~
 
 ######################################
 # 例外（追跡したいもの）
 ######################################
-
-# ドキュメントは追跡
 !docs/**
-
-# テストコードは追跡
 !tests/**
-
-# GitHub Actions は追跡
 !.github/**
-
-# src は追跡
 !src/**
+
+# meta.json を必ず追跡する
+!synthetic_html_meta/**/*.json
