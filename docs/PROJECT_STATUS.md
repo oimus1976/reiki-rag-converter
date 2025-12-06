@@ -1,9 +1,41 @@
 ---
 title: Project Status
 project: reiki-rag-converter
-version: 1.0
+version: 1.1
 updated: 2025-12-06
 ---
+
+---
+# PROJECT_STATUS.md — Governance & Operational Declaration
+本プロジェクトは、以下の 2 つの基盤文書を遵守して運用される。
+
+- **PROJECT_GRAND_RULES.md**  
+  ChatGPT を開発メンバーとして安全かつ一貫性をもって運用するための  
+  行動規範・意思決定原則・品質保証基準を定めたもの。
+
+- **AI_OSS_Practices_v1.0.md**  
+  OSS 開発に ChatGPT を統合するための体系的な実践手法をまとめた  
+  本プロジェクトの設計思想・開発方式の基礎文書。
+
+## 運用原則
+1. **PROJECT_STATUS.md は唯一の進行基準点（SSoT）である。**  
+   Next Action・Pending・Completed の状態は、本ファイルの記載のみが正式な位置づけとなる。
+
+2. **ChatGPT は、Next Action に記載された 1 項目のみを作業対象とする。**  
+   ChatGPT は独断でフェーズ変更・タスク追加を行わず、  
+   追加提案がある場合は「候補」として提示し、人間が採用を判断する。
+
+3. **すべての提案・修正・仕様変更は、設計書および Grand Rules と整合していなければならない。**  
+   影響範囲（設計・実装・CI・テスト・将来保守）を踏まえた上で提示すること。
+
+4. **CI・Golden diff・smoke test の安定性は最優先とする。**  
+   非決定的項目（converted_at 等）は diff 対象外とし、  
+   Golden の更新はルールに基づく場合に限られる。
+
+本ファイルは、プロジェクトの進行・品質・一貫性を守るための  
+中心文書としての役割を持つ。
+---
+
 
 # Project Status — reiki-rag-converter
 
