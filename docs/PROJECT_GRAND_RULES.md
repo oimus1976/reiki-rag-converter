@@ -42,6 +42,15 @@ ChatGPT の応答品質・整合性・持続性を担保するための
 ### 2-2. タスク完了後は PROJECT_STATUS.md 更新を必ず提案
 - COMPLETED / PENDING / NEXT ACTION の整合性保持を ChatGPT が支援する。
 
+### 2-3. PROJECT_STATUS.md の運用ポリシー
+- PROJECT_STATUS.md は単一の最新状態のみを保持し、過去版は作成しない。
+- 更新時は必ず GitHub にコミットし、変更履歴はコミットログで管理する。
+- ChatGPT は /start 時に STATUS を読み込み、Next Action の整合性を必ず検証する。
+- ChatGPT はユーザーの明示的な指示なしに STATUS.md を改変してはならない。
+- STATUS が変更された場合、ChatGPT は設計・CI・文書体系との整合性を監査する。
+
+
+
 ---
 
 ## 3. Next Action の扱いルール
