@@ -1,0 +1,27 @@
+---
+id: synRG00000015_P15_supplements
+title: ○サンプル条例（複条附則＋表）
+number: 条例第5号
+promulgation_date: 令和5年8月30日
+promulgation_date_normalized: 2023-08-30
+source_html: synRG00000015_P15_supplements.html
+converted_at: 2025-12-06 09:09:52
+converter_version: 2.7
+tags:
+  - 例規
+  - 条例
+---
+
+# ○サンプル条例（複条附則＋表）
+
+○サンプル条例（複条附則＋表）
+令和5年8月30日
+条例第5号
+## 第1条（(目的)）
+
+この条例は〜〜〜を目的とする。
+
+## 附則（令和5年8月30日 条例第5号）
+
+この条例は、公布の日から施行する。
+この条例の施行に関し必要な事項は規則で定める。

@@ -1,0 +1,22 @@
+---
+id: synRG00000011_P11_basic
+title: ○サンプル条例（基本構造）
+number: 条例第1号
+promulgation_date: 令和5年4月1日
+promulgation_date_normalized: 2023-04-01
+source_html: synRG00000011_P11_basic.html
+converted_at: 2025-12-06 09:09:52
+converter_version: 2.7
+tags:
+  - 例規
+  - 条例
+---
+
+# ○サンプル条例（基本構造）
+
+○サンプル条例（基本構造）
+令和5年4月1日
+条例第1号
+## 第1条（(目的)）
+
+この条例は、基本的な構造を示すために作成する。

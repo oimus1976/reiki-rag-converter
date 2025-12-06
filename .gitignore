@@ -99,3 +99,6 @@ Desktop.ini
 
 # meta.json を必ず追跡する
 !synthetic_html_meta/**/*.json
+
+# Allow Golden files to be tracked
+!golden_md/**

@@ -1,0 +1,28 @@
+---
+id: synRG00000014_P14_table_complex
+title: ○サンプル条例（複雑表：colspan・rowspan）
+number: 条例第4号
+promulgation_date: 令和5年7月20日
+promulgation_date_normalized: 2023-07-20
+source_html: synRG00000014_P14_table_complex.html
+converted_at: 2025-12-06 09:09:52
+converter_version: 2.7
+tags:
+  - 例規
+  - 条例
+---
+
+# ○サンプル条例（複雑表：colspan・rowspan）
+
+○サンプル条例（複雑表：colspan・rowspan）
+令和5年7月20日
+条例第4号
+## 第1条（(施設一覧)）
+
+施設の区分及び内容は次の表のとおりとする。
+
+| 区分 | 内容A |
+| --- | --- |
+| 詳細1 | 詳細2 |
+| A | ○○○ |
+| □□□ | ☆☆☆ |
