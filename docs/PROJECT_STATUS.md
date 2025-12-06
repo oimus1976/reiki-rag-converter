@@ -116,4 +116,18 @@ GOLDEN_POLICY_v1.0.md を作成する。
 
 ---
 
+## 7. ChatGPT 運用ルール（重要）
+
+1. PROJECT_STATUS.md はプロジェクトの唯一の真実源（SSoT）である。
+2. Next Action は PROJECT_STATUS.md に記載された 1 つのみとし、
+   ChatGPT の提案は PROJECT_STATUS.md に追記されるまで「未確定」とする。
+3. ChatGPT に作業を依頼する場合、
+   「PROJECT_STATUS.md の Next Action に従う」ことを必ず明示する。
+4. PROJECT_STATUS.md と矛盾する提案は自動的に無効とし、
+   必要なら PENTA 監査を行って採用可否を判断する。
+5. 新規提案を採用する場合、必ず Pending または Next Action に反映し、
+   反映されて初めて有効となる。
+
+---
+
 （End of PROJECT_STATUS.md）
