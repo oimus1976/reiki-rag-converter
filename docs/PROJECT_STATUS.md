@@ -4,7 +4,7 @@ version: v1.0
 doc_type: status
 project: reiki-rag-converter
 created: 2025-12-06
-updated: 2025-12-06
+updated: 2025-12-07
 author: Sumio Nishioka + ChatGPT
 tags:
   - project-management
@@ -28,17 +28,12 @@ tags:
 - synthetic_generator_v0.2 の安定稼働  
 
 ## 3. Pending（保留中タスク）
-※ 次スレッドでこの中から Next Action を正式に決定する。
-
 - convert_v2.8（表構造の高度化：colspan/rowspan・別記様式対応）  
 - validate_v0.6（編・章・節の階層認識）  
 - synthetic_generator_v0.3（meta schema 拡張：P16〜P20）  
-- GOLDEN_POLICY_v1.0（Golden 更新制度の文書化）  
 
 ## 4. Next Action（次に唯一実施すべきタスク）
-※ 次スレッド開始時に決定する。
-
-（空欄：未決定）
+- **GOLDEN_POLICY_v1.0（Golden 更新制度の文書化）を正式に作成する**
 
 ## 5. References
 - PROJECT_GRAND_RULES.md  
