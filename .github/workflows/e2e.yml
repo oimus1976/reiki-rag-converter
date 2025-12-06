@@ -58,6 +58,15 @@ jobs:
             --source synthetic_html \
             --output logs_validate_ci
 
+      # ---------------------------------------------------------
+      # Step 3: convert の実行
+      # ---------------------------------------------------------
+      - name: Run convert
+        run: |
+          python src/convert_reiki_v2.7.py \
+            --source synthetic_html \
+            --output output_md_ci
+
       - name: Run pytest
         run: |
           python -m pytest -q
