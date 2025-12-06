@@ -68,10 +68,12 @@ jobs:
             --output output_md_ci
 
       # ---------------------------------------------------------
-      # Step 4: Golden diff（P11〜P15 の比較）
+      # Step 4: Golden diff（converted_at は比較対象から除外）
       # ---------------------------------------------------------
       - name: Golden diff (P11–P15)
         run: |
+          mkdir -p tmp_golden tmp_output
+
           for f in golden_md/v1/*.txt; do
             base=$(basename "$f")
             if [ ! -f "output_md_ci/$base" ]; then
@@ -79,7 +81,12 @@ jobs:
               exit 1
             fi
 
-            diff -u "$f" "output_md_ci/$base" || {
+            # 比較用に converted_at 行を除外したファイルを作成
+            grep -v '^converted_at:' "$f" > "tmp_golden/$base"
+            grep -v '^converted_at:' "output_md_ci/$base" > "tmp_output/$base"
+
+            # diff 実行（差分があればFAIL）
+            diff -u "tmp_golden/$base" "tmp_output/$base" || {
               echo "ERROR: Golden diff failed for $base"
               exit 1
             }
@@ -87,7 +94,8 @@ jobs:
 
           echo "Golden diff passed for all files."
 
-          
+
+
       - name: Run pytest
         run: |
           python -m pytest -q
