@@ -39,7 +39,7 @@ jobs:
             exit 1
           fi
       # ---------------------------------------------------------
-        
+
       # ---------------------------------------------------------
       # Step 1: synthetic generator v0.2 の動作確認
       # ---------------------------------------------------------
@@ -48,6 +48,15 @@ jobs:
           python src/synthetic_generator_v0.2.py \
             --meta-dir synthetic_html_meta/v0.2 \
             --output-dir synthetic_html
+    
+      # ---------------------------------------------------------
+      # Step 2: validate の実行
+      # ---------------------------------------------------------
+      - name: Run validate
+        run: |
+          python src/validate_reiki_structure_v0.5.3.py \
+            --source synthetic_html \
+            --output logs_validate_ci
 
       - name: Run pytest
         run: |
