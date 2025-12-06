@@ -1,0 +1,24 @@
+{
+  "law_id": "synRG00000010",
+  "pattern": "P10",
+  "title": "【エラー用】サンプル町テスト条例",
+  "structure": {
+    "article_count": 0,
+    "has_items": false,
+    "has_table_main": false,
+    "has_table_supplement": false,
+    "supplement_count": 1
+  },
+  "dom_variation": {
+    "nested_div": false,
+    "s_head_style": "A",
+    "inline_depth": 1,
+    "table_wrapper": "normal"
+  },
+  "anomalies": [
+    "NO_PRIMARY_INNER",
+    "UNKNOWN_CLASS",
+    "SUPPLEMENT_META_WITHOUT_BODY"
+  ],
+  "created_at": "2025-12-05"
+}

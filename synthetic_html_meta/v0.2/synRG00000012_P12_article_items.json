@@ -1,0 +1,26 @@
+{
+  "id": "synRG00000012_P12_article_items",
+  "title": "○サンプル条例（条・項・号）",
+  "promulgation": {
+    "date": "令和5年5月10日",
+    "number": "条例第2号"
+  },
+  "blocks": [
+    {
+      "type": "article",
+      "num": 1,
+      "title": { "text": "定義", "style": "irregular", "position": "before" },
+      "clauses": [
+        {
+          "num": 1,
+          "text": "この条例においては、次の各号に掲げる用語の定義による。",
+          "items": [
+            { "num": 1, "text": "基準とは、評価の基礎となる事項をいう。" },
+            { "num": 2, "text": "標準とは、基準を具体化したものをいう。" }
+          ]
+        }
+      ]
+    }
+  ],
+  "options": {}
+}

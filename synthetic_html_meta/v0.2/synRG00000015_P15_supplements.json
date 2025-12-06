@@ -1,0 +1,46 @@
+{
+  "id": "synRG00000015_P15_supplements",
+  "title": "○サンプル条例（複条附則＋表）",
+  "promulgation": {
+    "date": "令和5年8月30日",
+    "number": "条例第5号"
+  },
+  "blocks": [
+    {
+      "type": "article",
+      "num": 1,
+      "title": { "text": "目的", "style": "irregular", "position": "before" },
+      "clauses": [
+        {
+          "num": 1,
+          "text": "この条例は〜〜〜を目的とする。",
+          "items": []
+        }
+      ]
+    },
+
+    {
+      "type": "supplement",
+      "meta": {
+        "label": "附則",
+        "date_raw": "令和5年8月30日",
+        "number_raw": "条例第5号"
+      },
+      "articles": [
+        {
+          "num": 1,
+          "clauses": [
+            { "num": 1, "text": "この条例は、公布の日から施行する。" }
+          ]
+        },
+        {
+          "num": 2,
+          "clauses": [
+            { "num": 1, "text": "この条例の施行に関し必要な事項は規則で定める。" }
+          ]
+        }
+      ]
+    }
+  ],
+  "options": {}
+}

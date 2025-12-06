@@ -1,0 +1,50 @@
+{
+  "id": "synRG00000014_P14_table_complex",
+  "title": "○サンプル条例（複雑表：colspan・rowspan）",
+  "promulgation": {
+    "date": "令和5年7月20日",
+    "number": "条例第4号"
+  },
+  "blocks": [
+    {
+      "type": "article",
+      "num": 1,
+      "title": { "text": "施設一覧", "style": "irregular", "position": "before" },
+      "clauses": [
+        {
+          "num": 1,
+          "text": "施設の区分及び内容は次の表のとおりとする。",
+          "items": []
+        }
+      ]
+    },
+    {
+      "type": "table",
+      "caption": {
+        "text": "第1条関係",
+        "article": 1,
+        "category": "一覧"
+      },
+      "rows": [
+        [
+          { "text": "区分", "rowspan": 2 },
+          { "text": "内容A", "colspan": 2 }
+        ],
+        [
+          { "text": "詳細1" },
+          { "text": "詳細2" }
+        ],
+        [
+          { "text": "A", "rowspan": 2 },
+          { "text": "○○○" },
+          { "text": "△△△" }
+        ],
+        [
+          { "text": "□□□" },
+          { "text": "☆☆☆" }
+        ]
+      ]
+    }
+  ],
+  "options": {}
+}

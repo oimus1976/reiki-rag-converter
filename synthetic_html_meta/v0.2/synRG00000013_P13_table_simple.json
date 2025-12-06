@@ -1,0 +1,45 @@
+{
+  "id": "synRG00000013_P13_table_simple",
+  "title": "○サンプル条例（表のある条）",
+  "promulgation": {
+    "date": "令和5年6月1日",
+    "number": "条例第3号"
+  },
+  "blocks": [
+    {
+      "type": "article",
+      "num": 1,
+      "title": { "text": "料金", "style": "irregular", "position": "before" },
+      "clauses": [
+        {
+          "num": 1,
+          "text": "料金は次の表のとおりとする。",
+          "items": []
+        }
+      ]
+    },
+    {
+      "type": "table",
+      "caption": {
+        "text": "第1条関係",
+        "article": 1,
+        "category": "一覧"
+      },
+      "rows": [
+        [
+          { "text": "区分" },
+          { "text": "料金" }
+        ],
+        [
+          { "text": "一般" },
+          { "text": "100円" }
+        ],
+        [
+          { "text": "学生" },
+          { "text": "50円" }
+        ]
+      ]
+    }
+  ],
+  "options": {}
+}

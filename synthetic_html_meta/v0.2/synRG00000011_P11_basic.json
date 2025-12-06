@@ -1,0 +1,23 @@
+{
+  "id": "synRG00000011_P11_basic",
+  "title": "○サンプル条例（基本構造）",
+  "promulgation": {
+    "date": "令和5年4月1日",
+    "number": "条例第1号"
+  },
+  "blocks": [
+    {
+      "type": "article",
+      "num": 1,
+      "title": { "text": "目的", "style": "irregular", "position": "before" },
+      "clauses": [
+        {
+          "num": 1,
+          "text": "この条例は、基本的な構造を示すために作成する。",
+          "items": []
+        }
+      ]
+    }
+  ],
+  "options": {}
+}

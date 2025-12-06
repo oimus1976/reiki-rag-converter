@@ -1,0 +1,20 @@
+{
+  "law_id": "synRG00000008",
+  "pattern": "P8",
+  "title": "サンプル町申請書様式管理条例",
+  "structure": {
+    "article_count": 2,
+    "has_items": false,
+    "has_table_main": false,
+    "has_table_supplement": false,
+    "supplement_count": 1
+  },
+  "dom_variation": {
+    "nested_div": false,
+    "s_head_style": "A",
+    "inline_depth": 1,
+    "table_wrapper": "normal"
+  },
+  "anomalies": [],
+  "created_at": "2025-12-05"
+}
