@@ -67,6 +67,27 @@ jobs:
             --source synthetic_html \
             --output output_md_ci
 
+      # ---------------------------------------------------------
+      # Step 4: Golden diff（P11〜P15 の比較）
+      # ---------------------------------------------------------
+      - name: Golden diff (P11–P15)
+        run: |
+          for f in golden_md/v1/*.txt; do
+            base=$(basename "$f")
+            if [ ! -f "output_md_ci/$base" ]; then
+              echo "ERROR: Missing output file: output_md_ci/$base"
+              exit 1
+            fi
+
+            diff -u "$f" "output_md_ci/$base" || {
+              echo "ERROR: Golden diff failed for $base"
+              exit 1
+            }
+          done
+
+          echo "Golden diff passed for all files."
+
+          
       - name: Run pytest
         run: |
           python -m pytest -q
