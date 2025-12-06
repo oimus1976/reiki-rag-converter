@@ -146,7 +146,7 @@ GOLDEN_POLICY_v1.0.md を作成する。
 
 ---
 
-# 6. 更新方法（STATUS.md の扱い）
+# 6. 更新方法（PROJECT_STATUS.md の扱い）
 
 - 作業開始前にこのファイルを開き、位置を確認  
 - 作業が完了したら **Completed Steps に移動し、Pending を更新する**  
@@ -155,7 +155,7 @@ GOLDEN_POLICY_v1.0.md を作成する。
 
 ---
 
-## 7. ChatGPT 運用ルール（重要）
+# 7. ChatGPT 運用ルール（重要）
 
 1. PROJECT_STATUS.md はプロジェクトの唯一の真実源（SSoT）である。
 2. Next Action は PROJECT_STATUS.md に記載された 1 つのみとし、
@@ -168,5 +168,11 @@ GOLDEN_POLICY_v1.0.md を作成する。
    反映されて初めて有効となる。
 
 ---
+
+# 8. Reference
+ - ChatGPT_Startup_Template_v1.0.md  
+ - ChatGPT_Startup_Workflow_v1.0.md  
+   （開発開始時のプロトコルを定義する文書）
+
 
 （End of PROJECT_STATUS.md）

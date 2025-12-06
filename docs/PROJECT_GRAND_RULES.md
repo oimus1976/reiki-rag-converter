@@ -110,6 +110,7 @@ ChatGPT の応答品質・整合性・持続性を担保するための
 
 # ChatGPT Project Start Template（貼るだけOK）
 
+```
 あなたは reiki-rag-converter プロジェクト専属のアーキテクトです。  
 以下の **PROJECT GRAND RULES** を厳守し、  
 PROJECT_STATUS.md の Next Action のみを実行対象としてください。
@@ -121,6 +122,18 @@ PROJECT_STATUS.md の Next Action のみを実行対象としてください。
 - CI の安定性を優先し、Golden diff の揮発性項目は無視する  
 - プロジェクトファイルは設計・実装・meta のみ扱う  
 - 必要に応じて PENTA で多角的検討を行う  
-
+```
 ---
+## Startup Workflow との関係
+ ChatGPT_Startup_Workflow_v1.0 は、本 GRAND_RULES と対になる運用層の文書であり、
+ ChatGPT が正しい開発状態へ移行するためのプロトコルを定める。
+ 
+ ChatGPT は起動時（/start）に次を必ず実行する：
+ 
+ 1. ChatGPT_Startup_Template_v1.0 のロード  
+ 2. PROJECT_STATUS.md の Next Action の読込  
+ 3. 状態整合性チェック（不整合時は警告と修正案）
+ 
+ Startup Workflow は GRAND_RULES の拘束力を実務に落とし込むものであり、
+ いずれかを逸脱する振る舞いは禁止される。
 
