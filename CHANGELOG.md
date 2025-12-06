@@ -1,171 +1,113 @@
-# Changelog  
-このプロジェクトにおける全変更履歴をまとめた公式 CHANGELOG です。  
-バージョンは [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) に準拠しています。
-
+# Changelog
+本プロジェクトにおける全変更履歴をまとめた公式 CHANGELOG です。  
+バージョン管理は Keep a Changelog に準拠しています。
 
 ---
 
-## v0.5.3 (2025-12-06)
+## [2025-12-06] Documentation & Governance Update（本スレッド）
+
+### Added
+- **ChatGPT_Startup_Template_v1.0**  
+  - ChatGPT の開発モード・人格・行動規則の正式化
+- **ChatGPT_Startup_Workflow_v1.0**  
+  - /start 起動プロセス、状態再構築、SSoT（PROJECT_STATUS）の仕組みを標準化
+- **AI_Development_Standard_v1.0**  
+  - OSS で AI を利用する際の包括的ガイドラインを制定
+- **PROJECT_GRAND_RULES.md**（更新版）
+  - Startup Workflow との連動ルールを正式追加
+
+### Updated
+- **docs/** 配下すべての Markdown に **frontmatter（拡張版 C案）** を統一適用  
+- **PROJECT_STATUS.md** を最新状態に整理  
+  - Completed / Pending / Next Action の全体再構成  
+  - Startup 系文書の追加を反映
+- **.github/workflows/e2e.yml**
+  - Golden diff における `converted_at` 差分除外フィルターを追加  
+  - CI の安定運用をさらに強化
+
+### Improved
+- プロジェクト運用基盤が **4層体系**（Template / Workflow / GRAND_RULES / STATUS）で確立  
+- ChatGPT の誤作動防止（状態ズレ、Next Action逸脱）が制度的に保証されるようになった
+- OSS プロジェクトとして長期保守が可能な構造へ進化
+
+---
+
+## v0.5.3 (2025-12-06) — validator 安定化
+
 ### Validate Module
-- FIX: JSON 出力時に `set` 型が含まれると serialization error が発生していた問題を修正  
-  - `_to_serializable()` を実装し、set → sorted list、tuple → list など安全に再帰変換
-  - これにより synthetic_html（P1〜P10）で validate が完全に安定
-- FIX: `write_json()` を JSON 互換データのみ書き込む形に変更
-- IMPROVED: validate の終了コードが例外に依存せず常に `0` となり、CI の安定性が向上
+- FIX: JSON 出力時 `set` が含まれると serialization error → `_to_serializable()` 導入で解消
+- FIX: `write_json()` を安全な JSON データ専用に変更
+- IMPROVED: validate の終了コードが常に `0` となり CI が完全安定
 
 ### Test / CI
-- UPDATE: synthetic_html ディレクトリの E2E テストが validate v0.5.3 に対応
-- UPDATE: GitHub Actions（e2e.yml）が新仕様の validate を参照し安定化
+- synthetic_html（P1〜P10）がすべて validate v0.5.3 に対応
+- e2e.yml が新仕様へ刷新され、CI 全体の安定性が向上
 
 ### Documentation
-- UPDATE: Exception Check Design を **v3.2** に更新  
-  - イベント／例外分類の明確化  
-  - JSON 出力仕様の修正（set → list）を正式反映  
+- **Design_exception_check_v3.2** を公開  
+  - イベント／例外モデルの再整理  
+  - JSON 出力仕様（set → list）の公式反映
 
 ---
 
-## [Unreleased]
-- Add synthetic HTML v0.2 assets (P7–P10), meta templates, and generator v0.1
-
----
-
-## [Unreleased]
-- Add Design_synthetic_html_v0.2 (P1–P10, DOM variation, generator & meta spec)
-
----
-
-## [Unreleased]
-- Add synthetic HTML design doc (Design_synthetic_html_v0.1)
-  - 定義パターン P1〜P6 を収録
-  - OSS用の安全な synthetic テストセットの設計開始
+## [Unreleased]（履歴統合済のため説明のみ）
+- synthetic_html v0.2 系統（P1〜P10 相当）の準備  
+- meta templates / generator v0.1 の試験投入
 
 ---
 
 ## v2.7.1-doc3 — 2025-12-04
-
 ### Added
-- `requirements.txt` を追加し、パッケージ依存関係を明確化  
-- `.gitignore` を更新して `requirements.txt` を追跡対象に修正
-
-### No functional changes
+- `requirements.txt` 追加  
+- `.gitignore` 更新（requirements.txt を追跡対象に）
 
 ---
 
 ## v2.7.1-doc2 — 2025-12-04
-
 ### Documentation
-- README を **v1.1** に全面改訂  
-  - TL;DR セクション追加  
-  - Quick Start 改善  
-  - Before/After の変換例追加  
-  - RAG 連携サンプル（LangChain）追加  
-  - 例規HTMLの著作権注意を追加  
-  - Contributing ガイドを強化（Golden diff / PR rules）  
-  - 全体を通して PENTA レビュー内容を反映し文章品質を向上  
-- ディレクトリ構成説明を最新版に更新  
-- CI（E2E workflow）に対応した説明を追加
-
-### No functional changes
-- コード（validate / convert）の処理内容は変更なし
+- README v1.1 に全面更新  
+- CI/E2E/GitHub Actions の説明を最新版に統合
 
 ---
 
 ## v2.7.1-doc1 — 2025-12-04
-
 ### Documentation
-- `docs/test_e2e_design.md` を v1.1 に改訂  
-  - 異常系テストケース（A01〜A06）を追加  
-  - Golden diff の方針を明確化  
-  - CI (GitHub Actions) を前提とした設計へ刷新  
-  - セキュリティ観点を追加（script混入、chardet、path等）  
-  - validate → convert の構造整合性チェックを定義
-
-### Added
-- `.github/workflows/e2e.yml` を追加  
-  - Python 3.10/3.11/3.12 の matrix  
-  - validate → convert → pytest  
-  - Golden diff による回帰テスト  
-  - failure 時の artifacts 保存に対応
+- `docs/test_e2e_design.md` v1.1 へ更新  
+- 異常系テスト A01〜A06 を追加
+- Golden diff の方針を正式化
 
 ---
 
 ## v2.7.1 — 2025-12-03
-
 ### Added
-- **convert_reiki_v2.7.py** を追加  
-  - validate v0.5.2 の構造情報に沿って完全変換を行う改良版  
-  - 条見出し → 本文の欠落問題を修正  
-  - `.main` → 条本文抽出ロジックの改善  
-  - 表（table）を Markdown 表に変換  
-  - YAML frontmatter（id/title/date/etc.）生成  
-  - 附則（複数）に完全対応  
-
-### Fixed
-- 条本文が抜けるバグ  
-- 「第2条」複数誤検出問題は v0.5.2 側で解消済み  
+- **convert_reiki_v2.7.py** 公開  
+- 表 → Markdown、複数附則、YAML frontmatter などの機能強化
 
 ---
 
-## v2.7.0（内部版） — 2025-12-03
-
+## v2.6 — 2025-12-01
 ### Added
-- convert v2.6 の GitHub 移行準備版（非公開）  
-- ローカルでの動作確認用 scaffolding の整備
+- **Design_convert_v2.6.md** 決定版  
+- 表解析・附則処理の主要改善
 
 ---
 
-## v2.6 — 2025-12-01（チャット内完成版）
-
+## v0.5.2 — 2025-12-01
 ### Added
-- **Design_convert_v2.6.md** を確定  
-- 表の抽出テスト（k518RG00000080.html）に対応  
-- 附則の誤結合防止アルゴリズムを実装  
-
-### Fixed
-- 従来問題だった「本則の途中で附則タイトル判定が誤作動する」問題を解消  
-- 「同じ class 名のノードが連続する DOM 揺れ」への耐性改善
-
----
-
-## v0.5.2（validator） — 2025-12-01
-
-### Added
-- **validate_reiki_structure_v0.5.2.py** を追加  
-  - `.eline` 内の `.article` から条を100%正確に抽出  
-  - 項 = `div.clause`、号 = `div.item`  
-  - 附則は `.s-head` → meta解析 → 本文抽出  
-  - E 系（E003/E004/E007 etc.）と S 系のイベント検出  
-  - `structure_summary.json` / `summary_report.json` / `class_statistics.json` を出力  
-- サンプル抽出（sample_patterns.json）ロジックを確立  
-- 例規HTML（12 / 55 / 80）で precision を検証
-
-### Fixed
-- 「第2条 検出がループする」バグを完全解消  
-- 附則の多段構造（最大9本）を正確に解析
+- validate v0.5.2 公開（条・項・号の100%抽出）
 
 ---
 
 ## v0.5.1 — 2025-11
-
-### Added
-- validate v0.5 の初期版を作成  
-- 本文と項・号の抽出ロジックの基礎構築
+- validate v0.5 系統の基礎構築
 
 ---
 
 ## v0.5.0 — 2025-11
-
-### Added
-- 最初の構造解析パイプライン  
-- 例規HTMLの class 構造（article/clause/item/s-head）の調査  
-- サンプル HTML（12/55/80）をベースとした仕様化を開始
+- HTML 構造解析の初期 PoC
 
 ---
 
-## v0.1.0 — 2025-11（最初期）
-
-### Added
+## v0.1.0 — 2025-11（初期）
 - プロジェクト立ち上げ  
-- HTML → テキスト抽出の PoC  
-- 「条文構造を機械で扱う」コンセプトの実験  
-- 開発ノート・概念モデルの作成
+- 最初の HTML → TEXT 抽出実験
