@@ -12,12 +12,14 @@ tags:
   - reiki-rag-converter
 ---
 
-# PROJECT STATUS（reiki-rag-converter）
+## PROJECT STATUS（reiki-rag-converter）
 
 ## 1. Purpose
+
 条例HTMLを安定的・再現性高く TXT/Markdown に変換する OSS を進化・保守する。
 
 ## 2. Completed（完了済みタスク）
+
 - ChatGPT_Startup_Template_v1.0 の制定  
 - ChatGPT_Startup_Workflow_v1.0 の制定  
 - PROJECT_GRAND_RULES.md の更新（Startup Workflow との連携を追加）  
@@ -28,14 +30,17 @@ tags:
 - synthetic_generator_v0.2 の安定稼働  
 
 ## 3. Pending（保留中タスク）
+
 - convert_v2.8（表構造の高度化：colspan/rowspan・別記様式対応）  
 - validate_v0.6（編・章・節の階層認識）  
 - synthetic_generator_v0.3（meta schema 拡張：P16〜P20）  
 
 ## 4. Next Action（次に唯一実施すべきタスク）
+
 - **GOLDEN_POLICY_v1.0（Golden 更新制度の文書化）を正式に作成する**
 
 ## 5. References
+
 - PROJECT_GRAND_RULES.md  
 - AI_Development_Standard_v1.0.md  
 - ChatGPT_Startup_Template_v1.0.md  
@@ -51,3 +56,7 @@ tags:
 【運用ルール】  
 本ファイルは唯一の進行基準点（SSoT）であり、  
 ChatGPT は Next Action のみをタスクとして実行する。
+
+【運用ルール（追加）】  
+commit 前には、ChatGPT がプロジェクトファイルの更新有無を自動チェックし、
+必要に応じて git add 対象をリマインドする。
