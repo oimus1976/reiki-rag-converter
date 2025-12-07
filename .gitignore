@@ -1,5 +1,5 @@
 ######################################
-# reiki-rag-converter 強化版 .gitignore
+# reiki-rag-converter 強化版 .gitignore（最新版）
 ######################################
 
 #-------------------------------------
@@ -40,31 +40,38 @@ htmlcov/
 logs_*/
 *logs*/
 
-# ただし meta.json は追跡するため *.json を無効にしない
-# ※ remove: *.json
-
-# convert 出力
+# convert 出力（TXT/MD/CSVなど生成物）
 output_*/
 converted_*/
 *.txt
-!requirements.txt
+!requirements.txt   # ← 本物の requirements.txt は例外
 
-# test 用生成物
+# テストで生成される一時ファイル
 tests/tmp/
 tests/output/
 
+# 自動生成HTML（Qommonsテスト用）
+test_html_set/
+
 #-------------------------------------
-# サンプルデータ（例規HTML）
+# 実条例HTML（著作権配慮で公開禁止・追跡不可）
 #-------------------------------------
+
+# 本物の例規HTML（読み取り専用・Gitには入れない）
 reiki_honbun/*
+
+# 旧サンプル3件だけ例外的に追跡（convertテスト用）
 !reiki_honbun/k518RG00000012.html
 !reiki_honbun/k518RG00000055.html
 !reiki_honbun/k518RG00000080.html
 
-samples/html/*
+# プロジェクトで生成したローカル評価用サンプル
+samples/
+samples/html/
+samples/**/*.html
 
 #-------------------------------------
-# binary / archive
+# Binary / Archive
 #-------------------------------------
 *.zip
 *.7z
@@ -90,15 +97,27 @@ Desktop.ini
 *~
 
 ######################################
-# 例外（追跡したいもの）
+# 例外（追跡したいディレクトリ）
 ######################################
+
+# プロジェクトの正式ドキュメント
 !docs/**
+
+# テストコード（ただし tmp/output は除く）
 !tests/**
+
+# GitHub Actions / workflow
 !.github/**
+
+# ソースコード
 !src/**
 
-# meta.json を必ず追跡する
+# synthetic_html_meta 内の schema/json は追跡する
 !synthetic_html_meta/**/*.json
 
-# Allow Golden files to be tracked
+# Golden ファイル（比較用）を必ず追跡
 !golden_md/**
+
+######################################
+# END
+######################################
