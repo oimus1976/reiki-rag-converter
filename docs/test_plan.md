@@ -173,4 +173,3 @@ GitHub Actions が失敗扱いとなります。
   - 手数料条例セット（TXT＋CSV＋HTML）を用いた RAG-01〜03 を最低限実施する。
 - GOLDEN_POLICY_v1.0 で定義する「Golden質問セット」に、  
   上記シナリオの代表質問を組み込む。
-
