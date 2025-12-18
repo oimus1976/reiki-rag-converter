@@ -16,11 +16,11 @@ tags:
 
 ## GOLDEN POLICY v1.0
 
-本書は、reiki-rag-converter プロジェクトにおける  
+本書は、reiki-rag-converter プロジェクトにおける
 **Golden diff（Golden ファイル）管理ポリシーの公式規範**である。
 
-Golden は「常に理想の出力」という意味ではなく、  
-**“現在の設計仕様を固定化した境界線（Specification Freeze Point）”** であり、  
+Golden は「常に理想の出力」という意味ではなく、
+**“現在の設計仕様を固定化した境界線（Specification Freeze Point）”** であり、
 回帰性・再現性・品質保証の中核となる。
 
 ---
@@ -37,30 +37,30 @@ Golden は「常に理想の出力」という意味ではなく、
 
 本ポリシーは以下に適用する：
 
-- convert_reiki_v2.x  
-- validate_reiki_structure_v0.x  
-- synthetic_html（特に P11〜P15）  
-- CI（e2e.yml / smoke test）  
+- convert_reiki_v2.x
+- validate_reiki_structure_v0.x
+- synthetic_html（特に P11〜P15）
+- CI（e2e.yml / smoke test）
 - Golden diff を利用する pytest
 
 ### 1.3 Golden の定義
 
 Golden は次の特徴をもつ：
 
-- **設計仕様に一致した出力の固定点（Expected Output）**  
-- 仕様変更がない限り、内容を変更してはならない  
-- CI が比較する対象であり、回帰テストの基準点である  
+- **設計仕様に一致した出力の固定点（Expected Output）**
+- 仕様変更がない限り、内容を変更してはならない
+- CI が比較する対象であり、回帰テストの基準点である
 
 ### 1.4 関連文書との関係（SSoT）
 
 SSoT（Single Source of Truth）は以下の優先順序に従う：
 
-1. PROJECT_STATUS.md  
-2. PROJECT_GRAND_RULES.md  
-3. Design 文書（Design_convert / Design_validate / synthetic 系）  
-4. CI（e2e.yml）  
-5. 実装コード（src/*.py）  
-6. Golden ファイル  
+1. PROJECT_STATUS.md
+2. PROJECT_GRAND_RULES.md
+3. Design 文書（Design_convert / Design_validate / synthetic 系）
+4. CI（e2e.yml）
+5. 実装コード（src/*.py）
+6. Golden ファイル
 
 Golden は “仕様の結果” を保存する最下層の位置づけ。
 
@@ -77,8 +77,8 @@ Qommons.AI は以下の特徴を持つ：
 - TXT と CSV の横断検索は「類似度上位に両方が入る場合のみ発火」する
 - ナレッジ選択が単一ファイルの場合、横断検索は行われない
 
-これらは Golden 出力の評価基準に直接影響するため、  
-RAG 最適化テストは **Qommons_test_manual_v0.1.md** に基づき実施し、  
+これらは Golden 出力の評価基準に直接影響するため、
+RAG 最適化テストは **Qommons_test_manual_v0.1.md** に基づき実施し、
 結果を Golden 更新可否判断の入力とする。
 
 ---
@@ -87,19 +87,19 @@ RAG 最適化テストは **Qommons_test_manual_v0.1.md** に基づき実施し�
 
 ### 2.1 Golden は「仕様の凍結点」である
 
-Golden は正しさの絶対性を表すのではなく、  
+Golden は正しさの絶対性を表すのではなく、
 現在の設計通りに実装が動いていることを保証するための「凍結点」である。
 
 ### 2.2 役割
 
-- 回帰テストの基準  
-- 劣化検出  
-- OSS の透明性保持  
+- 回帰テストの基準
+- 劣化検出
+- OSS の透明性保持
 - 出力仕様の固定
 
 ### 2.3 Golden と設計書
 
-- 設計書（Design_*.md）が仕様であり、Golden はその結果である。  
+- 設計書（Design_*.md）が仕様であり、Golden はその結果である。
 - Golden は仕様の代替にはならない。
 
 ### 2.4 Golden が更新される唯一の理由
@@ -112,10 +112,10 @@ Golden は正しさの絶対性を表すのではなく、
 
 ### 3.1 揮発性差分（無視対象）
 
-- converted_at（日時）  
-- JSON key 順序揺れ  
-- 改行コード（LF/CRLF）  
-- 空白・インデント揺れ  
+- converted_at（日時）
+- JSON key 順序揺れ
+- 改行コード（LF/CRLF）
+- 空白・インデント揺れ
 
 ### 3.2 構造的差分（実装修正により解決すべき）
 
@@ -127,20 +127,20 @@ Design 文書の改訂によって出力仕様が変更された場合。
 
 ### 3.4 Bug による差分
 
-実装バグの結果生じた差分。  
+実装バグの結果生じた差分。
 Golden は更新せず、実装を修正する。
 
 ---
 
-## Chapter 4. Golden 更新可否判定フロー  
+## Chapter 4. Golden 更新可否判定フロー
 
 （Design → Implementation → Golden の順序を保証）
 
 ### 4.1 判定基準
 
-1. 揮発性差分 → 無視  
-2. Bug → 実装修正  
-3. 仕様変更 → Design 文書改訂  
+1. 揮発性差分 → 無視
+2. Bug → 実装修正
+3. 仕様変更 → Design 文書改訂
 4. Design 文書更新後に Golden を更新
 
 ### 4.2 フローチャート
@@ -159,11 +159,11 @@ Golden 更新は **Design → 実装 → Golden** の順序で行う。
 
 ### 4.4 PR 説明項目
 
-- 差分の種類  
-- 仕様変更の有無  
-- 該当 Design セクション  
-- CI 影響  
-- 後方互換性  
+- 差分の種類
+- 仕様変更の有無
+- 該当 Design セクション
+- CI 影響
+- 後方互換性
 
 ---
 
@@ -171,24 +171,24 @@ Golden 更新は **Design → 実装 → Golden** の順序で行う。
 
 ### 5.1 更新前チェック
 
-- PROJECT_STATUS.md  
-- Design 文書  
-- CI 設定  
+- PROJECT_STATUS.md
+- Design 文書
+- CI 設定
 - 実装依存関係
 
 ### 5.2 非破壊的変更では Golden 更新禁止
 
-空白調整・インデント修正などの非仕様変更による差分では  
+空白調整・インデント修正などの非仕様変更による差分では
 Golden を変更してはならない。
 
 ### 5.3 正式更新手順（仕様変更あり）
 
-1. Design 文書更新  
-2. 実装更新  
-3. E2E 実行  
-4. Golden 差分の確認  
-5. Golden 更新  
-6. CI グリーン確認  
+1. Design 文書更新
+2. 実装更新
+3. E2E 実行
+4. Golden 差分の確認
+5. Golden 更新
+6. CI グリーン確認
 7. PR マージ
 
 ### 5.4 コミットメッセージ例
@@ -199,7 +199,7 @@ Update Golden for convert_v2.8 spec change (colspan/rowspan support)
 
 ### 5.5 バージョン管理
 
-- Golden v1：P11〜P15（永久固定）  
+- Golden v1：P11〜P15（永久固定）
 - Golden v2：将来の仕様変更に応じて導入
 
 ---
@@ -212,15 +212,15 @@ Update Golden for convert_v2.8 spec change (colspan/rowspan support)
 
 ### 6.2 例
 
-- convert_v2.8（colspan/rowspan）  
-- validate_v0.6（章・節構造）  
+- convert_v2.8（colspan/rowspan）
+- validate_v0.6（章・節構造）
 - synthetic generator v0.3（meta schema 拡張）
 
 ### 6.3 必要な対応
 
-- Design 文書改訂  
-- Golden 更新  
-- CHANGELOG への記録  
+- Design 文書改訂
+- Golden 更新
+- CHANGELOG への記録
 - STATUS.md 更新
 
 ---
@@ -233,8 +233,8 @@ Update Golden for convert_v2.8 spec change (colspan/rowspan support)
 
 ### 7.2 例
 
-- 空白整形  
-- コメント変更  
+- 空白整形
+- コメント変更
 - ログ改善
 
 ### 7.3 Golden 更新禁止
@@ -247,21 +247,21 @@ Update Golden for convert_v2.8 spec change (colspan/rowspan support)
 
 ### 8.1 比較ルール
 
-- converted_at 比較除外  
-- 改行コード LF 統一  
-- 空白正規化  
+- converted_at 比較除外
+- 改行コード LF 統一
+- 空白正規化
 - JSON key ソート比較
 
 ### 8.2 使用ツール
 
-- pytest  
-- diff  
+- pytest
+- diff
 - 正規表現 ignore patterns
 
 ### 8.3 差分の意味付け
 
-- 等価差分 → 無視  
-- 構造差分 → 要調査  
+- 等価差分 → 無視
+- 構造差分 → 要調査
 - 意味差分 → Golden または実装の更新
 
 ---
@@ -306,15 +306,15 @@ E2E 判定の最重要箇所。
 
 ### 11.1 関係文書
 
-- GRAND_RULES  
-- Startup_Workflow  
+- GRAND_RULES
+- Startup_Workflow
 - STATUS.md
 
 ### 11.2 役割と責任
 
-- Golden 更新承認者（Reviewer）  
-- 実装者（Developer）  
-- ChatGPT アーキテクト（整合性監査）  
+- Golden 更新承認者（Reviewer）
+- 実装者（Developer）
+- ChatGPT アーキテクト（整合性監査）
 
 ### 11.3 透明性
 
@@ -338,8 +338,8 @@ P16〜が増えることで Golden v1 → v2 移行の必要性。
 
 ### 12.4 Qommons.AI 仕様との連携強化
 
-convert / validate / synthetic の出力は、  
-Qommons.AI が実際に行う前処理（HTMLタグ除去・文字列化・CSVヘッダー依存検索）  
+convert / validate / synthetic の出力は、
+Qommons.AI が実際に行う前処理（HTMLタグ除去・文字列化・CSVヘッダー依存検索）
 を踏まえて Golden として設計・維持される。
 
 特に以下を Golden 評価項目として扱う：
@@ -349,7 +349,7 @@ Qommons.AI が実際に行う前処理（HTMLタグ除去・文字列化・CSV�
 - HTML が混在した際の検索ノイズ耐性
 - 生HTMLを Golden と比較する際の情報消失率
 
-これにより、Golden は「RAGに投入した際に期待されるふるまい」を  
+これにより、Golden は「RAGに投入した際に期待されるふるまい」を
 正確に反映する基準点として運用される。
 
 ---
@@ -361,3 +361,9 @@ Golden / Breaking Change / Non-breaking Change / Legacy / meta schema など。
 ## 付録 B. 更新履歴
 
 v1.0（2025-12-07）初版制定。
+
+## 付録 C. 参照関係
+
+- gov-llm-e2e-testkit
+  Qommons.AI 上での RAG 応答挙動を観測するための外部テスト基盤。
+  Golden 資産は凍結対象として扱い、評価・消費は行わない。

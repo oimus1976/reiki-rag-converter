@@ -84,6 +84,10 @@ reiki-rag-converter（validate v3.1 / convert v2.7.1）
   - **Qommons Evaluation Framework v0.1**
     (`docs/Qommons_Evaluation_Framework_v0.1.md`)
 
+※ RAG 応答の観測データ取得には、
+外部プロジェクト「gov-llm-e2e-testkit」を利用する。
+同プロジェクトは観測データのみを提供し、
+評価・採否判断は本プロジェクト側で行う。
 
 ---
 
