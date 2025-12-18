@@ -19,6 +19,8 @@
 
 - Qommons Evaluation Framework v0.1 (Gate-based)
 
+### Added
+- Design_Master.md as single design entry point
 
 
 ---
