@@ -116,7 +116,23 @@ Qommons.AI（RAG評価）
 - Qommons_test_manual_v0.1.md
 - Qommons_Evaluation_Framework_v0.1.md
 
+### 成果物インターフェース（観測データ）
+
+Qommons.AI テスト自動化プロジェクトから
+reiki-rag-converter が受け取る成果物の形式・責務境界は、
+以下のインターフェース定義に完全に委譲される。
+
+- **Qommons_Test_Artifact_Interface_v0.1r.md**
+
+本インターフェースで定義される成果物は、
+評価・解釈・結論を一切含まない一次観測データであり、
+評価・Gate 判定・Golden 更新判断は
+すべて reiki-rag-converter 側の責務とする。
+
+本設計書は、当該成果物の内容・評価方法には立ち入らない。
+
 **前提条件**
+
 - HTMLタグはすべて削除される
 - DOM構造は無視され、文字数チャンク化される
 - TXT + CSV 横断検索は「両方が検索上位」の場合のみ成立

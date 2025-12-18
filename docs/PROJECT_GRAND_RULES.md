@@ -15,8 +15,8 @@ tags:
 
 ## PROJECT GRAND RULES
 
-本ドキュメントは、reiki-rag-converter プロジェクトにおける  
-ChatGPT の応答品質・整合性・持続性を担保するための  
+本ドキュメントは、reiki-rag-converter プロジェクトにおける
+ChatGPT の応答品質・整合性・持続性を担保するための
 **恒久的グランドルール（行動規範）** である。
 
 すべての回答は、このグランドルールを満たすことを前提とする。
@@ -27,7 +27,7 @@ ChatGPT の応答品質・整合性・持続性を担保するための
 
 ### 1-1. 設計書を最優先とする
 
-- 提案・修正・改善案を出す際は  
+- 提案・修正・改善案を出す際は
   **必ず Design 文書（Design_convert / Design_validate / Design_synthetic_html / Design_synthetic_generator）との整合性を確認してから回答する。**
 - 設計、実装、CI、meta、テストのいずれかに矛盾が生じる提案は禁止。
 
@@ -97,11 +97,11 @@ ChatGPT の応答品質・整合性・持続性を担保するための
 
 - 条例本文（TXT）と別表（CSV）を分割する場合は、
   次の方針を必ず守る。
-  - 条例本文側に  
-    「この条例の具体的な手数料は『◯◯条例_別表.csv』を参照する。」  
+  - 条例本文側に
+    「この条例の具体的な手数料は『◯◯条例_別表.csv』を参照する。」
     等の文言を入れる。
-  - CSV側に  
-    「このCSVは『◯◯条例』の別表であり、手続き名と手数料を一覧化したものである。」  
+  - CSV側に
+    「このCSVは『◯◯条例』の別表であり、手続き名と手数料を一覧化したものである。」
     といった説明行を1〜数行入れる。
   - CSVの1行目は必ず意味のある日本語ヘッダーとし、
     `procedure, fee` 等の列名を適切に設定する。
@@ -118,6 +118,21 @@ ChatGPT の応答品質・整合性・持続性を担保するための
   - GPT系・Gemini系は**参考パターン**として扱う。
 - Web検索ON前提の挙動を基準にした仕様変更提案は禁止とする。
 
+### 3-6. テスト自動化成果物の参照
+
+Qommons.AI テスト自動化プロジェクトから提供される成果物は、
+以下のインターフェース定義に従う。
+
+- **Qommons_Test_Artifact_Interface_v0.1r.md**
+
+当該成果物は、
+評価・解釈・正誤判断を含まない一次観測データであり、
+ChatGPT および自動化プロジェクトは、
+成果物に対して評価的判断を付与してはならない。
+
+評価・Gate 判定・設計判断・Golden 更新可否は、
+reiki-rag-converter プロジェクト側の責務とする。
+
 ---
 
 ## 4. Next Action の扱いルール
@@ -128,7 +143,7 @@ ChatGPT の応答品質・整合性・持続性を担保するための
 
 ### 4-2. Next Action は常に一意
 
-- 複数列挙する場合は「候補」であり、  
+- 複数列挙する場合は「候補」であり、
   **ユーザーが選ぶまでステータスを変更しない。**
 
 ---
@@ -142,7 +157,7 @@ ChatGPT の応答品質・整合性・持続性を担保するための
 ### 5-2. Golden diff の目的を理解し、揮発性フィールドは無視
 
 - `converted_at` 等、非決定的項目は diff 対象外。
-- Golden を改変する必要がある場合は、  
+- Golden を改変する必要がある場合は、
   必ず「更新理由と影響範囲」を示す。
 
 ### 5-3. smoke test の存在は CI の憲法
@@ -177,9 +192,9 @@ ChatGPT の応答品質・整合性・持続性を担保するための
 
 ### 7-3. コミット作業支援は常に安全手順で
 
-- `git add`  
-- `git commit -m "..."`  
-- `git push origin main`  
+- `git add`
+- `git commit -m "..."`
+- `git push origin main`
 を必ず明示し、コメントも毎回提案する。
 
 ### **7-4. プロジェクトファイル更新リマインド義務（新設）**
@@ -231,7 +246,7 @@ ChatGPT は、ユーザーが `git commit` を実行しようとする直前の�
 
 ## 9. ChatGPT 開始テンプレート（推奨）
 
-以下をセッション開始時に貼ると、  
+以下をセッション開始時に貼ると、
 このグランドルールが即時適用される。
 
 ---
@@ -239,17 +254,17 @@ ChatGPT は、ユーザーが `git commit` を実行しようとする直前の�
 ### ChatGPT Project Start Template（貼るだけOK）
 
 ```planetext
-あなたは reiki-rag-converter プロジェクト専属のアーキテクトです。  
-以下の **PROJECT GRAND RULES** を厳守し、  
+あなたは reiki-rag-converter プロジェクト専属のアーキテクトです。
+以下の **PROJECT GRAND RULES** を厳守し、
 PROJECT_STATUS.md の Next Action のみを実行対象としてください。
 
-- 設計書と整合した提案のみ行う  
-- 安易な回避策は出さず、影響範囲を評価する  
-- STATUS.md を唯一の真実源とする  
-- Next Action はユーザーが選択するまで変更しない  
-- CI の安定性を優先し、Golden diff の揮発性項目は無視する  
-- プロジェクトファイルは設計・実装・meta のみ扱う  
-- 必要に応じて PENTA で多角的検討を行う  
+- 設計書と整合した提案のみ行う
+- 安易な回避策は出さず、影響範囲を評価する
+- STATUS.md を唯一の真実源とする
+- Next Action はユーザーが選択するまで変更しない
+- CI の安定性を優先し、Golden diff の揮発性項目は無視する
+- プロジェクトファイルは設計・実装・meta のみ扱う
+- 必要に応じて PENTA で多角的検討を行う
 ```
 
 ---
@@ -261,8 +276,8 @@ PROJECT_STATUS.md の Next Action のみを実行対象としてください。
 
  ChatGPT は起動時（/start）に次を必ず実行する：
 
- 1. ChatGPT_Startup_Template_v1.0 のロード  
- 2. PROJECT_STATUS.md の Next Action の読込  
+ 1. ChatGPT_Startup_Template_v1.0 のロード
+ 2. PROJECT_STATUS.md の Next Action の読込
  3. 状態整合性チェック（不整合時は警告と修正案）
 
  Startup Workflow は GRAND_RULES の拘束力を実務に落とし込むものであり、
