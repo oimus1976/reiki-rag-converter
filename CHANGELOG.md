@@ -4,6 +4,28 @@
 
 ---
 
+## [v1.1] - 2026-01-02
+
+### Added
+
+- 条例別カスタマイズ質問セット（customized_question_set.json）の
+  JSON 最終構造および versioning 方針を確定
+- Execution Input Contract としての位置づけを明文化し、
+  下流（生成AIテスト自動化プロジェクト）との責務境界を固定
+- docs/design 配下に設計運用ルールを追加
+  - Issue → Design 昇格スキーム
+  - docs/ 配下ディレクトリ整理方針
+
+### Changed
+
+- Design_interface_customized_question_set_delivery.md に
+  JSON 仕様（schema_version / source_golden_question_pool 等）を追記
+
+### Notes
+
+- 本バージョンでは変換ロジック・CI・Golden 資産の変更は行っていない
+- バージョンが飛んでいるのは本バージョンからPROJECT_STATUSとバージョンを同期させたことによるもの。
+
 ## [0.5.3] - 2025-12-05
 
 ### Fixed

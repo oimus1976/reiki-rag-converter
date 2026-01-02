@@ -57,7 +57,7 @@ reiki-rag-converter × 生成AIテスト自動化 連携文書
 * 「第○条」「第○条第○項」などの抽象表現を含む質問を
 * 機械的に具体化して実行する
 
-という運用を行ってきた。
+という運用を行ってきた
 ---
 
 ### 2.2 実務上顕在化した課題
@@ -183,6 +183,148 @@ customized_question_set
 
 ---
 
+## 付録A：customized_question_set.json 仕様（確定）
+
+本節では、条例別カスタマイズ質問セットの成果物  
+`customized_question_set.json` を  
+**評価観測用の実行入力契約（Execution Input Contract）**として  
+凍結するための JSON 仕様を定義する。
+
+本仕様は、下流（生成AIテスト自動化プロジェクト）において  
+**解釈・補完・修正を行わず、そのまま実行される入力契約**である。
+
+---
+
+### A.1 versioning 方針
+
+`customized_question_set.json` は、  
+以下の 3 層で versioning を管理する。
+
+#### schema_version（JSON 構造の契約）
+
+* JSON の **ルートキー**として必須
+* `<artifact>.<major>` 形式のみを許容する  
+  （例：`customized_question_set.v1`）
+* minor / patch バージョンの概念は持たない
+* **破壊的変更が発生した場合のみ** `v2` へ更新する
+
+以下は破壊的変更に該当する：
+
+* 必須キーの削除
+* 既存キーの意味変更
+* 構造階層の変更
+
+以下は破壊的変更に該当しない：
+
+* 任意キーの追加
+* `metadata` の拡張
+* 並び順に影響しない補助情報の追加
+
+---
+
+#### source_golden_question_pool（質問母集団の識別）
+
+* `customized_question_set` 配下の必須キー
+* 本質問セットが **どの Golden Question Pool から派生したか**を示す
+* Golden Question Pool の更新時：
+  * 本キーを更新する
+  * **schema_version は更新しない**
+
+Golden の変化は  
+**「入力内容の変化」であり  
+「JSON 構造契約の変化」ではない**。
+
+---
+
+#### question_set_id（人間可読な識別子）
+
+* `customized_question_set` 配下の必須キー
+* ログ・保存・比較・人間の把握のための識別子
+* **機械判定・分岐には使用しない**
+
+---
+
+### A.2 JSON 最終構造（キー一覧・必須/任意）
+
+#### ルートレベル
+
+| キー名 | 必須 | 型 | 意味 |
+| --- | :-: | --- | --- |
+| `schema_version` | ✔ | string | JSON 構造の契約バージョン |
+| `customized_question_set` | ✔ | object | 条例別カスタマイズ質問セット本体 |
+
+---
+
+#### customized_question_set オブジェクト
+
+| キー名 | 必須 | 型 | 意味 |
+| --- | :-: | --- | --- |
+| `ordinance_id` | ✔ | string | 対象条例の識別子 |
+| `question_set_id` | ✔ | string | 人間可読な質問セット識別子 |
+| `source_golden_question_pool` | ✔ | string | 派生元 Golden Question Pool |
+| `questions` | ✔ | array | 実行順序付き質問配列 |
+| `metadata` | ✖ | object | 補助情報（非契約） |
+
+---
+
+#### questions[] 配列要素
+
+※ 配列の順序は **意味を持つ（実行順）**
+
+| キー名 | 必須 | 型 | 意味 |
+| --- | :-: | --- | --- |
+| `question_id` | ✔ | string | Golden 由来の安定識別子 |
+| `question_text` | ✔ | string | 具体化済み質問文 |
+
+---
+
+### A.3 制約および禁止事項
+
+* `questions` 配列は **1件以上を必須**とする  
+  0 件となる場合は生成失敗とし、fail-fast で処理を終了する
+* `question_set_id` の文字列解析に依存した分岐を行ってはならない
+* `metadata` は完全に非契約情報とし、以下を含めてはならない：
+  * 評価結果
+  * 正誤判定
+  * 除外理由
+  * PASS / FAIL / Gate 判定に相当する情報
+* `metadata` の追加・拡張を理由に  
+  `schema_version` を更新してはならない
+
+---
+
+### A.4 最小構成例
+
+```json
+{
+  "schema_version": "customized_question_set.v1",
+  "customized_question_set": {
+    "ordinance_id": "k518RG00000022",
+    "question_set_id": "cqset-k518RG00000022-A-v1.1",
+    "source_golden_question_pool": "A-v1.1",
+    "questions": [
+      {
+        "question_id": "A-1-Q1",
+        "question_text": "この条例の目的を分かりやすく説明してください。"
+      }
+    ]
+  }
+}
+
+---
+
+## ✅ この追記ブロックの設計的メリット
+
+- **既存設計を壊さない**
+- Execution Input Contract の  
+  - versioning
+  - JSON構造
+  - 禁止事項  
+  が **1箇所に集約**
+- 下流が **ここだけ読めば実装できる**
+
+---
+
 ### 5.4 テスト自動化プロジェクト側での扱い
 
 生成AIテスト自動化プロジェクトは：
@@ -242,7 +384,16 @@ customized_question_set
 
 ---
 
-## 8. 参考資料
+## 8. 合意状況（記録）
+
+本仕様について、生成AIテスト自動化プロジェクトより  
+「評価観測用の実行入力契約（Execution Input Contract）として受け入れる」  
+旨の回答を得ている。
+
+本合意において、質問内容・選定理由・除外判断の再解釈や修正は行われず、  
+追加の制約・変更要請はないことが確認された。
+
+## 9. 参考資料
 
 * Design_Note_Question_Instantiation.md
 * Design_Master.md
