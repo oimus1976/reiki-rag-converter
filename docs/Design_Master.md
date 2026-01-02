@@ -170,8 +170,19 @@ Golden の管理・更新ルールは **GOLDEN_POLICY_v1.0.md** に完全委譲�
   1. 既存設計で吸収できないか検討
   2. 必要な場合のみ Design_*.md を新設
   3. 本書に **必ず追記**
-
 - ChatGPT は **本書を設計の入口として扱う**
+
+### 6.1 設計書運用・構造設計に関する補助設計書
+
+- **Design_Issue_to_Doc_Promotion_Workflow_v0.1.md**  
+  Epic Issue を「設計書の下書き」として扱い、  
+  思考中の Issue から docs/ 配下の設計書へ昇格させるための  
+  設計・運用スキームを定義する。
+
+- **Design_Document_Directory_Policy_v0.1.md**  
+  docs/ 配下のディレクトリ構成と、  
+  設計書・仕様書・運用文書を段階的に整理していくための  
+  ドキュメント配置・管理方針を定義する。
 
 ---
 
