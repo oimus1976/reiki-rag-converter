@@ -102,7 +102,8 @@ Qommons.AI（RAG評価）
 - **test_e2e_design.md**
 - **.github/workflows/e2e.yml**（参照）
 
-**原則**
+#### 原則
+
 - smoke test は CI の憲法
 - exit code 5 を発生させない
 - Golden diff は「仕様の結果」であり、テストではない
@@ -131,7 +132,7 @@ reiki-rag-converter が受け取る成果物の形式・責務境界は、
 
 本設計書は、当該成果物の内容・評価方法には立ち入らない。
 
-**前提条件**
+### 前提条件
 
 - HTMLタグはすべて削除される
 - DOM構造は無視され、文字数チャンク化される
