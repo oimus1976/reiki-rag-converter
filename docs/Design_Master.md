@@ -184,6 +184,10 @@ Golden の管理・更新ルールは **GOLDEN_POLICY_v1.0.md** に完全委譲�
   設計書・仕様書・運用文書を段階的に整理していくための  
   ドキュメント配置・管理方針を定義する。
 
+- **Roadmap_v1.2.md**  
+  Epic 0（Execution Input Contract 確立）完了後の  
+  reiki-rag-converter 全体計画およびフェーズ移行方針を定義するロードマップ。
+
 ---
 
 ## 7. バージョニング方針
