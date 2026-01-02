@@ -7,14 +7,14 @@ from typing import List, Optional
 
 
 # =========================
-# Ordinance structure
+# Ordinance structure summary
 # =========================
 
 @dataclass(frozen=True)
-class OrdinanceStructure:
+class OrdinanceStructureSummary:
     """
-    条例HTMLから抽出した「構造の有無」サマリ。
-    意味解釈は一切しない。
+    customized_question_set.json 用の構造サマリ。
+    articles などの詳細構造は持たない。
     """
     has_articles: bool          # 条 が存在するか
     has_paragraphs: bool        # 項 が存在するか

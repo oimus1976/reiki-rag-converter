@@ -32,9 +32,10 @@ class OrdinanceArticle:
 
 
 @dataclass(frozen=True)
-class OrdinanceStructure:
+class OrdinanceStructureFacts:
     """
-    条例HTMLの構造サマリ（事実のみ）
+    条例HTMLから抽出したDOM構造の事実表現（完全版）
+    concretizer / generator が使用する
     """
     has_articles: bool
     has_paragraphs: bool
@@ -50,7 +51,7 @@ class OrdinanceStructure:
 # Extractor
 # =========================
 
-def extract_ordinance_structure(html: str) -> OrdinanceStructure:
+def extract_ordinance_structure(html: str) -> OrdinanceStructureFacts:
     """
     条例HTMLから、条・項・附則の存在とDOM順構造を抽出する。
 
@@ -105,7 +106,7 @@ def extract_ordinance_structure(html: str) -> OrdinanceStructure:
     else:
         first_paragraph = None
 
-    return OrdinanceStructure(
+    return OrdinanceStructureFacts(
         has_articles=has_articles,
         has_paragraphs=has_paragraphs,
         has_supplementary=has_supplementary,

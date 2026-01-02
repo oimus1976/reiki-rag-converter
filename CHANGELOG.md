@@ -4,6 +4,24 @@
 
 ---
 
+## v1.3 (2026-01-02)
+
+### Changed
+
+- Refactored OrdinanceStructure into Facts / Summary to clarify responsibilities
+- Re-verified determinism of ordinance_structure, concretizer, and writer after type refactor
+
+### Fixed
+
+- Eliminated ambiguous type usage that could cause partial-optimal design issues
+
+### Notes
+
+- Epic 4 base logic is now considered stable and re-tested
+- Generator implementation remains as the final pending task for Epic 4 completion
+
+---
+
 ## v1.2 (2026-01-02)
 
 ### Added

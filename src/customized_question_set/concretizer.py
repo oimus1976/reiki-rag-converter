@@ -6,7 +6,7 @@ from dataclasses import dataclass
 from typing import List, Optional, Tuple
 
 from customized_question_set.types import ConcreteQuestion, GoldenQuestionTemplate
-from customized_question_set.ordinance_structure import OrdinanceStructure, OrdinanceArticle
+from customized_question_set.ordinance_structure import OrdinanceStructureFacts, OrdinanceArticle
 
 
 # =========================
@@ -113,7 +113,7 @@ def _select_paragraph_positions(article: OrdinanceArticle) -> List[int]:
     return out
 
 
-def _articles_with_paragraphs(structure: OrdinanceStructure) -> List[OrdinanceArticle]:
+def _articles_with_paragraphs(structure: OrdinanceStructureFacts) -> List[OrdinanceArticle]:
     return [a for a in structure.articles if len(a.paragraphs) > 0]
 
 
@@ -143,7 +143,7 @@ def _is_article_only_template(t: GoldenQuestionTemplate) -> bool:
 
 def concretize_questions(
     templates: List[GoldenQuestionTemplate],
-    structure: OrdinanceStructure,
+    structure: OrdinanceStructureFacts,
     *,
     source_golden_question_pool: str,
 ) -> List[ConcreteQuestion]:
