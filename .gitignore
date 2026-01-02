@@ -121,6 +121,11 @@ Desktop.ini
 # local test artifacts
 test_results/
 
+# python cache
+__pycache__/
+**/__pycache__/
+*.pyc
+
 ######################################
 # END
 ######################################
