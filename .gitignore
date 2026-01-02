@@ -118,6 +118,9 @@ Desktop.ini
 # Golden ファイル（比較用）を必ず追跡
 !golden_md/**
 
+# local test artifacts
+test_results/
+
 ######################################
 # END
 ######################################
