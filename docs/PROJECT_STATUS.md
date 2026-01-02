@@ -1,6 +1,6 @@
 ---
 title: PROJECT_STATUS
-version: v1.1
+version: v1.2
 doc_type: status
 project: reiki-rag-converter
 created: 2025-12-06
@@ -38,6 +38,10 @@ tags:
 - **条例別カスタマイズ質問セットの JSON 最終構造・versioning 方針の確定**
 - **customized_question_set.json を Execution Input Contract として凍結**
 - **外部連携プロジェクト（gov-llm-e2e-testkit）との責務境界の確定**
+- **Epic 4: 条例別カスタマイズ質問セット生成ロジック基盤の実装完了**
+  - ordinance_structure による条例構造（条・項・附則）の事実抽出
+  - Coverage Policy v0.1.1 に基づく concretizer 実装
+  - 決定性・再現性を担保した質問具体化ロジックの確立
 
 ---
 
@@ -46,12 +50,15 @@ tags:
 - convert_v2.8（表構造の高度化：colspan/rowspan・別記様式対応）
 - validate_v0.6（編・章・節の階層認識）
 - synthetic_generator_v0.3（meta schema 拡張：P16〜P20）
+- Epic 4: generator 実装およびサンプル成果物生成
+  - Golden Question Pool A 読み込み
+  - customized_question_set.json の実生成（1条例）
 
 ---
 
 ## 4. Next Action（次に唯一実施すべきタスク）
 
-- **GOLDEN_POLICY_v1.0（Golden 更新制度の文書化）を正式に作成する**
+- **Epic 4: generator を実装し、k518RG00000022 の customized_question_set.json を1本生成する**
 
 ---
 
@@ -83,6 +90,8 @@ Golden Question Pool A および Golden Ordinance Set は
 - Design_synthetic_html_v0.2.md
 - Design_synthetic_generator_v0.2.md
 - Design_interface_customized_question_set_delivery.md
+- docs/policy/Coverage_Policy_v0.1.1.md
+- docs/design/customized_question_set/Design_Concretizer_v0.1.md
 - test_plan.md / test_e2e_design.md
 - CI: .github/workflows/e2e.yml
 
