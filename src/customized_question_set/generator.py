@@ -57,3 +57,68 @@ def generate_customized_question_set(
 
     # 5. 決定的に書き出す
     write_customized_question_set(data, output_path)
+
+# generator.py（CLI用ラッパー部だけの修正例）
+
+
+from pathlib import Path
+
+# ★ここは "from customized_question_set.types import SCHEMA_VERSION" をしない
+import customized_question_set.types as types_mod
+
+
+def _resolve_schema_version() -> str:
+    """
+    types.py にある「実在する」schema_version 定数を拾う。
+    見つからない場合は、候補名と dir() を出して落とす（推測で固定しない）。
+    """
+    candidates = [
+        "SCHEMA_VERSION",
+        "CUSTOMIZED_QUESTION_SET_SCHEMA_VERSION",
+        "SCHEMA_VERSION_CUSTOMIZED_QUESTION_SET",
+        "SCHEMA_VERSION_V1",
+    ]
+    for name in candidates:
+        val = getattr(types_mod, name, None)
+        if isinstance(val, str) and val.strip():
+            return val
+
+    exported = [n for n in dir(types_mod) if "VERSION" in n]
+    raise RuntimeError(
+        "schema_version constant not found in customized_question_set.types. "
+        f"Checked: {candidates}. Found VERSION-like names: {exported}. "
+        "Define a schema version constant in types.py, or adjust candidates."
+    )
+
+
+def generate_from_html_path(
+    *,
+    ordinance_html_path: Path,
+    output_dir: Path,
+    question_pool_version: str = "A",
+) -> None:
+    html_text = ordinance_html_path.read_text(encoding="utf-8")
+
+    # ここは既に用意した関数名に合わせて（まだ未検証なので、まずは既存実装に寄せる）
+    from customized_question_set.generator import generate_customized_question_set  # 自分自身の既存関数
+    from customized_question_set.types import build_question_set_id, extract_ordinance_id_from_html
+
+    schema_version = _resolve_schema_version()
+    target_ordinance_id = extract_ordinance_id_from_html(ordinance_html_path, html_text)
+
+    question_set_id = build_question_set_id(
+        ordinance_id=target_ordinance_id,
+        question_pool_version=question_pool_version,
+        schema_version=schema_version,
+    )
+
+    output_path = output_dir / "customized_question_set.json"
+
+    generate_customized_question_set(
+        html=html_text,
+        target_ordinance_id=target_ordinance_id,
+        source_golden_question_pool=question_pool_version,
+        question_set_id=question_set_id,
+        schema_version=schema_version,
+        output_path=output_path,
+    )
