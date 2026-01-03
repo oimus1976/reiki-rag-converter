@@ -126,6 +126,18 @@ __pycache__/
 **/__pycache__/
 *.pyc
 
+# build / packaging
+*.egg-info/
+dist/
+build/
+
+# local artifacts
+artifacts/tmp_*/
+tmp_*.json
+
+# local data
+data/
+
 ######################################
 # END
 ######################################
