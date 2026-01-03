@@ -1,0 +1,39 @@
+{
+  "schema_version": "0.1",
+  "question_set_id": "customized_question_set:k518RG00000022:v1",
+  "source_golden_question_pool": "GQPA:v1.1",
+  "target_ordinance_id": "k518RG00000022",
+  "generated_at": "2026-01-02T23:52:57.532490+00:00",
+  "questions": [
+    {
+      "question_id": "GQPA:v1.1:Q1",
+      "text": "この条例の目的は何ですか。",
+      "source_template_id": "Q1"
+    },
+    {
+      "question_id": "GQPA:v1.1:Q3:a1",
+      "text": "第1条はどのような内容を定めていますか。",
+      "source_template_id": "Q3"
+    },
+    {
+      "question_id": "GQPA:v1.1:Q3:a34",
+      "text": "第34条はどのような内容を定めていますか。",
+      "source_template_id": "Q3"
+    },
+    {
+      "question_id": "GQPA:v1.1:Q3:a68",
+      "text": "第68条はどのような内容を定めていますか。",
+      "source_template_id": "Q3"
+    },
+    {
+      "question_id": "GQPA:v1.1:Q12:a1:a68",
+      "text": "第1条と第68条の関係はどのようになっていますか。",
+      "source_template_id": "Q12"
+    },
+    {
+      "question_id": "GQPA:v1.1:Q12:a1:a34",
+      "text": "第1条と第34条の関係はどのようになっていますか。",
+      "source_template_id": "Q12"
+    }
+  ]
+}
