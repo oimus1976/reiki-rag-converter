@@ -25,10 +25,9 @@ def test_generate_customized_question_set_snapshot(tmp_path: Path):
         target_ordinance_id="k518RG00000022",
         source_golden_question_pool="GQPA:v1.1",
         question_set_id="customized_question_set:k518RG00000022:v1",
-        schema_version="0.1",
+        schema_version="0.2",
         output_path=output_dir / "customized_question_set.json",
     )
-
 
     actual = load_json(output_dir / "customized_question_set.json")
     expected = load_json(
