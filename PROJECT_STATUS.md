@@ -1,10 +1,10 @@
 ---
 title: PROJECT_STATUS
-version: v1.3
+version: v1.4
 doc_type: status
 project: reiki-rag-converter
 created: 2025-12-06
-updated: 2026-01-02
+updated: 2026-01-04
 author: Sumio Nishioka + ChatGPT
 tags:
   - project-management
@@ -48,7 +48,29 @@ tags:
   - ordinance_structure / concretizer / writer の ad-hoc 検証
   - 同一入力 → 同一出力（決定性）を確認
 
-※ Epic 4 は **generator 未実装のため未完了**（基盤は健全化済み）
+※ Epic 4 は Epic 6 にて実データ検証まで完了済み
+
+### Epic 5（CLI 再現導線整備）
+
+- customized_question_set CLI の安定化
+- ordinance ID 自動検出・逐次実行スクリプトの整備
+- 実行 manifest 出力による再現性担保
+
+### Epic 6（Invariant 保証・回帰テスト）
+
+- Execution Input Contract v0.1 の不変条件（Invariant）確定
+- fail-fast 実装（質問集合空禁止）
+- pytest / E2E / 実データ（10条例）による検証完了
+- Execution Input Contract v0.1 を「運用可能な契約」として確定
+
+### Epic 7（Execution Input Contract v0.2 設計）
+
+- Execution Input Contract v0.2 の設計原則・意味論を確定
+- Core / Extension Fields の区分と責務定義
+- question_set_id / schema_version の意味論確定
+- Invariants / Consumer Interpretation Rules の集約
+- **Design_Execution_Input_Contract_v0.2.md を freeze 可能な状態で完成**
+- v0.1 Consumer との完全後方互換を保証
 
 ---
 
@@ -63,13 +85,14 @@ tags:
 - generator 実装（接続層）
   - Golden Question Pool A 読み込み
   - ordinance_structure → concretizer → writer の接続
-- customized_question_set.json の実生成（1条例：k518RG00000022）
+- customized_question_set.json の実生成（最小1条例）
 
 ---
 
 ## 4. Next Action（次に唯一実施すべきタスク）
 
-- **Epic 4: generator を実装し、k518RG00000022 の customized_question_set.json を1本生成する**
+Execution Input Contract v0.2 を前提として、
+generator / CLI の非破壊対応（schema_version=0.2, Extension Fields 出力）を行う
 
 ---
 
@@ -86,7 +109,7 @@ HTML / Markdown ナレッジ差分が RAG 応答に与える影響を
 採否判断・優劣判定は行わない。
 
 Golden Question Pool A および Golden Ordinance Set は  
-凍結資産として扱い、同プロジェクトの F4 フェーズでは消費しない。
+凍結資産として扱い、同プロジェクトの評価フェーズでは消費しない。
 
 ---
 
@@ -96,6 +119,7 @@ Golden Question Pool A および Golden Ordinance Set は
 - AI_Development_Standard_v1.0.md
 - ChatGPT_Startup_Template_v1.0.md
 - ChatGPT_Startup_Workflow_v1.0.md
+- Design_Execution_Input_Contract_v0.2.md
 - Design_convert_v2.6.md
 - Design_synthetic_html_v0.2.md
 - Design_synthetic_generator_v0.2.md

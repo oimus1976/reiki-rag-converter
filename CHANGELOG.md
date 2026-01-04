@@ -4,6 +4,24 @@
 
 ---
 
+## v1.4 (2026-01-04)
+
+### Added
+
+- Execution Input Contract v0.2 の設計書を追加（Design_Execution_Input_Contract_v0.2.md）
+- Core / Extension Fields 区分および Consumer Rules を明文化
+
+### Changed
+
+- PROJECT_STATUS を更新し、Epic 7（Execution Input Contract v0.2 設計）を Close
+- Execution Input Contract の位置づけを「成果物」から「長期運用可能な入力契約」として明確化
+
+### Fixed
+
+- Epic 6 までに確立された Invariants を v0.2 設計に正式に継承
+
+---
+
 ## v1.3 (2026-01-02)
 
 ### Changed
