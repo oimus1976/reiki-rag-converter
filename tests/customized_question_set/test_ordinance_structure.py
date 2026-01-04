@@ -26,6 +26,7 @@ def test_single_article_no_paragraph():
 
     assert len(structure.articles) == 1
     assert structure.articles[0].index == 1
+    assert structure.articles[0].number == 1
     assert structure.articles[0].paragraphs == []
 
 
@@ -43,6 +44,7 @@ def test_single_article_with_paragraphs():
     assert len(structure.articles) == 1
     article = structure.articles[0]
     assert article.index == 1
+    assert article.number == 1
     assert len(article.paragraphs) == 2
     assert [p.index for p in article.paragraphs] == [1, 2]
 
@@ -58,6 +60,7 @@ def test_multiple_articles():
     assert structure.has_supplementary is False
 
     assert [a.index for a in structure.articles] == [1, 2, 3]
+    assert [a.number for a in structure.articles] == [1, 2, 3]
 
 
 def test_with_supplementary():

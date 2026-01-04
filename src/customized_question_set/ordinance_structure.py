@@ -2,10 +2,11 @@
 
 from __future__ import annotations
 
+import re
 from dataclasses import dataclass
 from typing import List, Optional
 
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, Tag
 
 
 # =========================
@@ -27,6 +28,7 @@ class OrdinanceArticle:
     条のDOM上の事実表現
     """
     index: int               # DOM順（1始まり）
+    number: int              # HTML上の条番号（数字部のみ）
     element_id: Optional[str]
     paragraphs: List[OrdinanceParagraph]
 
@@ -51,6 +53,41 @@ class OrdinanceStructureFacts:
 # Extractor
 # =========================
 
+_DIGIT_TABLE = str.maketrans(
+    {
+        "０": "0",
+        "１": "1",
+        "２": "2",
+        "３": "3",
+        "４": "4",
+        "５": "5",
+        "６": "6",
+        "７": "7",
+        "８": "8",
+        "９": "9",
+    }
+)
+
+
+def _normalize_digits(value: str) -> str:
+    return value.translate(_DIGIT_TABLE)
+
+
+def _parse_article_number(article_el: Tag) -> Optional[int]:
+    """
+    条の表示番号（第○条の○ の数字部のみ）を抽出する。
+    - 数字部が取得できない場合は None を返す
+    - 文字列の解釈は行わず、数字部分の抽出のみ
+    """
+    text = article_el.get_text(" ", strip=True)
+    match = re.search(r"第\s*([0-9０-９]+)", text)
+    if not match:
+        return None
+    try:
+        return int(_normalize_digits(match.group(1)))
+    except ValueError:
+        return None
+
 def extract_ordinance_structure(html: str) -> OrdinanceStructureFacts:
     """
     条例HTMLから、条・項・附則の存在とDOM順構造を抽出する。
@@ -70,6 +107,7 @@ def extract_ordinance_structure(html: str) -> OrdinanceStructureFacts:
 
     for a_idx, article_el in enumerate(article_elements, start=1):
         article_id = article_el.get("id")
+        article_number = _parse_article_number(article_el)
 
         # --- 項の抽出 ---
         # 項は <div class="paragraph"> を想定
@@ -87,6 +125,7 @@ def extract_ordinance_structure(html: str) -> OrdinanceStructureFacts:
         articles.append(
             OrdinanceArticle(
                 index=a_idx,
+                number=article_number if article_number is not None else a_idx,
                 element_id=article_id,
                 paragraphs=paragraphs,
             )

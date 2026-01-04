@@ -63,14 +63,51 @@ def _cap(items: List[ConcreteQuestion], max_n: int) -> List[ConcreteQuestion]:
 # Coverage Policy v0.1.1 selection rules (fact-only inputs)
 # =========================
 
-def _select_article_positions(n: int) -> List[int]:
+def _article_number(article: OrdinanceArticle) -> int:
+    """
+    条番号として使用する値を決定する（number を優先）。
+    """
+    return article.number if isinstance(article.number, int) else article.index
+
+
+def _unique_article_numbers(articles: List[OrdinanceArticle]) -> List[int]:
+    """
+    条番号の重複を除去し、DOM順のまま返す。
+    """
+    seen = set()
+    nums: List[int] = []
+    for article in articles:
+        num = _article_number(article)
+        if num not in seen:
+            seen.add(num)
+            nums.append(num)
+    return nums
+
+
+def _index_articles_by_number(articles: List[OrdinanceArticle]) -> dict[int, OrdinanceArticle]:
+    """
+    条番号→最初に出現した OrdinanceArticle へのマップ。
+    """
+    mapping: dict[int, OrdinanceArticle] = {}
+    for article in articles:
+        num = _article_number(article)
+        if num not in mapping:
+            mapping[num] = article
+    return mapping
+
+
+def _select_article_positions(valid_article_numbers: List[int]) -> List[int]:
     """
     1-based positions: [1, ceil(n/2), n] unique, preserving order.
     """
-    if n <= 0:
+    if not valid_article_numbers:
         return []
-    mid = (n + 1) // 2  # ceil(n/2)
-    candidates = [1, mid, n]
+    mid_idx = (len(valid_article_numbers) - 1) // 2
+    candidates = [
+        valid_article_numbers[0],
+        valid_article_numbers[mid_idx],
+        valid_article_numbers[-1],
+    ]
     out: List[int] = []
     for x in candidates:
         if x not in out:
@@ -78,19 +115,23 @@ def _select_article_positions(n: int) -> List[int]:
     return out
 
 
-def _select_article_pairs(n: int) -> List[Tuple[int, int]]:
+def _select_article_pairs(valid_article_numbers: List[int]) -> List[Tuple[int, int]]:
     """
     1-based pairs:
       always (1, n)
       and if n>=3 then (1, ceil(n/2))
     unique, preserving order.
     """
-    if n <= 0:
+    if not valid_article_numbers:
         return []
-    mid = (n + 1) // 2
-    pairs = [(1, n)]
-    if n >= 3:
-        pairs.append((1, mid))
+    mid_idx = (len(valid_article_numbers) - 1) // 2
+    first = valid_article_numbers[0]
+    last = valid_article_numbers[-1]
+    mid = valid_article_numbers[mid_idx]
+
+    pairs = [(first, last)]
+    if len(valid_article_numbers) >= 3:
+        pairs.append((first, mid))
     out: List[Tuple[int, int]] = []
     for p in pairs:
         if p not in out:
@@ -111,10 +152,6 @@ def _select_paragraph_positions(article: OrdinanceArticle) -> List[int]:
         if x not in out:
             out.append(x)
     return out
-
-
-def _articles_with_paragraphs(structure: OrdinanceStructureFacts) -> List[OrdinanceArticle]:
-    return [a for a in structure.articles if len(a.paragraphs) > 0]
 
 
 # =========================
@@ -153,7 +190,8 @@ def concretize_questions(
     """
     concrete: List[ConcreteQuestion] = []
 
-    n_articles = len(structure.articles)
+    article_numbers = _unique_article_numbers(structure.articles)
+    article_by_number = _index_articles_by_number(structure.articles)
 
     for t in templates:
         # ---- Structural exclusion (Policy §8 minimal) ----
@@ -166,7 +204,7 @@ def concretize_questions(
 
         # ---- Relation (e.g., Q12) ----
         if _is_relation_template(t):
-            pairs = _select_article_pairs(n_articles)
+            pairs = _select_article_pairs(article_numbers)
             qs: List[ConcreteQuestion] = []
             for (a1, a2) in pairs:
                 text = _replace_two_articles(t.text, a1, a2)
@@ -177,41 +215,33 @@ def concretize_questions(
 
         # ---- Article + Paragraph (e.g., Q4) ----
         if _is_article_paragraph_template(t):
-            # Primary: select among all articles by positions
-            article_positions = _select_article_positions(n_articles)
+            # Primary: select among articles that have paragraphs
+            articles_with_paragraphs = [a for a in structure.articles if len(a.paragraphs) > 0]
+            article_numbers_with_paragraphs = _unique_article_numbers(articles_with_paragraphs)
+            article_with_paragraph_map = _index_articles_by_number(articles_with_paragraphs)
             qs: List[ConcreteQuestion] = []
 
-            for a_pos in article_positions:
-                article = structure.articles[a_pos - 1]
+            for a_num in _select_article_positions(article_numbers_with_paragraphs):
+                article = article_with_paragraph_map.get(a_num)
+                if article is None or len(article.paragraphs) == 0:
+                    continue
+
                 para_positions = _select_paragraph_positions(article)
                 for p_pos in para_positions:
-                    text = _replace_article_once(t.text, a_pos)
+                    text = _replace_article_once(t.text, a_num)
                     text = _replace_paragraph_once(text, p_pos)
-                    qid = _make_question_id(source_golden_question_pool, t.template_id, a1=a_pos, p1=p_pos)
+                    qid = _make_question_id(source_golden_question_pool, t.template_id, a1=a_num, p1=p_pos)
                     qs.append(ConcreteQuestion(question_id=qid, text=text, source_template_id=t.template_id))
 
-            # Safety: if still empty but paragraphs exist somewhere, reselect on "articles with paragraphs"
-            if not qs and structure.has_paragraphs:
-                awp = _articles_with_paragraphs(structure)
-                m = len(awp)
-                if m > 0:
-                    sel = _select_article_positions(m)
-                    for idx_in_awp in sel:
-                        article = awp[idx_in_awp - 1]
-                        a_pos = article.index  # original DOM position
-                        para_positions = _select_paragraph_positions(article)
-                        for p_pos in para_positions:
-                            text = _replace_article_once(t.text, a_pos)
-                            text = _replace_paragraph_once(text, p_pos)
-                            qid = _make_question_id(source_golden_question_pool, t.template_id, a1=a_pos, p1=p_pos)
-                            qs.append(ConcreteQuestion(question_id=qid, text=text, source_template_id=t.template_id))
+            # Safety: if still empty but paragraphs are reported, do not fabricate;
+            # allow Coverage Policy to skip this template.
 
             concrete.extend(_cap(qs, MAX_Q_ARTICLE_PARA))
             continue
 
         # ---- Article only (e.g., Q3) ----
         if _is_article_only_template(t):
-            article_positions = _select_article_positions(n_articles)
+            article_positions = _select_article_positions(article_numbers)
             qs: List[ConcreteQuestion] = []
             for a_pos in article_positions:
                 text = _replace_article_once(t.text, a_pos)

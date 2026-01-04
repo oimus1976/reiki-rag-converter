@@ -99,3 +99,37 @@ def test_concretize_is_deterministic():
 
     assert [q.question_id for q in qs1] == [q.question_id for q in qs2]
     assert [q.text for q in qs1] == [q.text for q in qs2]
+
+
+def test_concretize_uses_existing_article_numbers_only():
+    """
+    DOM上の article 要素数が実際の条番号より多くても、
+    存在しない条番号を生成しない。
+    """
+    html = """
+    <html>
+      <body>
+        <div class="article"><p>第1条 本文</p></div>
+        <div class="article"><p>第2条 本文</p></div>
+        <div class="article"><p>第2条 本文 重複1</p></div>
+        <div class="article"><p>第2条 本文 重複2</p></div>
+      </body>
+    </html>
+    """
+    st = _structure_from_html(html)
+
+    templates = [
+        GoldenQuestionTemplate(
+            template_id="Q3",
+            text="第○条の内容を要約してください。",
+            requires_article=True,
+            requires_paragraph=False,
+            requires_supplementary=False,
+        )
+    ]
+
+    qs = concretize_questions(templates, st, source_golden_question_pool="A")
+
+    assert qs
+    # 生成された条番号は実在する {1,2} のみに限られる
+    assert {q.question_id for q in qs} <= {"A:Q3:a1", "A:Q3:a2"}
