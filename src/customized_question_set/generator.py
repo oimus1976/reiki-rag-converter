@@ -90,35 +90,3 @@ def _resolve_schema_version() -> str:
         "Define a schema version constant in types.py, or adjust candidates."
     )
 
-
-def generate_from_html_path(
-    *,
-    ordinance_html_path: Path,
-    output_dir: Path,
-    question_pool_version: str = "A",
-) -> None:
-    html_text = ordinance_html_path.read_text(encoding="utf-8")
-
-    # ここは既に用意した関数名に合わせて（まだ未検証なので、まずは既存実装に寄せる）
-    from customized_question_set.generator import generate_customized_question_set  # 自分自身の既存関数
-    from customized_question_set.types import build_question_set_id, extract_ordinance_id_from_html
-
-    schema_version = _resolve_schema_version()
-    target_ordinance_id = extract_ordinance_id_from_html(ordinance_html_path, html_text)
-
-    question_set_id = build_question_set_id(
-        ordinance_id=target_ordinance_id,
-        question_pool_version=question_pool_version,
-        schema_version=schema_version,
-    )
-
-    output_path = output_dir / "customized_question_set.json"
-
-    generate_customized_question_set(
-        html=html_text,
-        target_ordinance_id=target_ordinance_id,
-        source_golden_question_pool=question_pool_version,
-        question_set_id=question_set_id,
-        schema_version=schema_version,
-        output_path=output_path,
-    )

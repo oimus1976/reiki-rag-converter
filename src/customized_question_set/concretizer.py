@@ -224,4 +224,9 @@ def concretize_questions(
         qid = _make_question_id(source_golden_question_pool, t.template_id)
         concrete.append(ConcreteQuestion(question_id=qid, text=t.text, source_template_id=t.template_id))
 
+    if structure.has_articles and len(concrete) == 0:
+        raise ValueError(
+            "Invariant violation: ordinance has articles but no questions were generated"
+        )
+
     return concrete
