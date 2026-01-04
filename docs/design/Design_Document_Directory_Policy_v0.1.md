@@ -1,7 +1,7 @@
 ---
 title: Design_Document_Directory_Policy
 version: v0.1
-status: proposal
+status: fixed
 scope:
   - documentation
   - repository_structure
