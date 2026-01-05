@@ -1,0 +1,27 @@
+---
+id: synRG00000013_P13_table_simple
+title: ○サンプル条例（表のある条）
+number: 条例第3号
+promulgation_date: 令和5年6月1日
+promulgation_date_normalized: 2023-06-01
+source_html: synRG00000013_P13_table_simple.html
+converted_at: 2025-12-06 09:09:52
+converter_version: 2.7
+tags:
+  - 例規
+  - 条例
+---
+
+# ○サンプル条例（表のある条）
+
+○サンプル条例（表のある条）
+令和5年6月1日
+条例第3号
+## 第1条（(料金)）
+
+料金は次の表のとおりとする。
+
+| 区分 | 料金 |
+| --- | --- |
+| 一般 | 100円 |
+| 学生 | 50円 |
