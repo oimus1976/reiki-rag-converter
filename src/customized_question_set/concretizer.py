@@ -55,6 +55,10 @@ def _replace_two_articles(text: str, a1: int, a2: int) -> str:
     return t
 
 
+def _normalize_legal_term(text: str) -> str:
+    return text.replace("条例", "法規文書")
+
+
 def _cap(items: List[ConcreteQuestion], max_n: int) -> List[ConcreteQuestion]:
     return items[:max_n]
 
@@ -208,6 +212,7 @@ def concretize_questions(
             qs: List[ConcreteQuestion] = []
             for (a1, a2) in pairs:
                 text = _replace_two_articles(t.text, a1, a2)
+                text = _normalize_legal_term(text)
                 qid = _make_question_id(source_golden_question_pool, t.template_id, a1=a1, a2=a2)
                 qs.append(ConcreteQuestion(question_id=qid, text=text, source_template_id=t.template_id))
             concrete.extend(_cap(qs, MAX_Q_RELATION))
@@ -230,6 +235,7 @@ def concretize_questions(
                 for p_pos in para_positions:
                     text = _replace_article_once(t.text, a_num)
                     text = _replace_paragraph_once(text, p_pos)
+                    text = _normalize_legal_term(text)
                     qid = _make_question_id(source_golden_question_pool, t.template_id, a1=a_num, p1=p_pos)
                     qs.append(ConcreteQuestion(question_id=qid, text=text, source_template_id=t.template_id))
 
@@ -245,6 +251,7 @@ def concretize_questions(
             qs: List[ConcreteQuestion] = []
             for a_pos in article_positions:
                 text = _replace_article_once(t.text, a_pos)
+                text = _normalize_legal_term(text)
                 qid = _make_question_id(source_golden_question_pool, t.template_id, a1=a_pos)
                 qs.append(ConcreteQuestion(question_id=qid, text=text, source_template_id=t.template_id))
             concrete.extend(_cap(qs, MAX_Q_ARTICLE))
@@ -252,7 +259,8 @@ def concretize_questions(
 
         # ---- Non-placeholder (e.g., Q1/Q2/Q5...) ----
         qid = _make_question_id(source_golden_question_pool, t.template_id)
-        concrete.append(ConcreteQuestion(question_id=qid, text=t.text, source_template_id=t.template_id))
+        text = _normalize_legal_term(t.text)
+        concrete.append(ConcreteQuestion(question_id=qid, text=text, source_template_id=t.template_id))
 
     if structure.has_articles and len(concrete) == 0:
         raise ValueError(
