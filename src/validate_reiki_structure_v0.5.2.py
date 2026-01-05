@@ -214,10 +214,29 @@ def summarize_all_logs(logs: dict):
 # ============================================================
 # ファイル保存
 # ============================================================
+def _to_serializable(obj):
+    """
+    JSON に直接書けない型を出力用にのみ正規化する。
+    - set: ソート済み list へ変換
+    - dict/list/tuple: 再帰的に処理
+    """
+    if isinstance(obj, dict):
+        return {k: _to_serializable(v) for k, v in obj.items()}
+
+    if isinstance(obj, set):
+        # repr ベースのキーで安定ソートし、内容は変更しない
+        return sorted((_to_serializable(v) for v in obj), key=repr)
+
+    if isinstance(obj, (list, tuple)):
+        return [_to_serializable(v) for v in obj]
+
+    return obj
+
+
 def write_json(path: str, data):
     os.makedirs(os.path.dirname(path), exist_ok=True)
     with open(path, "w", encoding="utf-8", newline="\n") as f:
-        json.dump(data, f, ensure_ascii=False, indent=2)
+        json.dump(_to_serializable(data), f, ensure_ascii=False, indent=2)
 
 
 # ============================================================
