@@ -11,6 +11,26 @@ from customized_question_set.writer import write_customized_question_set
 from customized_question_set.question_pool_a import load_golden_question_pool_a
 
 
+SKIP_REASON_NO_PARAGRAPHS = "no_paragraphs_in_ordinance"
+
+
+def _build_skipped_questions(
+    templates: List[GoldenQuestionTemplate],
+    structure: "OrdinanceStructureFacts",
+) -> List[dict[str, str]]:
+    skipped: List[dict[str, str]] = []
+    if not structure.has_paragraphs:
+        for t in templates:
+            if t.requires_paragraph:
+                skipped.append(
+                    {
+                        "source_template_id": t.template_id,
+                        "reason": SKIP_REASON_NO_PARAGRAPHS,
+                    }
+                )
+    return skipped
+
+
 def generate_customized_question_set(
     *,
     html: str,
@@ -38,6 +58,8 @@ def generate_customized_question_set(
         source_golden_question_pool=source_golden_question_pool,
     )
 
+    skipped_questions = _build_skipped_questions(templates, structure)
+
     # 4. JSON ルート（dict）を組み立てる（順序は writer に委譲）
     data = {
         "schema_version": schema_version,
@@ -53,6 +75,9 @@ def generate_customized_question_set(
             }
             for q in questions
         ],
+        "extensions": {
+            "skipped_questions": skipped_questions,
+        },
     }
 
     # 5. 決定的に書き出す

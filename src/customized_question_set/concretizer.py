@@ -239,8 +239,20 @@ def concretize_questions(
                     qid = _make_question_id(source_golden_question_pool, t.template_id, a1=a_num, p1=p_pos)
                     qs.append(ConcreteQuestion(question_id=qid, text=text, source_template_id=t.template_id))
 
-            # Safety: if still empty but paragraphs are reported, do not fabricate;
-            # allow Coverage Policy to skip this template.
+            if not qs and structure.has_paragraphs:
+                # Coverage Policy §5.3: ensure at least one Q4 if any paragraph exists.
+                fallback_article = next(
+                    (a for a in structure.articles if len(a.paragraphs) > 0),
+                    None,
+                )
+                if fallback_article is not None:
+                    a_num = _article_number(fallback_article)
+                    p_pos = fallback_article.paragraphs[0].index
+                    text = _replace_article_once(t.text, a_num)
+                    text = _replace_paragraph_once(text, p_pos)
+                    text = _normalize_legal_term(text)
+                    qid = _make_question_id(source_golden_question_pool, t.template_id, a1=a_num, p1=p_pos)
+                    qs.append(ConcreteQuestion(question_id=qid, text=text, source_template_id=t.template_id))
 
             concrete.extend(_cap(qs, MAX_Q_ARTICLE_PARA))
             continue

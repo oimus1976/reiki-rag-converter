@@ -15,6 +15,7 @@ ROOT_KEY_ORDER = [
     "target_ordinance_id",
     "generated_at",
     "questions",
+    "extensions",
 ]
 
 

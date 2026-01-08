@@ -100,6 +100,13 @@
       "text": "法規文書全体を100字以内で要約してください。",
       "source_template_id": "Q18"
     }
-  ]
+  ],
+  "extensions": {
+    "skipped_questions": [
+      {
+        "source_template_id": "Q4",
+        "reason": "no_paragraphs_in_ordinance"
+      }
+    ]
+  }
 }
-
