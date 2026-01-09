@@ -3,7 +3,7 @@
   "question_set_id": "customized_question_set:k518RG00000022:v1",
   "source_golden_question_pool": "GQPA:v1.1",
   "target_ordinance_id": "k518RG00000022",
-  "generated_at": "2026-01-04T15:08:23.857007+00:00",
+  "generated_at": "2026-01-09T03:27:35.984499+00:00",
   "questions": [
     {
       "question_id": "GQPA:v1.1:Q1",
@@ -29,6 +29,21 @@
       "question_id": "GQPA:v1.1:Q3:a31",
       "text": "第31条の内容を要約してください。",
       "source_template_id": "Q3"
+    },
+    {
+      "question_id": "GQPA:v1.1:Q4:a1:p1",
+      "text": "第1条第1項の内容を説明してください。",
+      "source_template_id": "Q4"
+    },
+    {
+      "question_id": "GQPA:v1.1:Q4:a16:p1",
+      "text": "第16条第1項の内容を説明してください。",
+      "source_template_id": "Q4"
+    },
+    {
+      "question_id": "GQPA:v1.1:Q4:a31:p1",
+      "text": "第31条第1項の内容を説明してください。",
+      "source_template_id": "Q4"
     },
     {
       "question_id": "GQPA:v1.1:Q5",
@@ -102,11 +117,6 @@
     }
   ],
   "extensions": {
-    "skipped_questions": [
-      {
-        "source_template_id": "Q4",
-        "reason": "no_paragraphs_in_ordinance"
-      }
-    ]
+    "skipped_questions": []
   }
 }
