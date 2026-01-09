@@ -10,7 +10,7 @@ from customized_question_set.ordinance_structure import OrdinanceStructureFacts,
 
 
 # =========================
-# Limits (Coverage Policy v0.1.1 - standard caps)
+# Limits (Coverage Policy v0.1.2 - standard caps)
 # =========================
 MAX_Q_ARTICLE = 3      # e.g., Q3
 MAX_Q_ARTICLE_PARA = 6 # e.g., Q4
@@ -64,7 +64,7 @@ def _cap(items: List[ConcreteQuestion], max_n: int) -> List[ConcreteQuestion]:
 
 
 # =========================
-# Coverage Policy v0.1.1 selection rules (fact-only inputs)
+# Coverage Policy v0.1.2 selection rules (fact-only inputs)
 # =========================
 
 def _article_number(article: OrdinanceArticle) -> int:
@@ -189,7 +189,7 @@ def concretize_questions(
     source_golden_question_pool: str,
 ) -> List[ConcreteQuestion]:
     """
-    Coverage Policy v0.1.1 を忠実に適用し、テンプレを具体化する。
+    Coverage Policy v0.1.2 を忠実に適用し、テンプレを具体化する。
     生成順は意味を持つ（生成順＝実行順）ため、順序を保持する。
     """
     concrete: List[ConcreteQuestion] = []

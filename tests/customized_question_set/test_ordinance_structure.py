@@ -72,6 +72,8 @@ def test_with_supplementary():
 
     assert structure.has_articles is True
     assert structure.has_supplementary is True
+    assert len(structure.supplementary) == 1
+    assert structure.supplementary[0].heading_text.startswith("附則")
 
 
 def test_no_article_returns_empty_structure():

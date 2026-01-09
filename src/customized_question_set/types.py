@@ -39,6 +39,19 @@ class GoldenQuestionTemplate:
 
 
 # =========================
+# Skipped question
+# =========================
+
+@dataclass(frozen=True)
+class SkippedQuestion:
+    """
+    extensions.skipped_questions に出力するスキップ理由。
+    """
+    source_template_id: str
+    reason: str
+
+
+# =========================
 # Concrete question
 # =========================
 

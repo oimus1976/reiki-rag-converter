@@ -61,6 +61,11 @@
       "source_template_id": "Q7"
     },
     {
+      "question_id": "GQPA:v1.1:Q8",
+      "text": "附則がある場合、その内容を要約し、本則との関係を説明してください。",
+      "source_template_id": "Q8"
+    },
+    {
       "question_id": "GQPA:v1.1:Q9",
       "text": "住民（関係者）が特に注意すべき点を説明してください。",
       "source_template_id": "Q9"

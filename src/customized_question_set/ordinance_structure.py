@@ -34,6 +34,16 @@ class OrdinanceArticle:
 
 
 @dataclass(frozen=True)
+class OrdinanceSupplementary:
+    """
+    附則見出しのDOM上の事実表現
+    """
+    index: int               # DOM順（1始まり）
+    element_id: Optional[str]
+    heading_text: str
+
+
+@dataclass(frozen=True)
 class OrdinanceStructureFacts:
     """
     条例HTMLから抽出したDOM構造の事実表現（完全版）
@@ -44,6 +54,7 @@ class OrdinanceStructureFacts:
     has_supplementary: bool
 
     articles: List[OrdinanceArticle]
+    supplementary: List[OrdinanceSupplementary]
 
     first_article: Optional[OrdinanceArticle]
     first_paragraph: Optional[OrdinanceParagraph]
@@ -88,6 +99,37 @@ def _parse_article_number(article_el: Tag) -> Optional[int]:
     except ValueError:
         return None
 
+
+def _is_supplementary_heading_text(text: str) -> bool:
+    normalized = re.sub(r"\s+", "", text)
+    return normalized.startswith("附則")
+
+
+def _collect_supplementary_headings(soup: BeautifulSoup) -> List[OrdinanceSupplementary]:
+    body = soup.body if soup.body is not None else soup
+    supplementary: List[OrdinanceSupplementary] = []
+    captured_ids: set[int] = set()
+
+    for tag in body.find_all(True):
+        heading_text = tag.get_text(" ", strip=True)
+        if not heading_text:
+            continue
+        if not _is_supplementary_heading_text(heading_text):
+            continue
+        if any(id(parent) in captured_ids for parent in tag.parents if isinstance(parent, Tag)):
+            continue
+        supplementary.append(
+            OrdinanceSupplementary(
+                index=len(supplementary) + 1,
+                element_id=tag.get("id"),
+                heading_text=heading_text,
+            )
+        )
+        captured_ids.add(id(tag))
+
+    return supplementary
+
+
 def extract_ordinance_structure(html: str) -> OrdinanceStructureFacts:
     """
     条例HTMLから、条・項・附則の存在とDOM順構造を抽出する。
@@ -110,8 +152,8 @@ def extract_ordinance_structure(html: str) -> OrdinanceStructureFacts:
         article_number = _parse_article_number(article_el)
 
         # --- 項の抽出 ---
-        # 項は <div class="paragraph"> を想定
-        paragraph_elements = article_el.select(".paragraph")
+        # 項は <div class="clause"> を想定
+        paragraph_elements = article_el.select(".clause")
 
         paragraphs: List[OrdinanceParagraph] = []
         for p_idx, para_el in enumerate(paragraph_elements, start=1):
@@ -135,8 +177,8 @@ def extract_ordinance_structure(html: str) -> OrdinanceStructureFacts:
     has_paragraphs = any(len(a.paragraphs) > 0 for a in articles)
 
     # --- 附則の存在判定 ---
-    # class="supplementary" を附則とみなす（内容は見ない）
-    has_supplementary = soup.select_one(".supplementary") is not None
+    supplementary = _collect_supplementary_headings(soup)
+    has_supplementary = len(supplementary) > 0
 
     first_article = articles[0] if articles else None
 
@@ -150,6 +192,7 @@ def extract_ordinance_structure(html: str) -> OrdinanceStructureFacts:
         has_paragraphs=has_paragraphs,
         has_supplementary=has_supplementary,
         articles=articles,
+        supplementary=supplementary,
         first_article=first_article,
         first_paragraph=first_paragraph,
     )

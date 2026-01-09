@@ -6,27 +6,37 @@ from typing import List
 
 from customized_question_set.ordinance_structure import extract_ordinance_structure
 from customized_question_set.concretizer import concretize_questions
-from customized_question_set.types import GoldenQuestionTemplate
+from customized_question_set.types import GoldenQuestionTemplate, SkippedQuestion
 from customized_question_set.writer import write_customized_question_set
 from customized_question_set.question_pool_a import load_golden_question_pool_a
 
 
 SKIP_REASON_NO_PARAGRAPHS = "no_paragraphs_in_ordinance"
+SKIP_REASON_SUPPLEMENTARY_NOT_EXTRACTED = "supplementary_not_extracted"
 
 
 def _build_skipped_questions(
     templates: List[GoldenQuestionTemplate],
     structure: "OrdinanceStructureFacts",
-) -> List[dict[str, str]]:
-    skipped: List[dict[str, str]] = []
+) -> List[SkippedQuestion]:
+    skipped: List[SkippedQuestion] = []
     if not structure.has_paragraphs:
         for t in templates:
             if t.requires_paragraph:
                 skipped.append(
-                    {
-                        "source_template_id": t.template_id,
-                        "reason": SKIP_REASON_NO_PARAGRAPHS,
-                    }
+                    SkippedQuestion(
+                        source_template_id=t.template_id,
+                        reason=SKIP_REASON_NO_PARAGRAPHS,
+                    )
+                )
+    if not structure.supplementary:
+        for t in templates:
+            if t.requires_supplementary:
+                skipped.append(
+                    SkippedQuestion(
+                        source_template_id=t.template_id,
+                        reason=SKIP_REASON_SUPPLEMENTARY_NOT_EXTRACTED,
+                    )
                 )
     return skipped
 
@@ -51,7 +61,7 @@ def generate_customized_question_set(
     # 2. Golden Question Pool A の読み込み（そのまま）
     templates: List[GoldenQuestionTemplate] = load_golden_question_pool_a()
 
-    # 3. 質問具体化（Coverage Policy v0.1.1 を内包）
+    # 3. 質問具体化（Coverage Policy v0.1.2 を内包）
     questions = concretize_questions(
         templates,
         structure,
@@ -76,7 +86,13 @@ def generate_customized_question_set(
             for q in questions
         ],
         "extensions": {
-            "skipped_questions": skipped_questions,
+            "skipped_questions": [
+                {
+                    "source_template_id": q.source_template_id,
+                    "reason": q.reason,
+                }
+                for q in skipped_questions
+            ],
         },
     }
 
