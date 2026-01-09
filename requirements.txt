@@ -1,3 +1,6 @@
+# Development-only convenience file
+# Canonical dependencies are defined in pyproject.toml
+
 beautifulsoup4
 chardet
 pytest
