@@ -4,6 +4,38 @@
 
 ---
 
+## v1.5 (2026-01-09)
+
+### Fixed
+
+- 条例構造抽出における **項（clause）の誤認識**を修正  
+  - paragraph（本文段落）と clause（項）を意味的に分離
+  - clause の有無に基づき Q4 / Q8 の生成可否を判定するよう修正
+- 上記修正により、**項を含む条例で Q4（条＋項質問）が正しく生成される**ことを確認
+- **附則（supplementary）抽出ロジックを見直し**、  
+  heading テキスト（"附則"）を基準に Q8 を正しく生成するよう修正
+
+### Added
+
+- `extensions.skipped_questions` における skip 理由の意味論を明確化
+  - clause 非存在時のみ Q4 / Q8 を非生成とし、正当な理由を記録
+- Coverage Policy v0.1.2 を追加
+  - Q4（条＋項）・Q8（附則）に関する生成条件・除外条件を明文化
+
+### Changed
+
+- Coverage Policy を v0.1.1 → **v0.1.2** に更新
+  - 「生成可否」と「評価可否」を分離した設計意図を明確化
+- Execution Input Contract v0.2 前提での質問生成結果を更新
+  - Golden Ordinance 10 本に対し Q4 / Q8 を含む生成結果を確認
+
+### Notes
+
+- 本リリースは **評価ロジックや評価結果の変更を含まない**
+- question_set/ は引き続き Git 管理外とし、成果物は zip 配布を正とする
+
+---
+
 ## v1.4 (2026-01-04)
 
 ### Added
