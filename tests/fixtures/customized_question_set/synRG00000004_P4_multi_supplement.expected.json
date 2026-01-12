@@ -1,0 +1,117 @@
+{
+  "schema_version": "0.2",
+  "question_set_id": "customized_question_set:synRG00000004:v1",
+  "source_golden_question_pool": "GQPA:v1.1",
+  "target_ordinance_id": "synRG00000004",
+  "generated_at": "2026-01-12T12:16:59.954415+00:00",
+  "questions": [
+    {
+      "question_id": "GQPA:v1.1:Q1",
+      "text": "この法規文書の目的を分かりやすく説明してください。",
+      "source_template_id": "Q1"
+    },
+    {
+      "question_id": "GQPA:v1.1:Q2",
+      "text": "この法規文書が何条で構成されているかを示し、それぞれの条の概要を説明してください。",
+      "source_template_id": "Q2"
+    },
+    {
+      "question_id": "GQPA:v1.1:Q3:a1",
+      "text": "第1条の内容を要約してください。",
+      "source_template_id": "Q3"
+    },
+    {
+      "question_id": "GQPA:v1.1:Q3:a2",
+      "text": "第2条の内容を要約してください。",
+      "source_template_id": "Q3"
+    },
+    {
+      "question_id": "GQPA:v1.1:Q3:a3",
+      "text": "第3条の内容を要約してください。",
+      "source_template_id": "Q3"
+    },
+    {
+      "question_id": "GQPA:v1.1:Q5",
+      "text": "この法規文書で定められている義務・禁止事項をすべて抽出し、箇条書きで説明してください。",
+      "source_template_id": "Q5"
+    },
+    {
+      "question_id": "GQPA:v1.1:Q6",
+      "text": "この法規文書に基づく手続きの全体的な流れを、関連条文を引用しながら説明してください。",
+      "source_template_id": "Q6"
+    },
+    {
+      "question_id": "GQPA:v1.1:Q7",
+      "text": "他の条文の解釈に影響を与える条があれば、引用して説明してください。",
+      "source_template_id": "Q7"
+    },
+    {
+      "question_id": "GQPA:v1.1:Q8",
+      "text": "附則がある場合、その内容を要約し、本則との関係を説明してください。",
+      "source_template_id": "Q8"
+    },
+    {
+      "question_id": "GQPA:v1.1:Q9",
+      "text": "住民（関係者）が特に注意すべき点を説明してください。",
+      "source_template_id": "Q9"
+    },
+    {
+      "question_id": "GQPA:v1.1:Q10",
+      "text": "例外規定がある場合、その内容を説明してください。なければ「ない」と答えてください。",
+      "source_template_id": "Q10"
+    },
+    {
+      "question_id": "GQPA:v1.1:Q11",
+      "text": "定義されている用語があれば、定義条を引用して説明してください。",
+      "source_template_id": "Q11"
+    },
+    {
+      "question_id": "GQPA:v1.1:Q12:a1:a3",
+      "text": "第1条と第3条の関係性を説明してください。",
+      "source_template_id": "Q12"
+    },
+    {
+      "question_id": "GQPA:v1.1:Q12:a1:a2",
+      "text": "第1条と第2条の関係性を説明してください。",
+      "source_template_id": "Q12"
+    },
+    {
+      "question_id": "GQPA:v1.1:Q13",
+      "text": "回答の根拠となる条文を引用して示してください。",
+      "source_template_id": "Q13"
+    },
+    {
+      "question_id": "GQPA:v1.1:Q14",
+      "text": "判断基準を本文の記載箇所を引用しながらまとめてください。",
+      "source_template_id": "Q14"
+    },
+    {
+      "question_id": "GQPA:v1.1:Q15",
+      "text": "法規文書を「目的→手続き→義務→例外→附則」の順に再構成してください。",
+      "source_template_id": "Q15"
+    },
+    {
+      "question_id": "GQPA:v1.1:Q16",
+      "text": "第三者に説明する場合の最適な説明順を、条文に基づいて示してください。",
+      "source_template_id": "Q16"
+    },
+    {
+      "question_id": "GQPA:v1.1:Q17",
+      "text": "法規文書全体を統合して説明してください。",
+      "source_template_id": "Q17"
+    },
+    {
+      "question_id": "GQPA:v1.1:Q18",
+      "text": "法規文書全体を100字以内で要約してください。",
+      "source_template_id": "Q18"
+    }
+  ],
+  "extensions": {
+    "skipped_questions": [
+      {
+        "source_template_id": "Q4",
+        "reason": "no_paragraphs_in_ordinance"
+      }
+    ]
+  }
+}

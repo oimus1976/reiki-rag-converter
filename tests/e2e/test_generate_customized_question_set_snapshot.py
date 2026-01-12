@@ -17,21 +17,26 @@ def normalize(payload: dict) -> dict:
 
 
 def test_generate_customized_question_set_snapshot(tmp_path: Path):
-    html = Path("data/k518RG00000022.html").read_text(encoding="utf-8")
+    html = Path(
+        "tests/fixtures/synthetic_html/synRG00000015_P15_supplements.html"
+    ).read_text(encoding="utf-8")
     output_dir = tmp_path / "out"
 
     generate_customized_question_set(
         html=html,
-        target_ordinance_id="k518RG00000022",
+        target_ordinance_id="synRG00000015",
         source_golden_question_pool="GQPA:v1.1",
-        question_set_id="customized_question_set:k518RG00000022:v1",
+        question_set_id="customized_question_set:synRG00000015:v1",
         schema_version="0.2",
         output_path=output_dir / "customized_question_set.json",
     )
 
     actual = load_json(output_dir / "customized_question_set.json")
     expected = load_json(
-        Path("tests/fixtures/customized_question_set/k518RG00000022.expected.json")
+        Path(
+            "tests/fixtures/customized_question_set/"
+            "synRG00000015_P15_supplements.expected.json"
+        )
     )
 
     assert normalize(actual) == normalize(expected)
