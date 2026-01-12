@@ -4,6 +4,14 @@
 
 ---
 
+## v1.4r (2026-01-12)
+
+### Fixed
+
+- refactor: rename customized_question_set to reiki_rag_customized_question_set to fix import reproducibility across environments
+
+---
+
 ## v1.4 (2026-01-04)
 
 ### Added
