@@ -1,371 +1,969 @@
 # reiki-rag-converter
 
-自治体例規（条例・規則等）の HTML を解析し、  
-構造化テキストや AI 利用向けデータを生成するためのツール群です。
+## 1. はじめに
 
-本リポジトリは、例規文書を **再現可能・検証可能な形で加工する**ことを目的としています。
+このリポジトリは、自治体の条例・規程などの法規HTMLを入力として、
 
----
+- 変換・生成処理を行う前提として、条例HTMLの構造を確認する（validate）
+- 人が読みやすいテキスト形式に変換する（convert）
+- 生成AI評価・RAG用途向けの質問セットを生成する
 
-## 📌 特徴
+ためのツール群を提供します。
 
-- 地方自治体の **例規HTML**（条・項・号・附則・表）を  
-  **AI/RAG が扱いやすい Markdown/TXT** に自動変換する  
-- validate（構造解析） → convert（変換）の2ステップ  
-- YAML frontmatter で RAG 用メタデータを付与  
-- E2E テスト＋Golden diffにより高品質を維持  
-- QommonsAI / LangChain / ChatGPT RAG などの前処理に最適
+主な利用シーンは次のとおりです。
 
----
+- 公開されている条例HTMLを元に、構造として読み取れるかを確認したい
+- 条例HTMLを、AIや人が扱いやすいテキストに変換したい
+- 条例ごとに、**評価・検証に使える質問セット**を安定的に生成したい
 
-## 📘 このプロジェクトについて
-
-**reiki-rag-converter** は、市町村等が公開する **例規集 HTML** を  
-**構造解析 → 変換 → AI/RAG 読み込み用テキスト** に仕上げるためのツールです。
-
-特に地方自治体の例規は：
-
-- HTML構造がバラバラ  
-- 附則が複数存在  
-- 表（table）が混在  
-- 年度改正が多く細かい
-
-といった特徴があり、**既存のHTMLパーサでは正しく扱えません**。
-
-本ツールは、それらの事情を考慮し、
-
-- validate（構造解析・異常検出）
-- convert（条文・附則・表をMarkdownへ変換）
-- RAG用frontmatter付与
-
-をワンストップで実現します。
+本ツールは、**実際の条例HTML（本番データ）をユーザーが自前で用意し、
+ローカルのファイルまたはフォルダを指定して処理する**ことを前提に設計されています。
 
 ---
 
-## 🧩 機能 (Features)
+### 本READMEの前提と対象読者
 
-- ✔ **条・項・号** を DOM から正確に抽出  
-- ✔ **附則（複数）** に対応  
-- ✔ **表（table）** を Markdown 表に変換  
-- ✔ **構造イベント（S系）と例外（E系）** を出力  
-- ✔ **YAML frontmatter** でメタデータを付与  
-- ✔ **validate→convert の整合性** を E2E テストで保証  
-- ✔ **Golden diff** による回帰テスト  
-- ✔ OSS として拡張しやすい設計（colspan・別記様式など将来拡張）
+本READMEは、以下のような利用者を想定しています。
+
+- 自治体や関連組織で、条例HTMLを扱っている人
+- 生成AI評価やRAG検証の入力データを、自分で制御したい人
+
+一方で、次の点はあらかじめ前提としています。
+
+- 実運用で使う条例HTMLは **Git管理しません**
+  （ライセンス・容量・再現性の観点から）
+- README に記載するコマンド例は、
+  **実在しうるローカルパス**を前提とします
+- リポジトリ内の `synthetic_html/` は
+  **開発・テスト・CI専用の合成データ**です
+  実利用時にこれを使う必要はありません
 
 ---
 
-## 🏁 Quick Start
+### READMEで分かること／分からないこと
 
-### 1. リポジトリの取得
+このREADMEを読むことで、次のことが分かります。
+
+- 何を入力として用意すればよいか
+- validate / convert / 質問セット生成を、どう実行するか
+- 本ツールが「どこまで責任を持つか」
+
+一方、次の内容はREADMEの範囲外です。
+
+- 各処理の詳細な設計意図
+- テストやCIで使われている合成データの構造
+- Execution Input Contract の完全な仕様定義
+
+これらは `docs/` 配下の設計・仕様文書で扱います。
+
+---
+
+## 2. 前提条件（重要）
+
+本ツールを利用するにあたり、以下の前提条件を必ず確認してください。
+ここに書かれている内容は、**動作要件というより「運用上の前提」**です。
+
+---
+
+### Python バージョン
+
+本ツールは **Python 3.10 以上**を前提としています。
+
+```text
+Python >= 3.10
+```
+
+- ローカル実行・CLI 実行・pytest いずれも同一バージョンを想定しています
+- 仮想環境（venv 等）の利用を推奨します
+
+※ Python の細かい環境差異（OS 依存のパス表記など）はありますが、
+本READMEでは **Windows / macOS / Linux いずれでも成立する前提**で記述します。
+
+---
+
+### 実条例HTMLは Git 管理しない
+
+本ツールは、**実際の条例HTMLを Git リポジトリに含めることを前提としていません**。
+
+理由は次のとおりです。
+
+- 公開元・取得方法・ライセンス条件が条例ごとに異なる
+- ファイルサイズ・改正履歴が大きくなりがち
+- 「どのHTMLを使ったか」は **利用者側で管理すべき入力条件**
+
+そのため、README やコマンド例では、
+
+- 実在しうる **ローカルパス**
+- 利用者が自前で用意した HTML ファイル／フォルダ
+
+を前提に説明します。
+
+```text
+例（ローカル環境）:
+C:\work\ordinances\k518RG00000022.html
+/home/user/ordinances/
+```
+
+※ リポジトリ内に含まれる `synthetic_html/` は
+**開発・テスト・CI 用の合成データ**であり、
+実運用で使用することは想定していません。
+
+---
+
+### 本 README は「実運用向け手順」である
+
+この README に記載している手順・コマンド例は、
+
+- 実際の条例HTMLを入力として
+- ローカル環境で処理を行う
+
+**実運用を想定したもの**です。
+
+そのため、以下は README の対象外です。
+
+- テスト・CI 内部での実行方法
+- `synthetic_html/` を前提とした操作
+- pytest の詳細な実行設計
+
+これらは **開発者向け情報**として `docs/` 配下で扱います。
+
+---
+
+### この章のまとめ
+
+- Python 3.10 以上が必要
+- 実条例HTMLは **利用者が用意し、Git 管理しない**
+- README は **実データを使う人のための入口**
+
+この前提を理解した上で、
+次章から具体的な利用手順（validate / convert / 質問セット生成）を説明します。
+
+---
+
+## 3. 想定利用シーン
+
+本ツールは、以下のような利用シーンを想定しています。
+
+---
+
+### ローカルに条例HTMLを保存している
+
+- 国・自治体・公式サイト等から取得した条例HTMLを
+  **ローカルのフォルダに保存している**
+- ファイルの取得方法や正当性は、本ツールでは扱いません
+- 「HTMLが手元にある」ことを前提に処理を行います
+
+```text
+例:
+C:\work\ordinances\
+  ├─ ordinance_A.html
+  ├─ ordinance_B.html
+  └─ ordinance_C.html
+```
+
+---
+
+### フォルダ単位で validate / convert したい
+
+- 単一ファイルだけでなく、**フォルダ単位でまとめて処理したい**
+- HTML構造のチェック（validate）や、
+  テキスト化（convert）を **一括で実行したい**
+
+```text
+・条例HTMLフォルダを指定して validate
+・同じフォルダ（または別フォルダ）に convert 結果を出力
+```
+
+といった流れを想定しています。
+
+---
+
+### AI / RAG に投入する前処理をしたい
+
+- 条例HTMLをそのまま AI / RAG に投入するのではなく、
+  **前処理済みの安定した入力データを用意したい**
+- 具体的には：
+
+  - 構造が把握できる形への変換
+  - 再現性のある質問セット生成
+  - 実行入力（Execution Input）としての整形
+
+を目的とした利用を想定しています。
+
+---
+
+### 本ツールが扱わないこと
+
+以下は、本ツールのスコープ外です。
+
+- 条例HTMLの制度的な適否の判断
+- 内容の正誤や解釈の評価
+- AI の回答品質そのものの評価
+
+本ツールはあくまで
+**「入力データを機械的・再現可能に整えるための前処理」**を担います。
+
+---
+
+### この章のまとめ
+
+- 手元にある条例HTMLを使う
+- フォルダ単位で機械的に処理する
+- AI / RAG に渡す前段の整形を行う
+
+この前提に合致する場合、本ツールはそのまま利用できます。
+
+---
+
+## 4. インストール
+
+本ツールは **ローカル実行前提**です。
+以下の手順でリポジトリを取得し、Python 環境にインストールします。
+
+---
+
+### 4.1 リポジトリの取得（clone）
+
+任意の作業ディレクトリで、GitHub リポジトリを clone します。
 
 ```bash
 git clone https://github.com/oimus1976/reiki-rag-converter.git
 cd reiki-rag-converter
-pip install -r requirements.txt
 ```
 
-### 2. 検証（例）
+※ 本リポジトリには **実条例HTMLは含まれません**。
+
+---
+
+### 4.2 Python 環境の準備
+
+- Python **3.10 以上**を使用してください
+- 仮想環境（venv）の利用を推奨します
 
 ```bash
-python scripts/validate_html.py data/sample.html
+python -m venv .venv
+source .venv/bin/activate  # Windows の場合は .venv\Scripts\activate
 ```
 
-### 3. 変換（例）
+---
+
+### 4.3 インストール（editable 推奨）
+
+開発・実運用のいずれでも、
+**editable install（`-e`）を推奨**します。
 
 ```bash
-python scripts/convert_html.py data/sample.html
+pip install -e .
+```
+
+これにより：
+
+- ソースコードの変更が即座に反映される
+- CLI / モジュール実行の挙動が一致する
+- 複数端末・再現実行時の差異を減らせる
+
+という利点があります。
+
+---
+
+### 4.4 動作確認（任意）
+
+インストール確認として、pytest を実行できます。
+
+```bash
+python -m pytest
+```
+
+※ テストでは **synthetic_html（合成データ）**を使用します  
+※ 実条例HTMLは不要です
+
+※ pytest が失敗しても、利用者の実行環境には影響しません  
+※ 実利用では pytest の実行は必須ではありません
+
+---
+
+### この章のまとめ
+
+- clone して
+- Python 環境を用意し
+- `pip install -e .` でインストールする
+
+ここまで完了すれば、
+次章以降の **validate / convert / 質問セット生成**を実行できます。
+
+---
+
+## 5. validate（構造解析）【実利用者向け】
+
+`validate` は、条例HTMLを **変換・生成処理に進める前段**として、
+**構造的に読み取れるかどうかを機械的に確認するためのコマンド**です。
+
+ここで行うのは「正しさの判定」ではなく、
+**後続処理で扱える形式かどうかのチェック**です。
+
+---
+
+### 5.1 入力形式
+
+`validate` は、以下のいずれかを入力として受け付けます。
+
+- 単一の条例HTMLファイル
+- 条例HTMLを複数含むフォルダ
+
+```text
+入力対象 = 「ローカルに存在する条例HTML」
+```
+
+※ Git 管理されている必要はありません
+※ 本リポジトリ内に配置する必要もありません
+
+---
+
+### 5.2 実行例（Windows）
+
+#### 単一ファイルを指定する場合
+
+```powershell
+python src/validate_reiki_structure_v0.5.2.py ^
+  --source C:\reiki\ordinances\k518RG00000022.html
+```
+
+#### フォルダを指定する場合（配下を一括処理）
+
+```powershell
+python src/validate_reiki_structure_v0.5.2.py ^
+  --source C:\reiki\ordinances\
 ```
 
 ---
 
-## 🔁 Customized Question Set（質問セット生成）
+### 5.3 実行例（macOS / Linux）
 
-本プロジェクトでは、例規 HTML と Golden Question Pool を入力として、
-AI テストや評価観測に利用可能な質問セット
-`customized_question_set.json` を生成できます。
+#### 単一ファイル
 
-この質問セットは、
-同一入力条件に対して **常に同一内容が生成される** よう設計されており、
-CLI コマンドから再現可能に実行できます。
+```bash
+python src/validate_reiki_structure_v0.5.2.py \
+  --source /home/user/reiki/ordinances/k518RG00000022.html
+```
 
----
+#### フォルダ指定
 
-### 前提条件
-
-- Python 3.10 以上
-- 本リポジトリを clone 済み
-- 依存ライブラリがインストール済み（`pip install -r requirements.txt` 等）
-
-※ `reiki_rag_customized_question_set` は `src/` 配下に配置されているため、
-リポジトリルートでコマンドを実行してください。
+```bash
+python src/validate_reiki_structure_v0.5.2.py \
+  --source /home/user/reiki/ordinances/
+```
 
 ---
 
-### 🛠 CLI による生成
+### 5.4 validate の出力について
 
-以下の CLI を実行することで、
-`customized_question_set.json` を指定したディレクトリに生成します。
+`validate` は **標準出力に結果を表示**します。
+
+- 正常終了（exit code 0）
+  → 後続の `convert` や質問セット生成に進めます
+- エラー終了（exit code ≠ 0）
+  → HTML 構造上、処理できない箇所が検出されています
+
+ここで出力されるメッセージは：
+
+- 条・項・附則などの **構造的な検出結果**
+- 変換・生成処理に進めない **機械的な理由**
+
+を示すものであり、
+**条例の内容や妥当性を評価するものではありません**。
+
+---
+
+### 5.5 典型的な使いどころ
+
+- 自前で収集した条例HTMLが、機械処理に使えるか確認したい
+- フォルダ単位でまとめて convert / 質問生成を行う前の事前確認
+- HTML取得方法（スクレイピング等）を変えた際の影響確認
+
+---
+
+### この章のまとめ
+
+- `validate` は **実条例HTMLを前提**に使う
+- 入力は **ファイルでもフォルダでも可**
+- 目的は「評価」ではなく **後続処理の可否確認**
+- 成功すれば、次は `convert` に進める
+
+---
+
+## 6. convert（変換）【実利用者向け】
+
+`convert` は、`validate` を通過した条例HTMLを
+**AI / RAG / 検索・要約処理などに投入しやすいテキスト形式**へ変換するためのコマンドです。
+
+この処理は **構造解析の結果を前提**としており、
+通常は `validate` の後に実行します。
+
+---
+
+### 6.1 前提条件
+
+- 入力となる条例HTMLは `validate` で確認済みであること
+- 入力は **ローカルに存在する実条例HTML**
+- 出力先ディレクトリは **ユーザーが指定**する
+
+`convert` は条例の内容を解釈・評価するものではなく、
+**HTML構造をテキスト表現へ写像する処理**です。
+
+---
+
+### 6.2 入力形式
+
+`convert` が受け付ける入力は以下です。
+
+- 単一の条例HTMLファイル
+- 条例HTMLを複数含むフォルダ
+
+```text
+入力 = validate 可能な条例HTML
+出力 = テキスト化された条例本文
+```
+
+---
+
+### 6.3 出力形式
+
+`convert` の出力は以下の形式です。
+
+- **TXT（プレーンテキスト）**
+- **Markdown 互換の段落構造**
+
+主な特徴：
+
+- 条・項・附則などの構造は **テキスト上で明示**
+- 表・箇条書きは、読み取り可能なテキスト表現に展開
+- HTMLタグや装飾要素は出力されない
+
+---
+
+### 6.4 実行例（Windows）
+
+#### 単一ファイルを変換する場合
+
+```powershell
+python src/convert_reiki_v2.7.py ^
+  --source C:\reiki\ordinances\k518RG00000022.html ^
+  --output C:\reiki\converted\
+```
+
+#### フォルダを指定する場合
+
+```powershell
+python src/convert_reiki_v2.7.py ^
+  --source C:\reiki\ordinances\ ^
+  --output C:\reiki\converted\
+```
+
+---
+
+### 6.5 実行例（macOS / Linux）
+
+```bash
+python src/convert_reiki_v2.7.py \
+  --source /home/user/reiki/ordinances/ \
+  --output /home/user/reiki/converted/
+```
+
+---
+
+### 6.6 文字コード・改行仕様
+
+`convert` の出力仕様は以下のとおりです。
+
+- **文字コード**：UTF-8
+- **改行コード**：
+
+  - 実行環境に依存せず LF（`\n`）を使用
+- BOM は付与されません
+
+このため、
+
+- Windows / macOS / Linux 間での差分比較
+- Git 管理外ファイルとしての利用
+- RAG 入力時の安定性
+
+を損ないません。
+
+---
+
+### 6.7 convert の結果をどう使うか
+
+変換後のテキストは、例えば以下に利用できます。
+
+- RAG / 検索用インデックス作成
+- AI への直接投入（要約・Q&A・比較）
+- 質問セット生成（次章）
+
+---
+
+### この章のまとめ
+
+- `convert` は **validate 後に実行**
+- 実条例HTMLを **テキスト化**する処理
+- 出力は UTF-8 / LF の安定した形式
+- 次は **質問セット生成**に進める
+
+---
+
+## 7. Customized Question Set の生成
+
+本章で扱う **Customized Question Set** は、
+条例本文を AI に評価・観測させるための **入力データ（Execution Input）** を生成する仕組みです。
+
+これは **エンドユーザー向けの質問生成**ではなく、
+**AI の挙動を安定的に観測・比較するための評価用入力**である点に注意してください。
+
+---
+
+### 7.1 この機能の位置づけ
+
+Customized Question Set は、次のような用途を想定しています。
+
+- RAG / LLM が条例をどのように解釈・応答するかの観測
+- 入力条件を固定した上でのモデル比較
+- 回答品質の差分検証・再現実験
+
+つまり、
+
+> **「よい質問を作る」ための機能ではなく、
+> 「同じ条件で AI を評価する」ための入力生成**
+
+を目的としています。
+
+---
+
+### 7.2 前提条件
+
+- 対象となる条例HTMLはローカルに存在している
+- 条例HTMLは `validate` / `convert` を経て、
+  構造が把握できている
+- 実条例HTMLは **Git 管理しない**
+
+Customized Question Set は、
+条例HTMLを直接読み取り、**条例ごとの質問セット（JSON）**を生成します。
+
+---
+
+### 7.3 実行方法（CLI）
+
+#### 基本形（単一条例）
 
 ```bash
 python -m reiki_rag_customized_question_set.cli \
-  --ordinance-html <ORDINANCE_HTML_PATH> \
-  --output <OUTPUT_DIR> \
-  --schema-version <SCHEMA_VERSION> \
-  --target-ordinance-id <ORDINANCE_ID> \
-  --question-set-id <QUESTION_SET_ID> \
-  --question-pool <GOLDEN_QUESTION_POOL_ID>
+  --ordinance-html /path/to/ordinance/k518RG00000022.html \
+  --output /path/to/output/ \
+  --schema-version 0.2 \
+  --question-pool GQPA:v1.1
 ```
 
----
-
-### 🧾 引数一覧
-
-| 引数                      | 説明                                              |
-| ----------------------- | ----------------------------------------------- |
-| `--ordinance-html`      | 対象となる条例 HTML ファイルのパス                            |
-| `--output`              | 出力ディレクトリ（`customized_question_set.json` が生成される） |
-| `--schema-version`      | 出力 JSON に設定される `schema_version`                 |
-| `--target-ordinance-id` | 対象条例の ID                                        |
-| `--question-set-id`     | 生成される質問セットの一意 ID                                |
-| `--question-pool`       | 使用する Golden Question Pool の識別子                  |
-
-※ CLI は引数の意味解釈や妥当性判断を行わず、
-　指定された値をそのまま generator に渡します。
-
----
-
-### 📌 生成例（既存成果物の再生成）
-
-以下は、リポジトリ内に固定されている
-`customized_question_set.json` を、
-同一条件で再生成するための例です。
+#### オプション指定例（ID 明示）
 
 ```bash
 python -m reiki_rag_customized_question_set.cli \
-  --ordinance-html data/k518RG00000022.html \
-  --output artifacts/tmp_k518RG00000022 \
-  --schema-version 0.1 \
+  --ordinance-html /path/to/ordinance/k518RG00000022.html \
+  --output /path/to/output/ \
+  --schema-version 0.2 \
   --target-ordinance-id k518RG00000022 \
   --question-set-id customized_question_set:k518RG00000022:v1 \
   --question-pool GQPA:v1.1
 ```
 
-実行成功時：
+---
 
-```text
-[OK] customized_question_set generated at: artifacts/tmp_k518RG00000022
-```
+### 7.4 出力物について
+
+生成される主な成果物は以下です。
+
+- `customized_question_set.json`
+
+この JSON は、
+
+- 条例ごとに固定された質問集合
+- 評価・実行用の **入力契約（Execution Input Contract）**
+
+として扱われます。
 
 ---
 
-### 🔍 再現性の確認（diff）
+### 7.5 Execution Input Contract の考え方（簡潔版）
 
-生成結果が既存成果物と一致することは、
-以下のように確認できます。
+Customized Question Set は、
+次の前提で設計されています。
+
+- **生成可否** と **評価可否** は分離する
+- 条例構造が成立しない場合のみ質問を除外する
+- 除外された質問は、理由付きで明示的に記録する
+- 同一入力 → 同一出力（決定性）を保証する
+
+つまり、
+
+> 評価すべき入力は、
+> 評価前に「黙って消えない」
+
+という思想です。
+
+---
+
+### 7.6 この出力をどう使うか
+
+`customized_question_set.json` は、例えば以下に利用できます。
+
+- AI テスト自動化パイプラインへの入力
+- RAG システムへの評価用質問投入
+- 回答ログ・スコアリングとの突合
+- 条例構造差による挙動差分の観測
+
+---
+
+### この章のまとめ
+
+- Customized Question Set は **AI評価・観測向け**
+- 実条例HTMLを直接入力として使用する
+- 出力は **Execution Input Contract**
+- 再現性・決定性を重視した設計
+
+---
+
+## 8. 出力データの扱い方
+
+本章では、本ツールが生成する出力データについて、
+
+- **Git 管理してよいもの / すべきでないもの**
+- **差分確認や再生成をどう考えるか**
+
+という観点から整理します。
+
+---
+
+### 8.1 Git 管理してよいもの
+
+以下は **Git 管理して問題ない（むしろ推奨される）**成果物です。
+
+#### 仕様・ルール系ドキュメント
+
+- Coverage Policy
+- Execution Input Contract
+- README / 設計書 / 運用ノート
+- 質問プール定義（例：Golden Question Pool）
+
+これらは：
+
+- 人が合意・判断した設計結果
+- 再現性・説明責任の根拠
+
+であり、**Git による履歴管理が前提**です。
+
+---
+
+#### 合成データ（synthetic_html 由来）
+
+- synthetic_html
+- synthetic_html を入力にした生成物
+
+  - snapshot 用 JSON
+  - テスト用 expected ファイル
+
+これらは：
+
+- 再現性確保
+- CI / pytest 用
+
+という **開発・検証目的**のため、
+Git 管理して問題ありません。
+
+---
+
+### 8.2 Git 管理すべきでないもの
+
+以下は **Git 管理しない前提**です。
+
+#### 実条例HTML
+
+- 実運用で使用する条例HTML
+- 自治体・組織・担当者ごとに保有されるデータ
+
+理由：
+
+- ライセンス・公開範囲が不定
+- サイズ・件数が大きくなりやすい
+- 再生成可能な入力である
+
+本リポジトリは、
+
+> **条例HTMLを保管する場所ではない**
+
+という立場を取ります。
+
+---
+
+#### 実条例HTMLを入力にした生成物
+
+- convert による TXT / Markdown 出力
+- customized_question_set.json（実条例由来）
+
+これらは：
+
+- 元入力（条例HTML）が Git 管理されない
+- 内容が条例改正等で変動する
+
+ため、**成果物のみを Git に残しても再現性が成立しません**。
+
+---
+
+### 8.3 差分確認の考え方
+
+#### 開発・検証フェーズ
+
+- synthetic_html を入力とする
+- snapshot / expected JSON を Git 管理する
+- diff により挙動差分を確認する
+
+→ **完全に再現可能**
+
+---
+
+#### 実運用フェーズ
+
+- 実条例HTMLをローカルで保持
+- convert / question set を必要に応じて再生成
+- 差分は **ローカルで確認**
+
+例：
 
 ```bash
-diff -u \
-  artifacts/customized_question_set/k518RG00000022/customized_question_set.json \
-  artifacts/tmp_k518RG00000022/customized_question_set.json
+diff old/customized_question_set.json new/customized_question_set.json
 ```
 
-`generated_at` などの非契約情報を除き、
-差分が存在しないことが期待されます。
+または：
+
+- Git 管理外の作業ディレクトリで履歴管理
+- 日付・条例ID付きで保存
+
+といった運用を想定します。
 
 ---
 
-### ℹ 補足：Execution Input Contract について
+### 8.4 再生成を前提にする、という考え方
 
-`customized_question_set.json` は、
-下流の AI テストや評価観測処理において
-そのまま利用される **実行入力（Execution Input Contract）** として扱われます。
+本ツールの基本姿勢は以下です。
 
-そのため、本プロジェクトでは、
+- 入力（条例HTML）が変われば、出力は変わる
+- 出力は **保存物ではなく生成物**
+- 必要になったら、同じ手順で再生成する
 
-* CLI は値の意味解釈を行わない
-* 同一入力条件で常に同一 JSON が生成される
+そのため、
 
-ことを重視しています。
+> 「生成物を Git に残すか」ではなく、
+> **「同じ生成物を再度作れるか」**
 
-仕様の更新や拡張が必要な場合は、
-別フェーズ（別 Epic）として切り出して扱います。
-
----
-
-## 📝 Before / After（変換例）
-
-入力（HTMLの一部）：
-
-```html
-<div class="article">
-  <p class="articlenum">第2条（定義）</p>
-  <p class="main">この条例において…</p>
-  <div class="item"><span>(1)</span> 駐車場等 …</div>
-</div>
-```
-
-出力（.html.txt）：
-
-```markdown
----
-id: k518RG00000080
-title: かつらぎ町駐車場条例
-promulgation_date: 平成○年○月○日
----
-
-## 第2条（定義）
-この条例において、次の各号に掲げる用語の意義は…
-
-- (1) 駐車場等 …  
-- (2) 駐輪場 …
-```
-
-AI/RAG モデルが扱いやすい構造に自動変換されます。
+を重視しています。
 
 ---
 
-## ⚙ validate（構造解析）
+### この章のまとめ
 
-```bash
-python src/validate_reiki_structure_v0.5.2.py --source reiki_honbun --output logs
-```
+- 実条例HTMLとその派生成物は Git 管理しない
+- synthetic_html 由来の成果物は Git 管理してよい
+- 差分確認は
 
-生成物：
-
-- `summary_report.json`
-- `structure_summary.json`
-- `exceptions/`（E系例外）
-- `class_statistics.json`
-
-例外例:
-
-| コード | 内容 |
-| ---- | ----------------- |
-| E003 | 条の欠落 |
-| E004 | 順序逆転 |
-| E007 | #primaryInner2 欠落 |
+  - 開発：Git + snapshot
+  - 実運用：ローカル差分
+- 再現性は **入力と手順で担保する**
 
 ---
 
-## 🛠 convert（変換）
-
-```bash
-python src/convert_reiki_v2.7.py --source reiki_honbun --output output_md
-```
-
-変換内容：
-
-- 条・項・号の抽出
-- 附則の分離
-- 表（簡易）を Markdown 表へ変換
-- frontmatter を付与
-- UTF-8 LF に統一
+了解です。
+**第9章：Development / Testing（簡潔）** の文案を提示します。README全体のトーン（実利用者優先／誤解防止）に合わせ、**読む必要がない人が一目で分かる**構成にしています。
 
 ---
 
-## 📁 ディレクトリ構成
+## 9. Development / Testing（開発者向け・簡潔）
 
-```text
-reiki-rag-converter/
-├── src/
-│   ├── convert_reiki_v2.7.py
-│   └── validate_reiki_structure_v0.5.2.py
-│
-├── docs/
-│   ├── Design_convert_v2.6.md
-│   ├── Design_exception_check_v3.1.md
-│   ├── requirements.md
-│   ├── test_plan.md
-│   └── test_e2e_design.md
-│
-├── tests/
-│   ├── test_e2e.py
-│   └── golden/
-│       ├── k518RG00000012.html.txt
-│       ├── k518RG00000055.html.txt
-│       └── k518RG00000080.html.txt
-│
-├── reiki_honbun/       # 代表3件のみ（著作権配慮）
-├── .github/workflows/
-│   └── e2e.yml
-├── LICENSE
-└── README.md
-```
+本章は **開発・検証・CI 用途の補足**です。
+**本ツールを実利用するだけの方は、読む必要はありません。**
 
 ---
 
-## 🧪 CI / E2E テスト（GitHub Actions）
+### 9.1 synthetic_html の位置づけ
 
-本リポジトリは Push/PR のたびに **validate→convert→golden diff** が自動実行されます。
+`synethic_html/` は、以下の目的で用意された **合成データ**です。
 
-CI の確認項目：
+- 再現性のあるテスト入力を提供する
+- 条例構造のパターン（条・項・表・附則など）を網羅的に検証する
+- CI / pytest で挙動差分を安定して検出する
 
-- validate の JSON 正常生成
-- convert の TXT 正常生成
-- golden ファイルとの完全一致（回帰テスト）
-- 表・附則の構造整合性
-- 文字化け防止（� の検出）
-- Python 3.10/3.11/3.12 の互換性チェック
+重要な点として：
 
-### Smoke Test 必須ポリシー
-
-本プロジェクトでは CI（GitHub Actions）を安定稼働させるため、
-必ず最低 1 件のテストが実行される必要があります。
-
-実HTML E2E は `SKIP_E2E=true` によりスキップされるため、
-テストが 0 件になると pytest の終了コードが `5` となり CI が失敗します。
-
-そのため、以下のファイルは **削除禁止の必須テスト** と位置付けています：
-
-```text
-    tests/test_smoketest.py
-```
-
-これは CI の正常性を保証するためのインフラであり、
-変更や削除を行ってはなりません。
+- synthetic_html は **実在の条例ではありません**
+- 実運用で使用することは想定していません
+- README に記載している実行手順の入力例には使いません
 
 ---
 
-## 📚 ドキュメント（主要設計書）
+### 9.2 CI / pytest について
 
-- [変換ロジック設計書（v2.6）](docs/Design_convert_v2.6.md)
-- [例外検証ロジック（v3.1）](docs/Design_exception_check_v3.1.md)
-- [テスト計画書](docs/test_plan.md)
-- [E2Eテスト設計書（v1.1）](docs/test_e2e_design.md)
-- [要件定義書](docs/requirements.md)
+- CI（GitHub Actions）
+- pytest による自動テスト
+- snapshot / expected ファイル
 
-- Execution Input Contract の詳細は設計書を正本とします。
+これらはすべて：
+
+> **開発者が仕様逸脱・回帰を検知するための仕組み**
+
+です。
+
+利用者が：
+
+- 自分の条例HTMLを validate / convert / 生成する
+- 出力を AI / RAG に投入する
+
+という用途において、
+**CI や pytest を意識する必要はありません。**
 
 ---
 
-## ⚠ 著作権・取り扱い注意
+### 9.3 利用者への注意書き（明示）
 
-例規HTMLは **自治体の著作物とみなされる可能性があるため**：
-
-- リポジトリには **代表3件のみ（12/55/80）** を同梱
-- 他の条例は GitHub へ直接アップロードしないことを推奨
-- 必要な場合は `samples/` を **個人環境のみに配置**してください
+- synthetic_html を真似て条例HTMLを作る必要はありません
+- テスト用ディレクトリ構成を再現する必要もありません
+- 実利用では、本READMEの **第5章〜第7章のみ**を参照してください
 
 ---
 
-## 🔄 RAG 連携例（サンプルコード）
+### この章のまとめ
 
-```python
-from langchain.document_loaders import TextLoader
-from langchain.text_splitter import MarkdownTextSplitter
+- synthetic_html は **開発・検証専用**
+- CI / pytest は **開発者向け**
+- 実利用者は本章を読まなくてよい
 
-docs = []
+---
 
-for file in output_md.glob("*.txt"):
-    loader = TextLoader(str(file), encoding="utf-8")
-    docs.extend(loader.load())
+## 10. 著作権・注意事項
 
-splitter = MarkdownTextSplitter(chunk_size=600, chunk_overlap=50)
-chunks = splitter.split_documents(docs)
+### 10.1 条例HTML・本文データについて
 
-# → ベクトルDBに投入
-```
+本リポジトリには、以下の方針に基づき、**実際の条例本文データは原則として同梱していません。**
+
+- 実運用で使用する条例HTMLは
+  **利用者が自ら取得・管理することを前提**としています
+- 実在する条例本文は、著作権・利用条件・配布範囲が自治体ごとに異なるため、
+  本リポジトリでは包括的に配布しません
+- そのため、README に記載しているコマンド例も、
+  **利用者のローカル環境上のパスを指定する形式**になっています
+
+---
+
+### 10.2 reiki_honbun / samples ディレクトリについて
+
+本リポジトリ内の以下のディレクトリは、**補助的・限定的な目的**でのみ提供されています。
+
+- `reiki_honbun/`
+- `samples/`
+
+これらは：
+
+- ツールの挙動確認
+- 出力形式のイメージ共有
+- README や設計文書の説明補助
+
+を目的としたものであり、
+
+- 網羅的な条例集
+- 実運用を前提とした入力データ
+- 継続的に更新される正本データ
+
+ではありません。
+
+---
+
+### 10.3 実運用におけるデータ管理の考え方
+
+実運用では、以下を推奨します。
+
+- 条例HTMLは、利用者の管理下にあるローカルフォルダや専用ストレージに配置する
+- Git 管理の対象は：
+
+  - スクリプト
+  - 設定ファイル
+  - 生成ロジック
+  - 必要に応じて生成結果（用途限定）
+- 条例本文そのものは：
+
+  - Git 管理しない
+  - 必要に応じて再取得・再生成する
+
+本ツールは、その前提に立って設計されています。
+
+---
+
+### この章のまとめ
+
+- 実在の条例本文は原則として同梱しない
+- `reiki_honbun` / `samples` は **限定的な補助データ**
+- 実運用では、利用者自身が条例HTMLを管理・指定する
+
+---
+
+## 11. ドキュメント・設計書リンク
+
+### 11.1 README の位置づけ
+
+この README は、以下を目的とした **利用者向けの入口文書**です。
+
+- 本ツールで「何ができるか」
+- 実運用で「何を用意し、どう実行するか」
+- validate / convert / 質問セット生成の基本的な流れ
+
+詳細な設計判断や内部仕様、開発上の前提条件までは扱いません。
+
+---
+
+### 11.2 正本ドキュメントの所在
+
+設計・仕様・運用ルールの **正本**は、すべて `docs/` 配下で管理されています。
+
+例：
+
+- `docs/`
+
+  - 設計方針・設計判断の記録
+  - Execution Input Contract 関連文書
+  - Coverage Policy
+  - 開発・再現性・トラブル対応に関する記録
+  - 評価フェーズ（F9 / F10 等）の作業ノート
+
+README に記載していない判断根拠や仕様の詳細は、
+**必ず docs/ 配下の文書を正としてください。**
+
+---
+
+### 11.3 利用者・開発者向けの読み分け
+
+- **利用者（実運用）**
+
+  - README を主に参照
+  - docs/ は必要に応じて参照
+
+- **開発者・検証者**
+
+  - README は入口
+  - docs/ を前提知識として扱う
+
+README と docs/ は役割分担された関係であり、
+README は docs/ の要約・抜粋ではありません。
+
+---
+
+### この章のまとめ
+
+- README は **入口**
+- 設計・仕様の正本は **docs/**
+- 判断に迷ったら docs/ を正とする
 
 ---
 
@@ -399,5 +997,3 @@ GitHub: [https://github.com/oimus1976](https://github.com/oimus1976)
 行政文書の利活用を次のステージに進めるための OSS です。
 
 ぜひご活用ください。
-
----
