@@ -100,6 +100,36 @@ ModuleNotFoundError: No module named 'chardet'
 
 ---
 
+### 原因③：トップレベルパッケージ名の衝突
+
+- reiki-rag-converter と gov-llm-e2e-testkit の双方に
+  `customized_question_set` という同名パッケージが存在
+- editable install / PYTHONPATH / CI 実行順により、
+  import 解決先が環境ごとに変動
+- 結果として：
+  - ローカルでは通るが CI で落ちる
+  - 端末 A と B で import される実体が異なる
+  という「再現性崩壊」を引き起こした
+
+本問題は Coverage Policy や生成ロジック以前の、
+**名前空間設計上の構造問題**である。
+
+#### 対策：トップレベルパッケージ名の衝突（恒久対策）
+
+> customized_question_set を
+> reiki_rag_customized_question_set に rename し、
+> 名前空間レベルでの衝突可能性を除去した。
+>
+> これにより：
+>
+> - editable install
+> - 複数リポジトリ共存
+> - CI / ローカル / 新端末
+>
+> の import 解決が完全に安定した。
+
+---
+
 ## 4. 実施した対応（何をやったか）
 
 ### 4.1 Git の正規化
@@ -179,6 +209,14 @@ python -m pytest -q
 
 > requirements.txt があっても、
 > **pyproject.toml が正でなければ意味がない**
+
+---
+
+### 教訓④
+
+> Python におけるトップレベルパッケージ名は、
+> 設計上の契約であり、実装詳細ではない  
+> 「名前が被る」こと自体が、再現性リスクである
 
 ---
 
