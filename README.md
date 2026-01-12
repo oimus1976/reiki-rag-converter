@@ -97,7 +97,7 @@ CLI コマンドから再現可能に実行できます。
 - 本リポジトリを clone 済み
 - 依存ライブラリがインストール済み（`pip install -r requirements.txt` 等）
 
-※ `customized_question_set` は `src/` 配下に配置されているため、
+※ `reiki_rag_customized_question_set` は `src/` 配下に配置されているため、
 リポジトリルートでコマンドを実行してください。
 
 ---
@@ -108,7 +108,7 @@ CLI コマンドから再現可能に実行できます。
 `customized_question_set.json` を指定したディレクトリに生成します。
 
 ```bash
-python -m customized_question_set.cli \
+python -m reiki_rag_customized_question_set.cli \
   --ordinance-html <ORDINANCE_HTML_PATH> \
   --output <OUTPUT_DIR> \
   --schema-version <SCHEMA_VERSION> \
@@ -142,7 +142,7 @@ python -m customized_question_set.cli \
 同一条件で再生成するための例です。
 
 ```bash
-python -m customized_question_set.cli \
+python -m reiki_rag_customized_question_set.cli \
   --ordinance-html data/k518RG00000022.html \
   --output artifacts/tmp_k518RG00000022 \
   --schema-version 0.1 \

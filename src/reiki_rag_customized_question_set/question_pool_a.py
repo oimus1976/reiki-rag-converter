@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import List
 
-from customized_question_set.types import GoldenQuestionTemplate
+from reiki_rag_customized_question_set.types import GoldenQuestionTemplate
 
 
 def load_golden_question_pool_a() -> List[GoldenQuestionTemplate]:

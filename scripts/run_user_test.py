@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Run customized_question_set CLI for multiple ordinances.
+Run reiki_rag_customized_question_set CLI for multiple ordinances.
 
 Default behavior:
 - Scan data/ directory
@@ -45,7 +45,7 @@ def parse_args() -> argparse.Namespace:
     p.add_argument(
         "--schema-version",
         required=True,
-        help="schema_version passed to customized_question_set.cli",
+        help="schema_version passed to reiki_rag_customized_question_set.cli",
     )
 
     p.add_argument(
@@ -116,7 +116,7 @@ def run_one(
     cmd = [
         sys.executable,
         "-m",
-        "customized_question_set.cli",
+        "reiki_rag_customized_question_set.cli",
         "--ordinance-html",
         str(ordinance_html),
         "--output",

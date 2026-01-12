@@ -3,7 +3,7 @@
 from pathlib import Path
 import pytest
 
-from customized_question_set.ordinance_structure import extract_ordinance_structure
+from reiki_rag_customized_question_set.ordinance_structure import extract_ordinance_structure
 
 
 FIXTURES = Path("tests/fixtures/html")

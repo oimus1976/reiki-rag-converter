@@ -4,11 +4,11 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import List
 
-from customized_question_set.ordinance_structure import extract_ordinance_structure
-from customized_question_set.concretizer import concretize_questions
-from customized_question_set.types import GoldenQuestionTemplate, SkippedQuestion
-from customized_question_set.writer import write_customized_question_set
-from customized_question_set.question_pool_a import load_golden_question_pool_a
+from reiki_rag_customized_question_set.ordinance_structure import extract_ordinance_structure
+from reiki_rag_customized_question_set.concretizer import concretize_questions
+from reiki_rag_customized_question_set.types import GoldenQuestionTemplate, SkippedQuestion
+from reiki_rag_customized_question_set.writer import write_customized_question_set
+from reiki_rag_customized_question_set.question_pool_a import load_golden_question_pool_a
 
 
 SKIP_REASON_NO_PARAGRAPHS = "no_paragraphs_in_ordinance"
@@ -104,8 +104,8 @@ def generate_customized_question_set(
 
 from pathlib import Path
 
-# ★ここは "from customized_question_set.types import SCHEMA_VERSION" をしない
-import customized_question_set.types as types_mod
+# ★ここは "from reiki_rag_customized_question_set.types import SCHEMA_VERSION" をしない
+import reiki_rag_customized_question_set.types as types_mod
 
 
 def _resolve_schema_version() -> str:
@@ -126,7 +126,7 @@ def _resolve_schema_version() -> str:
 
     exported = [n for n in dir(types_mod) if "VERSION" in n]
     raise RuntimeError(
-        "schema_version constant not found in customized_question_set.types. "
+        "schema_version constant not found in reiki_rag_customized_question_set.types. "
         f"Checked: {candidates}. Found VERSION-like names: {exported}. "
         "Define a schema version constant in types.py, or adjust candidates."
     )

@@ -1,8 +1,8 @@
 # tests/customized_question_set/test_concretizer.py
 
-from customized_question_set.concretizer import concretize_questions
-from customized_question_set.ordinance_structure import extract_ordinance_structure
-from customized_question_set.types import GoldenQuestionTemplate
+from reiki_rag_customized_question_set.concretizer import concretize_questions
+from reiki_rag_customized_question_set.ordinance_structure import extract_ordinance_structure
+from reiki_rag_customized_question_set.types import GoldenQuestionTemplate
 
 
 def _structure_from_html(html: str):

@@ -2,7 +2,7 @@
 import json
 from pathlib import Path
 
-from customized_question_set.generator import generate_customized_question_set
+from reiki_rag_customized_question_set.generator import generate_customized_question_set
 
 
 def load_json(path: Path) -> dict:

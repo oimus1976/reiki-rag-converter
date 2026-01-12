@@ -2,9 +2,9 @@
 
 import pytest
 
-from customized_question_set.concretizer import concretize_questions
-from customized_question_set.types import GoldenQuestionTemplate
-from customized_question_set.ordinance_structure import extract_ordinance_structure
+from reiki_rag_customized_question_set.concretizer import concretize_questions
+from reiki_rag_customized_question_set.types import GoldenQuestionTemplate
+from reiki_rag_customized_question_set.ordinance_structure import extract_ordinance_structure
 
 
 def test_invariant_non_empty_questions_when_article_exists():

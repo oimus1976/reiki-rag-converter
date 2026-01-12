@@ -5,8 +5,8 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import List, Optional, Tuple
 
-from customized_question_set.types import ConcreteQuestion, GoldenQuestionTemplate
-from customized_question_set.ordinance_structure import OrdinanceStructureFacts, OrdinanceArticle
+from reiki_rag_customized_question_set.types import ConcreteQuestion, GoldenQuestionTemplate
+from reiki_rag_customized_question_set.ordinance_structure import OrdinanceStructureFacts, OrdinanceArticle
 
 
 # =========================

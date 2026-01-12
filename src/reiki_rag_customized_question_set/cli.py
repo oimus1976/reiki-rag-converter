@@ -13,7 +13,7 @@ import argparse
 import sys
 from pathlib import Path
 
-from customized_question_set.generator import generate_customized_question_set
+from reiki_rag_customized_question_set.generator import generate_customized_question_set
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(

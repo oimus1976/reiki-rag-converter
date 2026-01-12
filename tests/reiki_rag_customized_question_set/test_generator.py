@@ -1,7 +1,7 @@
 import json
 from pathlib import Path
 
-from customized_question_set.generator import generate_customized_question_set
+from reiki_rag_customized_question_set.generator import generate_customized_question_set
 
 
 def test_generate_records_skipped_q8_when_supplementary_missing(tmp_path: Path):
