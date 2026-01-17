@@ -4,7 +4,23 @@
 
 ---
 
-## v1.5
+## v1.6 (2026-01-18)
+
+### Changed
+
+- HTML版 / Markdown版 answer.md の差分を「評価前観測」として扱う設計を確定
+  - 差分を不具合・品質判定に直結させない方針を明文化
+  - 評価（Gate判定）とは独立した Observation フェーズとして位置づけ
+  - Evaluation Framework との責務境界を整理
+- 上記設計確定に伴い、PROJECT_STATUS を更新
+  - 次フェーズを「answer.md 差分観測」に明示的に移行
+
+※ 実装ロジックの変更はなし  
+※ reiki-rag-converter の責務・出力契約に変更なし（設計・位置づけの明確化のみ）
+
+---
+
+## v1.5 (2026-01-18)
 
 ### Changed
 

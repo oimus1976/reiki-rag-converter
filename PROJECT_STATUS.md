@@ -1,10 +1,10 @@
 ---
 title: PROJECT_STATUS
-version: v1.5
+version: v1.6
 doc_type: status
 project: reiki-rag-converter
 created: 2025-12-06
-updated: 2026-01-17
+updated: 2026-01-18
 author: Sumio Nishioka + ChatGPT
 tags:
   - project-management
@@ -26,6 +26,18 @@ tags:
 - **再現可能な Execution Input Contract として固定する**
 
 ことを目的とする。
+
+また、生成された answer.md については、
+
+- HTML版 / Markdown版の違いを
+- **評価や是非判断に先立つ内部工程として観測・整理する**
+
+という方針を採る。
+
+本プロジェクトにおける評価は、
+本観測結果を含む複数の情報を踏まえて
+人手により実施されるものであり、
+差分観測はその評価を支える前段工程として位置づけられる。
 
 ---
 
@@ -71,6 +83,19 @@ tags:
 
 ---
 
+### Answer Diff Observation 設計【完了】
+
+- HTML版 / Markdown版 answer.md の差分を  
+  **評価前に観測・整理する設計を確定**
+- 観測と評価の責務境界を明確化
+- 判定・採否・優劣判断を行わない方針を固定
+- Gate-based Evaluation Framework との関係を整理
+
+※ 詳細は  
+`Design_Answer_Diff_Observation_v0.1.md` に記録
+
+---
+
 ### 再現性事故と復旧（2026-01）【重要な知見として固定】
 
 - パッケージ名衝突により
@@ -101,11 +126,14 @@ tags:
 
 ## 4. Next Action（次に唯一実施すべきタスク）
 
-**convert / validate の実利用安定性向上**
+**answer.md 差分観測フェーズの実行**
 
-- フォルダ単位処理の明確化
-- README と実挙動の完全一致保証
-- 実条例 HTML（非 Git 管理）を前提とした運用確認
+- HTML版 / Markdown版 answer.md の差分観測実行
+- 観測結果の整理・記録
+- 評価フェーズ（外部）に引き渡すための前処理確定
+
+※ convert / validate の拡張は  
+　本フェーズ完了後に再開する
 
 ---
 
@@ -114,8 +142,9 @@ tags:
 ### gov-llm-e2e-testkit
 
 - 本プロジェクトは **入力資産提供側**
-- 採否・優劣判断は行わない
+- 評価・採否・優劣判断は行わない
 - Golden Question / Ordinance は凍結資産として扱う
+- answer.md の差分は **評価前観測データ**として提供する
 
 ---
 
@@ -126,6 +155,7 @@ tags:
 - ChatGPT_Startup_Template_v1.0.md
 - ChatGPT_Startup_Workflow_v1.0.md
 - Design_Execution_Input_Contract_v0.2.md
+- Design_Answer_Diff_Observation_v0.1.md
 - Design_convert_v2.6.md
 - Design_synthetic_html_v0.2.md
 - Design_synthetic_generator_v0.2.md
