@@ -129,7 +129,7 @@ C:\work\ordinances\k518RG00000022.html
 
 ---
 
-### この章のまとめ
+### 第2章のまとめ
 
 - Python 3.10 以上が必要
 - 実条例HTMLは **利用者が用意し、Git 管理しない**
@@ -205,7 +205,7 @@ C:\work\ordinances\
 
 ---
 
-### この章のまとめ
+### 第3章のまとめ
 
 - 手元にある条例HTMLを使う
 - フォルダ単位で機械的に処理する
@@ -282,7 +282,7 @@ python -m pytest
 
 ---
 
-### この章のまとめ
+### 第4章のまとめ
 
 - clone して
 - Python 環境を用意し
@@ -295,337 +295,309 @@ python -m pytest
 
 ## 5. validate（構造解析）【実利用者向け】
 
-`validate` は、条例HTMLを **変換・生成処理に進める前段**として、
-**構造的に読み取れるかどうかを機械的に確認するためのコマンド**です。
+### 5.1 validate とは何をする処理か
 
-ここで行うのは「正しさの判定」ではなく、
-**後続処理で扱える形式かどうかのチェック**です。
+`validate` は、**条例HTMLを格納したフォルダ**を入力として、
 
----
+- 条・項・号などの構造を機械的に解析し
+- 後続処理（convert / Customized Question Set 生成）が可能かどうかを確認する
 
-### 5.1 入力形式
+ための **前処理ステップ**です。
 
-`validate` は、以下のいずれかを入力として受け付けます。
-
-- 単一の条例HTMLファイル
-- 条例HTMLを複数含むフォルダ
-
-```text
-入力対象 = 「ローカルに存在する条例HTML」
-```
-
-※ Git 管理されている必要はありません
-※ 本リポジトリ内に配置する必要もありません
+この処理は、
+条例の内容が「正しいか／妥当か」を評価するものではありません。
+あくまで **後続の機械処理に耐えうる構造かどうか** を確認します。
 
 ---
 
-### 5.2 実行例（Windows）
+### 5.2 入力の前提（重要）
 
-#### 単一ファイルを指定する場合
+- 入力は **HTMLファイルを格納したフォルダ**です
+- **単一HTMLファイルの指定は想定していません**
+- フォルダ内の HTML ファイルを **まとめて処理**します
+
+> ※ 本READMEでは、実運用で保証されている使い方のみを記載しています。
+
+---
+
+### 5.3 実行例（実在するローカルパス前提）
+
+#### Windows（PowerShell）
 
 ```powershell
-python src/validate_reiki_structure_v0.5.2.py ^
-  --source C:\reiki\ordinances\k518RG00000022.html
+python src/validate_reiki_structure_v0.5.2.py `
+  --source C:\data\ordinances\html
 ```
 
-#### フォルダを指定する場合（配下を一括処理）
-
-```powershell
-python src/validate_reiki_structure_v0.5.2.py ^
-  --source C:\reiki\ordinances\
-```
-
----
-
-### 5.3 実行例（macOS / Linux）
-
-#### 単一ファイル
+#### macOS / Linux（bash）
 
 ```bash
 python src/validate_reiki_structure_v0.5.2.py \
-  --source /home/user/reiki/ordinances/k518RG00000022.html
+  --source /home/user/ordinances/html
 ```
 
-#### フォルダ指定
-
-```bash
-python src/validate_reiki_structure_v0.5.2.py \
-  --source /home/user/reiki/ordinances/
-```
+- `--source` には **条例HTMLを格納したフォルダのパス**を指定します
+- フォルダ配下の `.html` ファイルが対象になります
 
 ---
 
-### 5.4 validate の出力について
+### 5.4 出力と結果の考え方
 
-`validate` は **標準出力に結果を表示**します。
+- エラーなく終了した場合
+  → 構造解析が完了し、後続処理に進めます
 
-- 正常終了（exit code 0）
-  → 後続の `convert` や質問セット生成に進めます
-- エラー終了（exit code ≠ 0）
-  → HTML 構造上、処理できない箇所が検出されています
+- エラーが出た場合
+  → 一部または全部のHTMLが、想定する構造として解釈できません
 
-ここで出力されるメッセージは：
+この結果は、
 
-- 条・項・附則などの **構造的な検出結果**
-- 変換・生成処理に進めない **機械的な理由**
+- 条例として「不適切」
+- 内容が「間違っている」
 
-を示すものであり、
-**条例の内容や妥当性を評価するものではありません**。
+ことを意味するものではありません。
 
----
-
-### 5.5 典型的な使いどころ
-
-- 自前で収集した条例HTMLが、機械処理に使えるか確認したい
-- フォルダ単位でまとめて convert / 質問生成を行う前の事前確認
-- HTML取得方法（スクレイピング等）を変えた際の影響確認
+**あくまでツール側の処理前提との不一致**を示します。
 
 ---
 
-### この章のまとめ
+### 5.5 次のステップ
 
-- `validate` は **実条例HTMLを前提**に使う
-- 入力は **ファイルでもフォルダでも可**
-- 目的は「評価」ではなく **後続処理の可否確認**
-- 成功すれば、次は `convert` に進める
+`validate` が問題なく完了したフォルダを入力として、
+次に `convert`（第6章）を実行します。
 
 ---
 
 ## 6. convert（変換）【実利用者向け】
 
-`convert` は、`validate` を通過した条例HTMLを
-**AI / RAG / 検索・要約処理などに投入しやすいテキスト形式**へ変換するためのコマンドです。
+### 6.1 convert とは何をする処理か
 
-この処理は **構造解析の結果を前提**としており、
-通常は `validate` の後に実行します。
+`convert` は、**validate 済みの条例HTMLフォルダ**を入力として、
 
----
+- 条例本文を機械処理しやすい形に正規化し
+- Markdown / TXT 形式へ変換する
 
-### 6.1 前提条件
+ための処理です。
 
-- 入力となる条例HTMLは `validate` で確認済みであること
-- 入力は **ローカルに存在する実条例HTML**
-- 出力先ディレクトリは **ユーザーが指定**する
+この変換結果は、
 
-`convert` は条例の内容を解釈・評価するものではなく、
-**HTML構造をテキスト表現へ写像する処理**です。
+- AI / RAG への投入
+- 検索・差分比較
+- 後続の質問生成処理
 
----
-
-### 6.2 入力形式
-
-`convert` が受け付ける入力は以下です。
-
-- 単一の条例HTMLファイル
-- 条例HTMLを複数含むフォルダ
-
-```text
-入力 = validate 可能な条例HTML
-出力 = テキスト化された条例本文
-```
+などの **入力データ**として利用されます。
 
 ---
 
-### 6.3 出力形式
+### 6.2 入力の前提（重要）
 
-`convert` の出力は以下の形式です。
+- 入力は **条例HTMLを格納したフォルダ**です
+- **validate が正常終了しているフォルダ**を対象とします
+- **単一HTMLファイル指定は想定していません**
 
-- **TXT（プレーンテキスト）**
-- **Markdown 互換の段落構造**
-
-主な特徴：
-
-- 条・項・附則などの構造は **テキスト上で明示**
-- 表・箇条書きは、読み取り可能なテキスト表現に展開
-- HTMLタグや装飾要素は出力されない
+> validate を通していない HTML を直接 convert することは推奨されません。
 
 ---
 
-### 6.4 実行例（Windows）
+### 6.3 実行例（実在するローカルパス前提）
 
-#### 単一ファイルを変換する場合
+#### Windows（PowerShell）
 
 ```powershell
-python src/convert_reiki_v2.7.py ^
-  --source C:\reiki\ordinances\k518RG00000022.html ^
-  --output C:\reiki\converted\
+python src/convert_reiki_v2.7.py `
+  --source C:\data\ordinances\html `
+  --output C:\data\ordinances\converted
 ```
 
-#### フォルダを指定する場合
-
-```powershell
-python src/convert_reiki_v2.7.py ^
-  --source C:\reiki\ordinances\ ^
-  --output C:\reiki\converted\
-```
-
----
-
-### 6.5 実行例（macOS / Linux）
+#### macOS / Linux（bash）
 
 ```bash
 python src/convert_reiki_v2.7.py \
-  --source /home/user/reiki/ordinances/ \
-  --output /home/user/reiki/converted/
+  --source /home/user/ordinances/html \
+  --output /home/user/ordinances/converted
 ```
 
----
+- `--source`
+  条例HTMLを格納した **入力フォルダ**
 
-### 6.6 文字コード・改行仕様
-
-`convert` の出力仕様は以下のとおりです。
-
-- **文字コード**：UTF-8
-- **改行コード**：
-
-  - 実行環境に依存せず LF（`\n`）を使用
-- BOM は付与されません
-
-このため、
-
-- Windows / macOS / Linux 間での差分比較
-- Git 管理外ファイルとしての利用
-- RAG 入力時の安定性
-
-を損ないません。
+- `--output`
+  変換後ファイルを出力する **フォルダ**
 
 ---
 
-### 6.7 convert の結果をどう使うか
+### 6.4 出力内容
 
-変換後のテキストは、例えば以下に利用できます。
+`--output` で指定したフォルダに、
+入力HTMLごとに対応する変換結果が生成されます。
 
-- RAG / 検索用インデックス作成
-- AI への直接投入（要約・Q&A・比較）
-- 質問セット生成（次章）
-
----
-
-### この章のまとめ
-
-- `convert` は **validate 後に実行**
-- 実条例HTMLを **テキスト化**する処理
-- 出力は UTF-8 / LF の安定した形式
-- 次は **質問セット生成**に進める
+- Markdown または TXT 形式
+- ファイル名は元HTMLに対応
+- 条・項・号の構造を保持したテキスト表現
 
 ---
 
-## 7. Customized Question Set の生成
+### 6.5 文字コード・改行仕様
 
-本章で扱う **Customized Question Set** は、
-条例本文を AI に評価・観測させるための **入力データ（Execution Input）** を生成する仕組みです。
+- 入力HTML
 
-これは **エンドユーザー向けの質問生成**ではなく、
-**AI の挙動を安定的に観測・比較するための評価用入力**である点に注意してください。
+  - 自動判定（内部で文字コードを検出）
+- 出力テキスト
 
----
+  - UTF-8
+  - 改行コードは LF
 
-### 7.1 この機能の位置づけ
-
-Customized Question Set は、次のような用途を想定しています。
-
-- RAG / LLM が条例をどのように解釈・応答するかの観測
-- 入力条件を固定した上でのモデル比較
-- 回答品質の差分検証・再現実験
-
-つまり、
-
-> **「よい質問を作る」ための機能ではなく、
-> 「同じ条件で AI を評価する」ための入力生成**
-
-を目的としています。
+> 実運用では、文字コードを意識せずに扱えることを前提としています。
 
 ---
 
-### 7.2 前提条件
+### 6.6 convert の位置づけ
 
-- 対象となる条例HTMLはローカルに存在している
-- 条例HTMLは `validate` / `convert` を経て、
-  構造が把握できている
-- 実条例HTMLは **Git 管理しない**
+`convert` は、
 
-Customized Question Set は、
-条例HTMLを直接読み取り、**条例ごとの質問セット（JSON）**を生成します。
+- 条例を「読む」ための変換ではなく
+- **機械処理のための正規化ステップ**
+
+です。
+
+この段階では、
+
+- 条例解釈
+- 意味的な補正
+- 内容の評価
+
+は一切行いません。
 
 ---
 
-### 7.3 実行方法（CLI）
+### 6.7 次のステップ
 
-#### 基本形（単一条例）
+変換結果を入力として、
+
+- AI / RAG への投入
+- または **Customized Question Set の生成**（第7章）
+
+に進みます。
+
+---
+
+## 7. Customized Question Set の生成（AI評価・観測用途）
+
+> ⚠ この章は **AI / RAG の評価・観測を行う人向け**です。
+> 単に条例を Markdown / TXT に変換したいだけの場合、本章を読む必要はありません。
+
+### 7.1 これは何のための処理か
+
+Customized Question Set の生成は、
+条例本文に対して **評価用の質問入力（Execution Input）を決定的に生成**するための処理です。
+
+ここで生成される JSON は：
+
+- AI に「何をどう答えさせるか」を評価するための **入力データ**
+- 回答結果や評価結果そのものではない
+- 後続の AI 実行・評価プロセスでは
+  **ブラックボックス入力（再解釈しない前提データ）**として扱われる
+
+という位置づけを持ちます。
+
+本機能は「質問を作る便利機能」ではなく、
+**評価条件を固定し、再現可能な観測を行うための基盤**です。
+
+---
+
+### 7.2 前提条件（必須）
+
+Customized Question Set の生成は、以下が **すでに完了していることを前提**とします。
+
+- 対象となる条例 HTML に対して `validate` が正常に完了していること
+- `convert` により、条例構造（条・項・附則など）が正規化されていること
+
+これらは単なる事前作業ではなく、
+
+> **質問生成の意味論を保証するために不可欠な工程**
+
+です。
+`validate` / `convert` を省略しての実行は、想定していません。
+
+---
+
+### 7.3 入力単位について（重要）
+
+本プロジェクトでは、条例データは **フォルダ単位で管理・処理する**ことを前提とします。
+
+- 条例 HTML は通常、複数ファイルとして保存・管理される
+- validate / convert / 質問生成はいずれも
+  **フォルダ単位の処理フロー**として設計されています
+
+そのため、Customized Question Set の生成も
+**条例 HTML を格納したフォルダを入力として指定する**ことを基本とします。
+
+---
+
+### 7.4 CLI 実行例（実運用想定）
+
+以下は、ローカルに保存された条例 HTML フォルダを対象に、
+Customized Question Set を生成する例です。
+
+#### Windows（PowerShell）
+
+```powershell
+python -m reiki_rag_customized_question_set.cli `
+  --ordinance-html C:\work\ordinances\converted\ `
+  --output C:\work\artifacts\question_sets\ `
+  --schema-version 0.2 `
+  --question-pool GQPA:v1.1 `
+  --question-set-id customized_question_set:k518RG00000022:v1
+```
+
+#### Unix / macOS（bash）
 
 ```bash
 python -m reiki_rag_customized_question_set.cli \
-  --ordinance-html /path/to/ordinance/k518RG00000022.html \
-  --output /path/to/output/ \
+  --ordinance-html /home/user/ordinances/converted/ \
+  --output /home/user/artifacts/question_sets/ \
   --schema-version 0.2 \
-  --question-pool GQPA:v1.1
-```
-
-#### オプション指定例（ID 明示）
-
-```bash
-python -m reiki_rag_customized_question_set.cli \
-  --ordinance-html /path/to/ordinance/k518RG00000022.html \
-  --output /path/to/output/ \
-  --schema-version 0.2 \
-  --target-ordinance-id k518RG00000022 \
-  --question-set-id customized_question_set:k518RG00000022:v1 \
-  --question-pool GQPA:v1.1
+  --question-pool GQPA:v1.1 \
+  --question-set-id customized_question_set:k518RG00000022:v1
 ```
 
 ---
 
-### 7.4 出力物について
+### 7.5 出力される JSON の考え方
 
-生成される主な成果物は以下です。
+生成される `customized_question_set.json` には：
 
-- `customized_question_set.json`
+- 採用された質問
+- 除外された質問（skip）とその理由
+- 対象条例・質問プール・スキーマの識別情報
 
-この JSON は、
+がすべて明示的に含まれます。
 
-- 条例ごとに固定された質問集合
-- 評価・実行用の **入力契約（Execution Input Contract）**
+後続の AI 実行側は、この JSON を：
 
-として扱われます。
+- 内容を再解釈しない
+- 質問の正しさ・妥当性を評価しない
+- **同一入力 → 同一観測**を保証するための固定入力
 
----
-
-### 7.5 Execution Input Contract の考え方（簡潔版）
-
-Customized Question Set は、
-次の前提で設計されています。
-
-- **生成可否** と **評価可否** は分離する
-- 条例構造が成立しない場合のみ質問を除外する
-- 除外された質問は、理由付きで明示的に記録する
-- 同一入力 → 同一出力（決定性）を保証する
-
-つまり、
-
-> 評価すべき入力は、
-> 評価前に「黙って消えない」
-
-という思想です。
+として扱います。
 
 ---
 
-### 7.6 この出力をどう使うか
+### 7.6 この処理が不要なケース
 
-`customized_question_set.json` は、例えば以下に利用できます。
+以下の場合、本章の処理は不要です。
 
-- AI テスト自動化パイプラインへの入力
-- RAG システムへの評価用質問投入
-- 回答ログ・スコアリングとの突合
-- 条例構造差による挙動差分の観測
+- 条例本文を Markdown / TXT に変換したいだけの場合
+- 人手で条例を読んで理解する用途のみの場合
+- AI 評価・観測を行わない場合
+
+その場合は、第5章（validate）・第6章（convert）のみを参照してください。
 
 ---
 
-### この章のまとめ
+## 補足（設計意図）
 
-- Customized Question Set は **AI評価・観測向け**
-- 実条例HTMLを直接入力として使用する
-- 出力は **Execution Input Contract**
-- 再現性・決定性を重視した設計
+- 本機能は **業務システム投入用ではありません**
+- 本機能は **質問生成の自動化ツールではありません**
+- 評価条件を「固定する」こと自体が目的です
 
 ---
 
@@ -765,7 +737,7 @@ diff old/customized_question_set.json new/customized_question_set.json
 
 ---
 
-### この章のまとめ
+### 第8章のまとめ
 
 - 実条例HTMLとその派生成物は Git 管理しない
 - synthetic_html 由来の成果物は Git 管理してよい
@@ -835,7 +807,7 @@ diff old/customized_question_set.json new/customized_question_set.json
 
 ---
 
-### この章のまとめ
+### 第9章のまとめ
 
 - synthetic_html は **開発・検証専用**
 - CI / pytest は **開発者向け**
@@ -901,7 +873,7 @@ diff old/customized_question_set.json new/customized_question_set.json
 
 ---
 
-### この章のまとめ
+### 第10章のまとめ
 
 - 実在の条例本文は原則として同梱しない
 - `reiki_honbun` / `samples` は **限定的な補助データ**
@@ -959,7 +931,7 @@ README は docs/ の要約・抜粋ではありません。
 
 ---
 
-### この章のまとめ
+### 第11章のまとめ
 
 - README は **入口**
 - 設計・仕様の正本は **docs/**

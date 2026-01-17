@@ -1,10 +1,10 @@
 ---
 title: PROJECT_STATUS
-version: v1.4
+version: v1.5
 doc_type: status
 project: reiki-rag-converter
 created: 2025-12-06
-updated: 2026-01-04
+updated: 2026-01-17
 author: Sumio Nishioka + ChatGPT
 tags:
   - project-management
@@ -16,120 +16,106 @@ tags:
 
 ## 1. Purpose
 
-条例HTMLを安定的・再現性高く TXT / Markdown に変換する OSS を進化・保守する。
+条例 HTML を **再現性高く・決定的に** TXT / Markdown へ変換し、  
+生成 AI / RAG 評価に投入可能な入力資産を生成する OSS を提供する。
 
-加えて本プロジェクトは、生成AIテスト自動化プロジェクトと連携し、  
-条例ナレッジ入力差分が RAG 応答に与える影響を  
-**再現可能に観測するための入力資産を提供する**ことを目的とする。
+本プロジェクトはあわせて、
+
+- 入力構造の差異が RAG 応答に与える影響を
+- **評価前に歪めず**
+- **再現可能な Execution Input Contract として固定する**
+
+ことを目的とする。
 
 ---
 
 ## 2. Completed（完了済みタスク）
 
-- ChatGPT_Startup_Template_v1.0 の制定
-- ChatGPT_Startup_Workflow_v1.0 の制定
-- PROJECT_GRAND_RULES.md の更新（Startup Workflow 連携）
-- frontmatter 運用ルールの確立（docs 配下）
-- CI（smoke + Golden diff）の安定運用
-- Golden_v1（P11〜P15）の確定
-- synthetic_html_meta v0.2 の整備
-- synthetic_generator_v0.2 の安定稼働
-- **条例別カスタマイズ質問セットの JSON 最終構造・versioning 方針の確定**
-- **customized_question_set.json を Execution Input Contract として凍結**
-- **外部連携プロジェクト（gov-llm-e2e-testkit）との責務境界の確定**
+### 基盤・運用
 
-### Epic 4（条例別カスタマイズ質問セット生成基盤）
+- PROJECT_GRAND_RULES / Startup Workflow / frontmatter 運用の確立
+- CI（pytest + E2E）の恒常運用
+- synthetic_html / synthetic_generator の安定化（v0.2）
+- Golden TXT / HTML（P11–P15）の確定
+- README を **実利用者向け手順書**として再定義
+  - 実データ前提
+  - synthetic_html は dev/test 限定と明示
 
-- ordinance_structure による条例構造（条・項・附則）の事実抽出
-- Coverage Policy v0.1.1 に基づく concretizer 実装
-- 決定性・再現性を担保した質問具体化ロジックの確立
-- **OrdinanceStructure の型名分離（Facts / Summary）による責務明確化**
-- **型名分離後の再テスト完了**
-  - ordinance_structure / concretizer / writer の ad-hoc 検証
-  - 同一入力 → 同一出力（決定性）を確認
+---
 
-※ Epic 4 は Epic 6 にて実データ検証まで完了済み
+### Epic 4（条例別カスタマイズ質問セット生成基盤）【完了】
 
-### Epic 5（CLI 再現導線整備）
+- ordinance_structure による **条・項（clause）・附則の正規抽出**
+- paragraph ≠ clause の語彙正規化完了
+- Coverage Policy v0.1.2 に準拠した concretizer 実装
+- Q4（条＋項）/ Q8（附則）質問の **全条例生成保証**
+- skip 判定は Extension Fields に理由付きで記録
+- 同一入力 → 同一出力の決定性を pytest / 実条例で確認
 
-- customized_question_set CLI の安定化
-- ordinance ID 自動検出・逐次実行スクリプトの整備
-- 実行 manifest 出力による再現性担保
+---
 
-### Epic 6（Invariant 保証・回帰テスト）
+### Epic 5（CLI・再現導線）【完了】
 
-- Execution Input Contract v0.1 の不変条件（Invariant）確定
-- fail-fast 実装（質問集合空禁止）
-- pytest / E2E / 実データ（10条例）による検証完了
-- Execution Input Contract v0.1 を「運用可能な契約」として確定
+- customized question set CLI の安定化
+- 実パス前提の validate / convert / generate 導線確立
+- 実行結果の再生成・差分確認が可能な設計を固定
 
-### Epic 7（Execution Input Contract v0.2 設計）
+---
 
-- Execution Input Contract v0.2 の設計原則・意味論を確定
-- Core / Extension Fields の区分と責務定義
-- question_set_id / schema_version の意味論確定
-- Invariants / Consumer Interpretation Rules の集約
-- **Design_Execution_Input_Contract_v0.2.md を freeze 可能な状態で完成**
-- v0.1 Consumer との完全後方互換を保証
+### Epic 6（Invariant / 回帰保証）【完了】
+
+- Execution Input Contract v0.2 の確定
+- Invariant（質問集合空禁止・構造逸脱防止）実装
+- 実条例 10 本での手動検証（Q4/Q8 含む）
+- pytest / E2E / CI すべてで再現性確認
+
+---
+
+### 再現性事故と復旧（2026-01）【重要な知見として固定】
+
+- パッケージ名衝突により
+  - 新端末 / CI 環境で import が破綻
+- 原因：
+  - `customized_question_set` が他リポジトリと衝突
+- 対応：
+  - パッケージを `reiki_rag_customized_question_set` に rename
+  - pyproject.toml / tests / CLI / README を一括更新
+- 結果：
+  - ローカル / 新端末 / GitHub Actions すべてで再現性回復
+
+※ 詳細は  
+`docs/dev/Reproducibility_Break_and_Recovery_2026-01.md` に記録
 
 ---
 
 ## 3. Pending（保留中タスク）
 
-- convert_v2.8（表構造の高度化：colspan / rowspan / 別記様式対応）
-- validate_v0.6（編・章・節の階層認識）
-- synthetic_generator_v0.3（meta schema 拡張：P16〜P20）
-
-### Epic 4（残作業）
-
-- generator 実装（接続層）
-  - Golden Question Pool A 読み込み
-  - ordinance_structure → concretizer → writer の接続
-- customized_question_set.json の実生成（最小1条例）
-
----
-
-### Known Issue / Observation
-
-- concretizer の実装が Coverage Policy v0.1.1 の規定を満たしておらず、
-  Q4（条項質問）および Q8（附則質問）が
-  全条例で生成されない状態となっている。
-- 本件は Coverage Policy の設計意図ではなく、
-  実装上の逸脱に起因することが
-  Policy 文書および生成結果の一次情報から確認されている。
-- 評価前に入力を修正すると観測結果が変化するため、
-  現行の評価では、当該質問を含まない入力セットを
-  評価対象として固定する。
-- 対応要否および修正方針は、
-  評価結果を踏まえた後続フェーズで判断する。
-
-Refs:
-
-- GitHub Issue #9
+- convert_v2.8
+  - 表構造（rowspan / colspan / 別記様式）の高度化
+- validate_v0.6
+  - 編・章・節レベルの階層認識
+- synthetic_generator_v0.3
+  - P16–P20 拡張
 
 ---
 
 ## 4. Next Action（次に唯一実施すべきタスク）
 
-Execution Input Contract v0.2 を前提として、
-generator / CLI の非破壊対応（schema_version=0.2, Extension Fields 出力）を行う
+**convert / validate の実利用安定性向上**
+
+- フォルダ単位処理の明確化
+- README と実挙動の完全一致保証
+- 実条例 HTML（非 Git 管理）を前提とした運用確認
 
 ---
 
-## 5. 外部依存／連携プロジェクト
+## 5. 外部連携
 
-### External Dependency: gov-llm-e2e-testkit
+### gov-llm-e2e-testkit
 
-生成AI 上での RAG 応答挙動を観測するため、  
-別プロジェクト「gov-llm-e2e-testkit」を利用する。
-
-同プロジェクトは、  
-HTML / Markdown ナレッジ差分が RAG 応答に与える影響を  
-再現可能に観測・記録することを目的とし、  
-採否判断・優劣判定は行わない。
-
-Golden Question Pool A および Golden Ordinance Set は  
-凍結資産として扱い、同プロジェクトの評価フェーズでは消費しない。
+- 本プロジェクトは **入力資産提供側**
+- 採否・優劣判断は行わない
+- Golden Question / Ordinance は凍結資産として扱う
 
 ---
 
@@ -144,16 +130,17 @@ Golden Question Pool A および Golden Ordinance Set は
 - Design_synthetic_html_v0.2.md
 - Design_synthetic_generator_v0.2.md
 - Design_interface_customized_question_set_delivery.md
-- docs/policy/Coverage_Policy_v0.1.1.md
-- docs/design/customized_question_set/Design_Concretizer_v0.1.md
+- Coverage_Policy_v0.1.2.md
+- Design_Concretizer_v0.1.md
+- Design_synthetic_html_v0.2.md
+- Reproducibility_Break_and_Recovery_2026-01.md
 - test_plan.md / test_e2e_design.md
-- CI: .github/workflows/e2e.yml
+- CI: .github/workflows/*.yml
 
 ---
 
-【運用ルール】  
-本ファイルは唯一の進行基準点（SSoT）であり、  
-Next Action のみを次タスクとして扱う。
+【運用ルール】
 
-【運用ルール（追加）】  
-commit 前には、プロジェクト管理ファイルの更新有無を必ず確認する。
+- 本ファイルは唯一の進行基準点（SSoT）
+- Next Action 以外の作業は原則行わない
+- commit 前に PROJECT_STATUS / CHANGELOG を必ず確認する

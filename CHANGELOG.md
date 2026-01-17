@@ -4,11 +4,26 @@
 
 ---
 
+## v1.5
+
+### Changed
+
+- README を実運用（本番条例HTML）前提に再設計
+  - validate / convert / Customized Question Set 生成をフォルダ単位処理として明確化
+  - 実在しない data/ パス参照を削除
+  - synthetic_html を開発・テスト用途に限定
+  - PowerShell / bash の実行例を正しい記法に修正
+
+※ 実装ロジックの変更はなし（利用者向け契約・説明の是正）
+
+---
+
 ## v1.4r (2026-01-12)
 
 ### Fixed
 
 - refactor: rename customized_question_set to reiki_rag_customized_question_set to fix import reproducibility across environments
+- docs: fix README to remove synthetic/test-only assumptions
 
 ---
 
@@ -94,6 +109,7 @@
 ## [0.5.3] - 2025-12-05
 
 ### Fixed
+
 - `validate_reiki_structure` の JSON 出力で、内部に `set` 型を含む場合に
   `TypeError: Object of type set is not JSON serializable` が発生していた問題を修正。
 - 専用の `_to_serializable` 関数を導入し、`set` をソート済み `list` に変換することで、
@@ -101,28 +117,32 @@
   シリアライズ可能にした。
 
 ### Changed
+
 - スクリプト先頭のバージョン表記を `v0.5.3` に更新。
 - 例外チェックツール設計書を v3.2 に更新し、JSON シリアライズ仕様を明記。
 
 - Qommons Evaluation Framework v0.1 (Gate-based)
 
 ### Added
-- Design_Master.md as single design entry point
 
+- Design_Master.md as single design entry point
 
 ---
 
 ## [Unreleased]
+
 - Add synthetic HTML v0.2 assets (P7–P10), meta templates, and generator v0.1
 
 ---
 
 ## [Unreleased]
+
 - Add Design_synthetic_html_v0.2 (P1–P10, DOM variation, generator & meta spec)
 
 ---
 
 ## [Unreleased]
+
 - Add synthetic HTML design doc (Design_synthetic_html_v0.1)
   - 定義パターン P1〜P6 を収録
   - OSS用の安全な synthetic テストセットの設計開始
@@ -132,6 +152,7 @@
 ## v2.7.1-doc3 — 2025-12-04
 
 ### Added
+
 - `requirements.txt` を追加し、パッケージ依存関係を明確化
 - `.gitignore` を更新して `requirements.txt` を追跡対象に修正
 
@@ -142,6 +163,7 @@
 ## v2.7.1-doc2 — 2025-12-04
 
 ### Documentation
+
 - README を **v1.1** に全面改訂
   - TL;DR セクション追加
   - Quick Start 改善
@@ -154,6 +176,7 @@
 - CI（E2E workflow）に対応した説明を追加
 
 ### No functional changes
+
 - コード（validate / convert）の処理内容は変更なし
 
 ---
@@ -161,6 +184,7 @@
 ## v2.7.1-doc1 — 2025-12-04
 
 ### Documentation
+
 - `docs/test_e2e_design.md` を v1.1 に改訂
   - 異常系テストケース（A01〜A06）を追加
   - Golden diff の方針を明確化
@@ -169,6 +193,7 @@
   - validate → convert の構造整合性チェックを定義
 
 ### Added
+
 - `.github/workflows/e2e.yml` を追加
   - Python 3.10/3.11/3.12 の matrix
   - validate → convert → pytest
@@ -180,6 +205,7 @@
 ## v2.7.1 — 2025-12-03
 
 ### Added
+
 - **convert_reiki_v2.7.py** を追加
   - validate v0.5.2 の構造情報に沿って完全変換を行う改良版
   - 条見出し → 本文の欠落問題を修正
@@ -189,6 +215,7 @@
   - 附則（複数）に完全対応
 
 ### Fixed
+
 - 条本文が抜けるバグ
 - 「第2条」複数誤検出問題は v0.5.2 側で解消済み
 
@@ -197,6 +224,7 @@
 ## v2.7.0（内部版） — 2025-12-03
 
 ### Added
+
 - convert v2.6 の GitHub 移行準備版（非公開）
 - ローカルでの動作確認用 scaffolding の整備
 
@@ -205,11 +233,13 @@
 ## v2.6 — 2025-12-01（チャット内完成版）
 
 ### Added
+
 - **Design_convert_v2.6.md** を確定
 - 表の抽出テスト（k518RG00000080.html）に対応
 - 附則の誤結合防止アルゴリズムを実装
 
 ### Fixed
+
 - 従来問題だった「本則の途中で附則タイトル判定が誤作動する」問題を解消
 - 「同じ class 名のノードが連続する DOM 揺れ」への耐性改善
 
@@ -218,6 +248,7 @@
 ## v0.5.2（validator） — 2025-12-01
 
 ### Added
+
 - **validate_reiki_structure_v0.5.2.py** を追加
   - `.eline` 内の `.article` から条を100%正確に抽出
   - 項 = `div.clause`、号 = `div.item`
@@ -228,6 +259,7 @@
 - 例規HTML（12 / 55 / 80）で precision を検証
 
 ### Fixed
+
 - 「第2条 検出がループする」バグを完全解消
 - 附則の多段構造（最大9本）を正確に解析
 
@@ -236,6 +268,7 @@
 ## v0.5.1 — 2025-11
 
 ### Added
+
 - validate v0.5 の初期版を作成
 - 本文と項・号の抽出ロジックの基礎構築
 
@@ -244,6 +277,7 @@
 ## v0.5.0 — 2025-11
 
 ### Added
+
 - 最初の構造解析パイプライン
 - 例規HTMLの class 構造（article/clause/item/s-head）の調査
 - サンプル HTML（12/55/80）をベースとした仕様化を開始
@@ -253,6 +287,7 @@
 ## v0.1.0 — 2025-11（最初期）
 
 ### Added
+
 - プロジェクト立ち上げ
 - HTML → テキスト抽出の PoC
 - 「条文構造を機械で扱う」コンセプトの実験
