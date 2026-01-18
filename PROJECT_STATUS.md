@@ -30,14 +30,18 @@ tags:
 また、生成された answer.md については、
 
 - HTML版 / Markdown版の違いを
-- **評価や是非判断に先立つ内部工程として観測・整理する**
+- **評価や是非判断に先立つ観測対象として整理・固定する**
 
 という方針を採る。
 
 本プロジェクトにおける評価は、
-本観測結果を含む複数の情報を踏まえて
-人手により実施されるものであり、
-差分観測はその評価を支える前段工程として位置づけられる。
+
+- 観測結果（Answer Diff Observation）を含む入力資産を前提として
+- **本プロジェクトの設計思想・評価工程に基づき**
+- 人手により実施される
+
+ものであり、  
+差分観測はその評価を歪めないための **必須前段工程**として位置づけられる。
 
 ---
 
@@ -86,13 +90,13 @@ tags:
 ### Answer Diff Observation 設計【完了】
 
 - HTML版 / Markdown版 answer.md の差分を  
-  **評価前に観測・整理する設計を確定**
-- 観測と評価の責務境界を明確化
-- 判定・採否・優劣判断を行わない方針を固定
-- Gate-based Evaluation Framework との関係を整理
+  **評価前に観測・整理する設計を v0.1 として確定**
+- 観測と評価の責務境界を明確化（判定・優劣判断を含めない）
+- Structural / Volume / Reference の3観測軸を固定
+- compare_answers.py の責務・I/F・出力仕様を設計として拘束
 
 ※ 詳細は  
-`Design_Answer_Diff_Observation_v0.1.md` に記録
+`docs/observation/Design_Answer_Diff_Observation_Spec_v0.1.md` に記録
 
 ---
 
@@ -126,11 +130,11 @@ tags:
 
 ## 4. Next Action（次に唯一実施すべきタスク）
 
-**answer.md 差分観測フェーズの実行**
+**Answer Diff Observation の実行フェーズ**
 
-- HTML版 / Markdown版 answer.md の差分観測実行
-- 観測結果の整理・記録
-- 評価フェーズ（外部）に引き渡すための前処理確定
+- compare_answers.py による差分観測の実行
+- ObservationResult（JSON / Markdown）の生成
+- 評価工程に投入可能な観測データの固定
 
 ※ convert / validate の拡張は  
 　本フェーズ完了後に再開する
@@ -141,10 +145,9 @@ tags:
 
 ### gov-llm-e2e-testkit
 
-- 本プロジェクトは **入力資産提供側**
-- 評価・採否・優劣判断は行わない
-- Golden Question / Ordinance は凍結資産として扱う
-- answer.md の差分は **評価前観測データ**として提供する
+- 本プロジェクトは **入力資産・観測資産の提供側**
+- 評価は本プロジェクトの設計思想に基づき実施される
+- answer.md の差分は **評価前観測データ**として扱う
 
 ---
 

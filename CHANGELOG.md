@@ -18,6 +18,18 @@
 ※ 実装ロジックの変更はなし  
 ※ reiki-rag-converter の責務・出力契約に変更なし（設計・位置づけの明確化のみ）
 
+### Added
+
+- Answer Diff Observation 設計（v0.1）を正式FIX
+  - HTML版 / Markdown版 answer.md の差分を「評価前観測」として整理する仕様を確定
+  - 観測と評価の責務境界を明文化（判定・優劣判断を含めない）
+  - Structural / Volume / Reference の3観測軸を v0.1 として固定
+  - compare_answers.py の責務・CLI I/F・JSON 出力仕様を設計として拘束
+
+### Notes
+
+- 本更新は設計仕様の確定のみを対象とし、変換・生成ロジックの変更は行っていない
+
 ---
 
 ## v1.5 (2026-01-18)
