@@ -19,11 +19,37 @@ import sys
 from dataclasses import dataclass
 from typing import Dict, Tuple, List
 
+import zipfile
+import tempfile
+import shutil
+
+
 @dataclass(frozen=True)
 class AnswerEntry:
     ordinance_id: str
     question_id: str
     path: Path
+
+def prepare_input_root(input_path: Path) -> Path:
+    """
+    Prepare input root directory.
+
+    - If input_path is a directory: return as-is
+    - If input_path is a zip file: extract to a temporary directory and return it
+
+    Caller is responsible for cleanup if needed.
+    """
+    if input_path.is_dir():
+        return input_path
+
+    if input_path.is_file() and input_path.suffix.lower() == ".zip":
+        tmpdir = Path(tempfile.mkdtemp(prefix="compare_answers_"))
+        with zipfile.ZipFile(input_path, "r") as zf:
+            zf.extractall(tmpdir)
+        return tmpdir
+
+    raise ValueError(f"Unsupported input type: {input_path}")
+
 
 def collect_answer_entries(root: Path) -> Dict[Tuple[str, str], AnswerEntry]:
     """
@@ -171,8 +197,12 @@ def main() -> int:
         return 1
     
     # Input scan (Spec v0.1 compliant)
-    html_entries = collect_answer_entries(html_input)
-    md_entries = collect_answer_entries(md_input)
+    html_root = prepare_input_root(html_input)
+    md_root = prepare_input_root(md_input)
+
+    html_entries = collect_answer_entries(html_root)
+    md_entries = collect_answer_entries(md_root)
+
 
     pairs, errors = build_answer_pairs(html_entries, md_entries)
 
