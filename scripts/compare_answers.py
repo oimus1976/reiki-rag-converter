@@ -23,6 +23,9 @@ import zipfile
 import tempfile
 import shutil
 
+import re
+
+
 
 @dataclass(frozen=True)
 class AnswerEntry:
@@ -85,6 +88,45 @@ def collect_answer_entries(root: Path) -> Dict[Tuple[str, str], AnswerEntry]:
             )
 
     return entries
+
+ARTICLE_RE = re.compile(r"第[一二三四五六七八九十百千万0-9]+条")
+PARAGRAPH_RE = re.compile(r"第[一二三四五六七八九十百千万0-9]+項")
+SUPPLEMENTARY_RE = re.compile(r"附則")
+
+
+def extract_references(text: str) -> dict[str, set[str]]:
+    """
+    Extract legal references from answer text.
+    """
+    return {
+        "article": set(ARTICLE_RE.findall(text)),
+        "paragraph": set(PARAGRAPH_RE.findall(text)),
+        "supplementary": set(SUPPLEMENTARY_RE.findall(text)),
+    }
+
+def compute_reference_diff(
+    html_text: str, md_text: str
+) -> dict[str, dict[str, list[str]]]:
+    """
+    Compute reference diff between html and markdown answers.
+    """
+    html_refs = extract_references(html_text)
+    md_refs = extract_references(md_text)
+
+    diff: dict[str, dict[str, list[str]]] = {}
+
+    for key in ["article", "paragraph", "supplementary"]:
+        only_html = sorted(html_refs[key] - md_refs[key])
+        only_md = sorted(md_refs[key] - html_refs[key])
+
+        if only_html or only_md:
+            diff[key] = {}
+            if only_html:
+                diff[key]["only_in_html"] = only_html
+            if only_md:
+                diff[key]["only_in_markdown"] = only_md
+
+    return diff
 
 def build_answer_pairs(
     html_entries: Dict[Tuple[str, str], AnswerEntry],
@@ -206,6 +248,30 @@ def main() -> int:
 
     pairs, errors = build_answer_pairs(html_entries, md_entries)
 
+    observations = []
+
+    if pairs:
+        html_entry, md_entry = pairs[0]
+
+        html_text = html_entry.path.read_text(encoding="utf-8")
+        md_text = md_entry.path.read_text(encoding="utf-8")
+
+        reference_diff = compute_reference_diff(html_text, md_text)
+
+        observations.append(
+            {
+                "ordinance_id": html_entry.ordinance_id,
+                "question_id": html_entry.question_id,
+                "diff_flags": {
+                    "reference_diff": bool(reference_diff)
+                },
+                "metrics": {},
+                "details": {
+                    "reference_diff": reference_diff
+                },
+            }
+        )
+
     # For now: just log counts (no observation yet)
     print(f"[INFO] HTML entries: {len(html_entries)}")
     print(f"[INFO] Markdown entries: {len(md_entries)}")
@@ -217,6 +283,8 @@ def main() -> int:
     ensure_output_dir(output_dir)
 
     result = generate_empty_observation_result()
+    result["observations"] = observations
+
     write_observation_result(output_dir, result)
 
     print("[OK] Observation skeleton executed successfully.")
