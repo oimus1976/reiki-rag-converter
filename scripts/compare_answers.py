@@ -250,9 +250,7 @@ def main() -> int:
 
     observations = []
 
-    if pairs:
-        html_entry, md_entry = pairs[0]
-
+    for html_entry, md_entry in pairs:
         html_text = html_entry.path.read_text(encoding="utf-8")
         md_text = md_entry.path.read_text(encoding="utf-8")
 
@@ -271,6 +269,7 @@ def main() -> int:
                 },
             }
         )
+
 
     # For now: just log counts (no observation yet)
     print(f"[INFO] HTML entries: {len(html_entries)}")
