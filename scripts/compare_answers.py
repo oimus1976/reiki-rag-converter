@@ -295,32 +295,75 @@ def write_observation_result(output_dir: Path, result: dict) -> None:
     with md_path.open("w", encoding="utf-8") as f:
         f.write("# Answer Diff Observation Summary\n\n")
 
-        f.write("## Volume Diff（情報量差）について\n\n")
         f.write(
-            "本観測では、HTML 版 answer.md と Markdown 版 answer.md の間で、\n"
-            "**文章量の差（情報量差）を定量的に観測**します。\n\n"
+            "## Observation Summary の位置づけ\n\n"
+            "本ドキュメントおよび `observation_result.json` は、\n"
+            "HTML 版 answer.md と Markdown 版 answer.md の差分を、\n"
+            "**評価や解釈を行わず、観測事実として固定する**ことを目的とします。\n\n"
+            "本フェーズでは、差分の有無や量を機械的に記録するに留め、\n"
+            "それらの良否・適切性・意味付けは行いません。\n"
+            "観測結果の解釈および評価は、Evaluation Framework 側の責務とします。\n\n"
         )
 
-        f.write("### 観測指標（v0.1）\n\n")
-        f.write("- **chars**  \n  回答全文の文字数（Unicode コードポイント数）\n\n")
-        f.write("- **lines**  \n  改行（\\n）で区切った行数\n\n")
         f.write(
+            "## 入力と出力\n\n"
+            "- 入力：HTML 版 answer.md（zip / directory）\n"
+            "- 入力：Markdown 版 answer.md（zip / directory）\n"
+            "- 出力：`observation_result.json`（観測結果の正本）\n"
+            "- 出力：`observation_summary.md`（本ドキュメント）\n\n"
+        )
+
+        f.write(
+            "## 観測対象と Diff の種類（v0.1）\n\n"
+            "本フェーズでは、以下 3 種類の Diff を観測対象とします。\n\n"
+            "### Reference Diff（参照差）\n\n"
+            "- 条（第○条）\n"
+            "- 項（第○項）\n"
+            "- 附則\n\n"
+            "について、**出現有無のみ**を観測します。\n"
+            "文章内容の言い換え、要約、説明粒度の違いは対象外です。\n\n"
+            "### Volume Diff（情報量差）\n\n"
+            "HTML 版と Markdown 版の間で、**文章量の差を定量的に観測**します。\n\n"
+            "### Structural Diff（構造差）\n\n"
+            "Structural Diff では、回答中に含まれる以下の構造要素について、\n"
+            "HTML 版と Markdown 版の **一致／不一致のみ**を判定します。\n\n"
+            "- 見出し行\n"
+            "- 箇条書き項目\n"
+            "- 附則の有無\n\n"
+            "v0.1 では、構造要素の個数や内訳は記録せず、\n"
+            "構造が同一かどうかの boolean 値のみを観測結果として出力します。\n\n"
+        )
+
+        f.write(
+            "## Volume Diff（情報量差）について\n\n"
+            "### 観測指標（v0.1）\n\n"
+            "- **chars**  \n"
+            "  回答全文の文字数（Unicode コードポイント数）\n\n"
+            "- **lines**  \n"
+            "  改行（\\n）で区切った行数\n\n"
             "- **paragraphs**  \n"
             "  空行で区切られた、1 行以上の非空行ブロック数  \n"
             "  （見出し・本文・箇条書き等の構文的区別は行いません）\n\n"
         )
 
-        f.write("### 重要な注意点\n\n")
         f.write(
-            "- 本観測は **定量的な事実の記録のみ**を目的としています\n"
-            "- 文字数・行数・段落数の **多寡や増減の良否は判断しません**\n"
-            "- Markdown 特有の見出し、章サマリ、箇条書き構造により、\n"
-            "  HTML 版より段落数等が大きくなる場合がありますが、\n"
-            "  これは **仕様どおりの観測結果**です\n"
-            "- 本結果を用いた評価・解釈・適否判断は、\n"
-            "  **Evaluation Framework 側の責務**とします\n"
+            "## Structural Diff v0.1 に関する注意点\n\n"
+            "Structural Diff v0.1 は、観測対象データセットの特性上、\n"
+            "**すべての回答で差が検出される場合があります**。\n\n"
+            "これは以下の理由によるものであり、異常や実装不備を示すものではありません。\n\n"
+            "- Markdown 版には、章サマリや見出し構造が含まれる\n"
+            "- HTML 版では、これらが平文化されている場合がある\n"
+            "- 本 Diff は「差の有無」のみを判定する設計である\n\n"
+            "差の種類や程度を分析することは、v0.2 以降、または Evaluation フェーズで扱う課題とします。\n\n"
         )
 
+        f.write(
+            "## 本フェーズの完了条件\n\n"
+            "- 全 AnswerPair について ObservationResult が生成されている\n"
+            "- Reference / Volume / Structural の各 Diff が算出されている\n"
+            "- 観測結果が JSON と Markdown の成果物として固定されている\n"
+            "- 成果物に評価・判断を含む記述が存在しない\n"
+        )
 
 def main() -> int:
     args = parse_args()
