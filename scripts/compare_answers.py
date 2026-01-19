@@ -33,6 +33,56 @@ class AnswerEntry:
     question_id: str
     path: Path
 
+def compute_structural_metrics(text: str) -> dict:
+    """
+    Structural metrics v0.1
+    - heading_count
+    - list_item_count
+    - has_supplementary
+    """
+    heading_count = 0
+    list_item_count = 0
+    has_supplementary = False
+
+    for line in text.splitlines():
+        stripped = line.strip()
+
+        if not stripped:
+            continue
+
+        # 見出し検出（Spec 9.2）
+        if (
+            stripped.startswith("#")
+            or stripped.startswith("附則")
+            or stripped.startswith("第")
+        ):
+            heading_count += 1
+
+        # 箇条書き検出（Spec 9.3）
+        if (
+            stripped.startswith("- ")
+            or stripped.startswith("* ")
+            or stripped.startswith("+ ")
+            or re.match(r"\d+\.\s+", stripped)
+        ):
+            list_item_count += 1
+
+        # 附則セクション検出（Spec 9.4）
+        if stripped.startswith("附則"):
+            has_supplementary = True
+
+    return {
+        "heading_count": heading_count,
+        "list_item_count": list_item_count,
+        "has_supplementary": has_supplementary,
+    }
+
+def compute_structural_diff(html_text: str, md_text: str) -> bool:
+    html_struct = compute_structural_metrics(html_text)
+    md_struct = compute_structural_metrics(md_text)
+
+    return html_struct != md_struct
+
 def compute_volume_metrics(text: str) -> dict:
     # chars: Unicode code points
     chars = len(text)
@@ -310,14 +360,16 @@ def main() -> int:
 
         html_metrics = compute_volume_metrics(html_text)
         md_metrics = compute_volume_metrics(md_text)
-
         volume_diff = (html_metrics != md_metrics)
+
+        structural_diff = compute_structural_diff(html_text, md_text)
 
         observations.append(
             {
                 "ordinance_id": html_entry.ordinance_id,
                 "question_id": html_entry.question_id,
                 "diff_flags": {
+                    "structural_diff": structural_diff,
                     "reference_diff": bool(reference_diff),
                     "volume_diff": volume_diff,
                 },
