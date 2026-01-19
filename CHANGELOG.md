@@ -4,6 +4,36 @@
 
 ---
 
+## v1.7 (2026-01-19)
+
+### Added
+
+- Answer Diff Observation 実行フェーズを正式に完了
+  - compare_answers.py による差分観測（Reference / Volume / Structural）を全条例で実行
+  - ObservationResult（JSON / Markdown）を run 単位の成果物として固定
+- Observation Summary v0.1 を正式テンプレとして確定
+  - diff_flags が全件 true となり得ることを仕様として明文化
+  - observations 配列の並び順が意味を持たないことを明示
+  - 正規化・DOM 解釈・Markdown 構文解釈を行わない設計判断を固定
+  - observation_result.json 単体での比較・評価を禁止
+
+### Changed
+
+- Observation Summary の生成方式を整理
+  - 固定テンプレ（docs/observation/Observation_Summary_v0.1.md）を正本とし
+  - run 固有情報（schema_version / generated_at / 件数）を
+    compare_answers.py が自動追記する方式に変更
+- PROJECT_STATUS を更新し
+  - Answer Diff Observation フェーズを「完了」としてクローズ
+  - 次フェーズを Evaluation 実行準備に移行
+
+### Notes
+
+- 本バージョンでは HTML / Markdown 変換ロジックの変更は行っていない
+- 差分観測は評価や品質判定を目的としない前段工程として固定されている
+
+---
+
 ## v1.6 (2026-01-18)
 
 ### Changed

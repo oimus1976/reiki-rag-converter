@@ -1,10 +1,10 @@
 ---
 title: PROJECT_STATUS
-version: v1.6
+version: v1.7
 doc_type: status
 project: reiki-rag-converter
 created: 2025-12-06
-updated: 2026-01-18
+updated: 2026-01-19
 author: Sumio Nishioka + ChatGPT
 tags:
   - project-management
@@ -61,7 +61,7 @@ tags:
 
 ### Epic 4（条例別カスタマイズ質問セット生成基盤）【完了】
 
-- ordinance_structure による **条・項（clause）・附則の正規抽出**
+- ordinance_structure による **条・項・附則の正規抽出**
 - paragraph ≠ clause の語彙正規化完了
 - Coverage Policy v0.1.2 に準拠した concretizer 実装
 - Q4（条＋項）/ Q8（附則）質問の **全条例生成保証**
@@ -82,32 +82,41 @@ tags:
 
 - Execution Input Contract v0.2 の確定
 - Invariant（質問集合空禁止・構造逸脱防止）実装
-- 実条例 10 本での手動検証（Q4/Q8 含む）
-- pytest / E2E / CI すべてで再現性確認
+- 実条例での手動検証（Q4 / Q8 含む）
+- pytest / E2E / CI による再現性確認
 
 ---
 
-### Answer Diff Observation 設計【完了】
+### Answer Diff Observation（v0.1）【完了】
 
 - HTML版 / Markdown版 answer.md の差分を  
-  **評価前に観測・整理する設計を v0.1 として確定**
-- 観測と評価の責務境界を明確化（判定・優劣判断を含めない）
-- Structural / Volume / Reference の3観測軸を固定
-- compare_answers.py の責務・I/F・出力仕様を設計として拘束
+  **評価前に観測・整理する設計および実装を v0.1 として確定**
+- 観測と評価の責務境界を明確化
+  - 差分の良否・適切性・意味付けを行わない
+- Reference / Volume / Structural の3観測軸を固定
+- compare_answers.py による
+  - 全条例・全質問ペアの差分観測を実行
+  - ObservationResult（JSON / Markdown）を run 単位で生成
+- Observation Summary v0.1 を正式テンプレとして確定
+  - diff_flags が全件 true となり得ることを仕様として明文化
+  - observations 配列の並び順が意味を持たないことを明示
+  - 正規化・DOM 解釈・Markdown 構文解釈を行わない設計判断を固定
+  - observation_result.json 単体での比較・評価を禁止
 
 ※ 詳細は  
-`docs/observation/Design_Answer_Diff_Observation_Spec_v0.1.md` に記録
+`docs/observation/Design_Answer_Diff_Observation_Spec_v0.1.md`  
+`docs/observation/Observation_Summary_v0.1.md`  
+に記録
 
 ---
 
 ### 再現性事故と復旧（2026-01）【重要な知見として固定】
 
-- パッケージ名衝突により
-  - 新端末 / CI 環境で import が破綻
+- パッケージ名衝突により新端末 / CI 環境で import が破綻
 - 原因：
   - `customized_question_set` が他リポジトリと衝突
 - 対応：
-  - パッケージを `reiki_rag_customized_question_set` に rename
+  - パッケージ名を `reiki_rag_customized_question_set` に rename
   - pyproject.toml / tests / CLI / README を一括更新
 - 結果：
   - ローカル / 新端末 / GitHub Actions すべてで再現性回復
@@ -130,14 +139,13 @@ tags:
 
 ## 4. Next Action（次に唯一実施すべきタスク）
 
-**Answer Diff Observation の実行フェーズ**
+**Evaluation 実行準備フェーズ**
 
-- compare_answers.py による差分観測の実行
-- ObservationResult（JSON / Markdown）の生成
-- 評価工程に投入可能な観測データの固定
+- Observation 成果物を前提とした Evaluation 実行手順の明文化
+- Evaluation Framework における入力前提・読む順番・禁止事項の整理
+- 初回 Evaluation run の実施準備
 
-※ convert / validate の拡張は  
-　本フェーズ完了後に再開する
+※ Observation / convert / validate の仕様変更は行わない
 
 ---
 
@@ -159,6 +167,8 @@ tags:
 - ChatGPT_Startup_Workflow_v1.0.md
 - Design_Execution_Input_Contract_v0.2.md
 - Design_Answer_Diff_Observation_v0.1.md
+- Design_Answer_Diff_Observation_Spec_v0.1.md
+- Observation_Summary_v0.1.md
 - Design_convert_v2.6.md
 - Design_synthetic_html_v0.2.md
 - Design_synthetic_generator_v0.2.md
