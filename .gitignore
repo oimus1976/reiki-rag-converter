@@ -53,6 +53,9 @@ tests/output/
 # 自動生成HTML（Qommonsテスト用）
 test_html_set/
 
+# Observation artifacts
+observation_out/
+
 #-------------------------------------
 # 実条例HTML（著作権配慮で公開禁止・追跡不可）
 #-------------------------------------
