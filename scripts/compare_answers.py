@@ -33,6 +33,33 @@ class AnswerEntry:
     question_id: str
     path: Path
 
+def compute_volume_metrics(text: str) -> dict:
+    # chars: Unicode code points
+    chars = len(text)
+
+    # lines: splitlines() は末尾改行の過剰カウントを避ける
+    lines = len(text.splitlines())
+
+    # paragraphs: 空行区切りの非空行ブロック
+    count = 0
+    in_block = False
+    for line in text.splitlines():
+        if line.strip() == "":
+            if in_block:
+                count += 1
+                in_block = False
+        else:
+            in_block = True
+    if in_block:
+        count += 1
+
+    return {
+        "chars": chars,
+        "lines": lines,
+        "paragraphs": count,
+    }
+
+
 def prepare_input_root(input_path: Path) -> Path:
     """
     Prepare input root directory.
@@ -217,7 +244,32 @@ def write_observation_result(output_dir: Path, result: dict) -> None:
 
     with md_path.open("w", encoding="utf-8") as f:
         f.write("# Answer Diff Observation Summary\n\n")
-        f.write("- No observations generated (skeleton run)\n")
+
+        f.write("## Volume Diff（情報量差）について\n\n")
+        f.write(
+            "本観測では、HTML 版 answer.md と Markdown 版 answer.md の間で、\n"
+            "**文章量の差（情報量差）を定量的に観測**します。\n\n"
+        )
+
+        f.write("### 観測指標（v0.1）\n\n")
+        f.write("- **chars**  \n  回答全文の文字数（Unicode コードポイント数）\n\n")
+        f.write("- **lines**  \n  改行（\\n）で区切った行数\n\n")
+        f.write(
+            "- **paragraphs**  \n"
+            "  空行で区切られた、1 行以上の非空行ブロック数  \n"
+            "  （見出し・本文・箇条書き等の構文的区別は行いません）\n\n"
+        )
+
+        f.write("### 重要な注意点\n\n")
+        f.write(
+            "- 本観測は **定量的な事実の記録のみ**を目的としています\n"
+            "- 文字数・行数・段落数の **多寡や増減の良否は判断しません**\n"
+            "- Markdown 特有の見出し、章サマリ、箇条書き構造により、\n"
+            "  HTML 版より段落数等が大きくなる場合がありますが、\n"
+            "  これは **仕様どおりの観測結果**です\n"
+            "- 本結果を用いた評価・解釈・適否判断は、\n"
+            "  **Evaluation Framework 側の責務**とします\n"
+        )
 
 
 def main() -> int:
@@ -256,20 +308,28 @@ def main() -> int:
 
         reference_diff = compute_reference_diff(html_text, md_text)
 
+        html_metrics = compute_volume_metrics(html_text)
+        md_metrics = compute_volume_metrics(md_text)
+
+        volume_diff = (html_metrics != md_metrics)
+
         observations.append(
             {
                 "ordinance_id": html_entry.ordinance_id,
                 "question_id": html_entry.question_id,
                 "diff_flags": {
-                    "reference_diff": bool(reference_diff)
+                    "reference_diff": bool(reference_diff),
+                    "volume_diff": volume_diff,
                 },
-                "metrics": {},
+                "metrics": {
+                    "html": html_metrics,
+                    "markdown": md_metrics,
+                },
                 "details": {
-                    "reference_diff": reference_diff
+                    "reference_diff": reference_diff,
                 },
             }
         )
-
 
     # For now: just log counts (no observation yet)
     print(f"[INFO] HTML entries: {len(html_entries)}")
