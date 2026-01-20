@@ -4,6 +4,36 @@
 
 ---
 
+## v1.9 (2026-01-20)
+
+### Added
+
+- Evaluation AUTO Result（JSON 正本）v0.2 を設計・実装として追加
+  - Observation v0.1 成果物を入力とし、差分の「事実のみ」を自動集約
+  - diff_flags 分布および Reference Diff の事実集計を JSON として固定
+  - 評価・解釈・合否判断を含まない AUTO フェーズとして明確化
+- eval_summarize.py を追加
+  - Observation Result（JSON）から Evaluation AUTO Result（JSON）を生成
+  - CLI v0.2（--out-dir）を正式 I/F として確定
+- Evaluation AUTO Result v0.2 に対する pytest を追加
+  - JSON スキーマおよび集計事実をテストで拘束
+
+### Changed
+
+- Evaluation フェーズの内部構成を明確化
+  - AUTO（事実集約）/ HUMAN（判断・所見）を明示的に分離
+  - Markdown は JSON 正本の派生 view として位置づけ
+- Evaluation 成果物の配置方針を整理
+  - 実行生成物は artifacts 配下を正とし、docs/ は設計・テンプレのみとする方針を明文化
+
+### Notes
+
+- 本バージョンでは Observation v0.1 の仕様・算出ロジックに変更はない
+- Evaluation の人手判断（HUMAN フェーズ）は未実施
+- 本更新は **Evaluation 実行基盤の確定**を目的とする
+
+---
+
 ## v1.8 (2026-01-xx)
 
 ### Added

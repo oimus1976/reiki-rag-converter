@@ -1,6 +1,6 @@
 ---
 title: PROJECT_STATUS
-version: v1.8
+version: v1.9
 doc_type: status
 project: reiki-rag-converter
 created: 2025-12-06
@@ -34,14 +34,11 @@ tags:
 
 という方針を採る。
 
-本プロジェクトにおける評価は、
+評価工程は以下の責務分離に基づく。
 
-- 観測結果（Answer Diff Observation）を含む入力資産を前提として
-- **本プロジェクトの設計思想・評価工程に基づき**
-- 人手により実施される
-
-ものであり、  
-差分観測はその評価を歪めないための **必須前段工程**として位置づけられる。
+- Observation：差分の事実を観測する前段フェーズ
+- Evaluation AUTO：観測結果を事実として集約する自動フェーズ
+- Evaluation HUMAN：Framework に基づき人手で判断するフェーズ
 
 ---
 
@@ -110,25 +107,6 @@ tags:
 
 ---
 
-### Evaluation 実行手順（v0.1）【完了】
-
-- Observation v0.1 成果物を前提とした
-  - Evaluation 実行手順（読む順・判断ルール）を正式文書として確定
-- 以下を明確に分離・固定
-  - Observation：評価前の差分観測フェーズ
-  - Evaluation：Framework に基づく人手判断フェーズ
-- Evaluation において行わない事項を明文化
-  - Observation の再解釈・再計算
-  - 差分の良否・品質判断
-  - run 間の直接比較
-- 初回 Evaluation Run 向けチェックリスト v0.1 を整備
-  - 手順逸脱・責務越境防止を目的とした初回専用ガードとして位置づけ
-
-※ 本フェーズでは Evaluation の実行そのものは行っていない  
-※ 実装・観測ロジック・成果物仕様の変更はなし
-
----
-
 ### 再現性事故と復旧（2026-01）【重要な知見として固定】
 
 - パッケージ名衝突により新端末 / CI 環境で import が破綻
@@ -145,12 +123,38 @@ tags:
 
 ---
 
+### Evaluation 実行手順（v0.1）【完了】
+
+- Observation v0.1 成果物を前提とした
+  - Evaluation 実行手順（読む順・判断ルール）を正式文書として確定
+- Observation / Evaluation の責務境界を明確化
+- 初回 Evaluation Run チェックリスト v0.1 を整備
+
+---
+
+### Evaluation AUTO Result（v0.2）【完了】
+
+- Evaluation AUTO Result（JSON 正本）v0.2 を設計・実装として確定
+- Observation Result（JSON）を入力とし
+  - diff_flags 分布の集計
+  - Reference Diff に関する事実集約を自動生成
+- 評価・解釈・合否判断を含まないことを明示
+- eval_summarize.py により CLI 実行可能
+- pytest により JSON スキーマと集計事実を拘束
+
+※ 詳細は  
+`docs/eval/Design_Evaluation_Auto_Result_v0.2.md`  
+に記録
+
+---
+
 ## 3. Pending（保留中タスク）
 
-- convert_v2.8
-  - 表構造（rowspan / colspan / 別記様式）の高度化
-- validate_v0.6
-  - 編・章・節レベルの階層認識
+- Evaluation HUMAN フェーズの実行
+  - Gate 判定（OK / △ / NG）
+  - 所見・判断留保の記録
+- convert_v2.8（表構造高度化）
+- validate_v0.6（編・章・節認識）
 - synthetic_generator_v0.3
   - P16–P20 拡張
 
@@ -158,11 +162,11 @@ tags:
 
 ## 4. Next Action（次に唯一実施すべきタスク）
 
-**Evaluation 実行フェーズの開始**
+**Evaluation HUMAN フェーズの開始**
 
-- v0.1 手順に基づく初回 Evaluation run の実施
-- Gate 判定結果・所見の記録
-- Evaluation Framework 運用上の課題抽出
+- v0.1 手順に基づく初回 Evaluation run（人手判断）の実施
+- Evaluation Record への所見記録
+- Framework 運用上の課題抽出
 
 ---
 
