@@ -56,6 +56,10 @@ test_html_set/
 # Observation artifacts
 observation_out/
 
+# Evaluation run artifacts
+artifacts/evaluation/**
+
+
 #-------------------------------------
 # 実条例HTML（著作権配慮で公開禁止・追跡不可）
 #-------------------------------------
