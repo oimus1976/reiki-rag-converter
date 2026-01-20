@@ -3,6 +3,10 @@ schema_version: "0.1"
 document_type: design_spec
 record_type: evaluation_bundle_distribution
 status: FIX
+canonical: true
+related_specs:
+  - docs/README_Evaluation.md
+  - docs/eval/Evaluation_Bundle_v0.1.md
 ---
 
 # Evaluation Bundle ZIP 配布仕様 v0.1
@@ -12,6 +16,7 @@ status: FIX
 ## 本文書の位置づけ
 
 本ドキュメントは、**Evaluation Bundle v0.1 を外部に引き渡すための ZIP 配布仕様**を定義する設計正本である。
+本文書は、Evaluation の実行手順・判断内容・評価基準を定義するものではない。
 
 本仕様は以下を目的とする。
 
@@ -26,6 +31,7 @@ status: FIX
 本仕様は、以下の条件を満たす Evaluation Bundle に適用する。
 
 - Evaluation Bundle 設計 v0.1 に準拠している
+- Evaluation v0.1 の完了条件を満たしている
 - bundle_manifest.json が存在する
 - Observation / AUTO / HUMAN / Judgment がすべて含まれている
 
@@ -158,6 +164,10 @@ Evaluation Bundle ZIP 配布仕様 v0.1 は、
 ---
 
 ## まとめ
+
+本仕様は、Evaluation 全体の入口文書である  
+`docs/README_Evaluation.md` によって位置づけられ、  
+Evaluation Bundle v0.1 の配布フェーズを構成する。
 
 本仕様により、Evaluation Bundle は、
 

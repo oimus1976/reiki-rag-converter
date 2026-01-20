@@ -4,6 +4,40 @@
 
 ---
 
+## v1.10 (2026-01-20)
+
+### Added
+
+- Evaluation v0.1 を **正式に完了**
+  - Observation / Evaluation AUTO / Evaluation HUMAN / Judgment の全フェーズを定義・実行
+  - 各フェーズ成果物の責務境界と不変性を FIX
+- Evaluation Bundle v0.1 を設計正本として確定
+  - Observation / AUTO / HUMAN / Judgment を束ねる評価単位を定義
+  - bundle_manifest.json による機械可読な完全性保証を導入
+- Evaluation Bundle ZIP 配布仕様 v0.1 を追加
+  - 単一 Bundle = 単一 ZIP の配布単位を固定
+  - ZIP 内ディレクトリ構成・命名規則・不変性ルールを明文化
+- bundle_pack.py を追加
+  - Evaluation Bundle v0.1 を ZIP として自動生成する CLI
+  - pytest により ZIP 内容・構造を検証
+- Evaluation Judgment 設計 v0.1 を追加
+  - AUTO / HUMAN を前提とした最終判断フェーズの責務を定義
+  - 合否判断・留保・差戻しの記録形式を固定
+
+### Changed
+
+- Evaluation 成果物のライフサイクルを明確化
+  - docs/ は設計・テンプレ・仕様のみ
+  - 実行生成物は artifacts/ を正とする運用に統一
+- Evaluation を「実行可能・配布可能な成果物単位」として再定義
+
+### Notes
+
+- 本バージョン以降、Evaluation v0.1 は再実行・再解釈の対象としない
+- 差分比較・複数 run 対応は Bundle v0.2 で扱う
+
+---
+
 ## v1.9 (2026-01-20)
 
 ### Added

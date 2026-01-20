@@ -1,6 +1,6 @@
 ---
 title: PROJECT_STATUS
-version: v1.9
+version: v1.10
 doc_type: status
 project: reiki-rag-converter
 created: 2025-12-06
@@ -148,11 +148,40 @@ tags:
 
 ---
 
+### Evaluation v0.1（完了）【正式完了】
+
+- Evaluation v0.1 を **設計・実行・配布可能な単位として正式に完了**
+- 以下の全フェーズを FIX
+  - Observation（差分の事実観測）
+  - Evaluation AUTO（事実集約・JSON 正本）
+  - Evaluation HUMAN（Framework に基づく人手判断）
+  - Evaluation Judgment（最終判断・結論記録）
+- 各フェーズの責務境界を明確化
+  - 評価前観測と判断の混線を禁止
+  - AUTO フェーズでは解釈・合否判断を行わない
+- Evaluation Bundle v0.1 を正式成果物単位として確定
+  - Observation / AUTO / HUMAN / Judgment を束ねる構造を固定
+  - bundle_manifest.json による完全性検証を導入
+- Evaluation Bundle ZIP 配布仕様 v0.1 を確定
+  - 単一 Bundle = 単一 ZIP
+  - ZIP 内構造・命名規則・不変性ルールを設計として拘束
+- bundle_pack.py により
+  - Bundle v0.1 の ZIP 自動生成を実装
+  - pytest による内容検証を実施
+
+※ Evaluation v0.1 は「完了済み成果物」として固定し、
+　再生成・差替えは行わない
+
+---
+
 ## 3. Pending（保留中タスク）
 
-- Evaluation HUMAN フェーズの実行
-  - Gate 判定（OK / △ / NG）
-  - 所見・判断留保の記録
+- Bundle v0.2 設計
+  - 複数 Evaluation run の束ね
+  - Bundle 間差分比較
+- Reference Diff false 内容分析フェーズの別プロジェクト化
+- Evaluation Bundle 受領側検証 CLI（bundle_validate.py）
+- Evaluation 完全自動フロー（Observation → ZIP）設計
 - convert_v2.8（表構造高度化）
 - validate_v0.6（編・章・節認識）
 - synthetic_generator_v0.3
@@ -162,11 +191,7 @@ tags:
 
 ## 4. Next Action（次に唯一実施すべきタスク）
 
-**Evaluation HUMAN フェーズの開始**
-
-- v0.1 手順に基づく初回 Evaluation run（人手判断）の実施
-- Evaluation Record への所見記録
-- Framework 運用上の課題抽出
+**Bundle v0.2（差分比較・複数 run 対応）の設計開始**
 
 ---
 
