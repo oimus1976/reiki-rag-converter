@@ -80,7 +80,10 @@ def main():
     with zipfile.ZipFile(zip_path, "w", zipfile.ZIP_DEFLATED) as zf:
         for path in bundle_dir.rglob("*"):
             if path.is_file():
-                arcname = path.relative_to(bundle_dir.parent)
+                arcname = (
+                Path(f"evaluation_bundle_{bundle_id}")
+                / path.relative_to(bundle_dir)
+                )
                 zf.write(path, arcname)
 
     print(f"[OK] Evaluation Bundle packed: {zip_path}")
