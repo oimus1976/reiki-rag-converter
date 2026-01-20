@@ -4,6 +4,30 @@
 
 ---
 
+## v1.8 (2026-01-xx)
+
+### Added
+
+- Evaluation 実行手順 v0.1 を正式文書として確定
+  - Observation v0.1 成果物を前提とした入力条件・読む順・判断ルールを固定
+  - Observation の再解釈・再計算・品質判断を行わない方針を明文化
+  - 合否ではなく Gate 判定（OK / △ / NG）による評価出口を定義
+- 初回 Evaluation Run チェックリスト v0.1 を追加
+  - 手順逸脱・責務越境を防止するための初回専用ガードとして位置づけ
+
+### Changed
+
+- Evaluation フェーズの位置づけを整理
+  - Observation 完了後に人手で実行する判断フェーズとして明確化
+  - Observation / Evaluation / Framework の責務境界を文書レベルで固定
+
+### Notes
+
+- 本バージョンでは Observation / convert / validate / diff 算出ロジックの変更は行っていない
+- Evaluation は未実行であり、本更新は **実行手順の確定**のみを対象とする
+
+---
+
 ## v1.7 (2026-01-19)
 
 ### Added

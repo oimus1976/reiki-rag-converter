@@ -1,10 +1,10 @@
 ---
 title: PROJECT_STATUS
-version: v1.7
+version: v1.8
 doc_type: status
 project: reiki-rag-converter
 created: 2025-12-06
-updated: 2026-01-19
+updated: 2026-01-20
 author: Sumio Nishioka + ChatGPT
 tags:
   - project-management
@@ -110,6 +110,25 @@ tags:
 
 ---
 
+### Evaluation 実行手順（v0.1）【完了】
+
+- Observation v0.1 成果物を前提とした
+  - Evaluation 実行手順（読む順・判断ルール）を正式文書として確定
+- 以下を明確に分離・固定
+  - Observation：評価前の差分観測フェーズ
+  - Evaluation：Framework に基づく人手判断フェーズ
+- Evaluation において行わない事項を明文化
+  - Observation の再解釈・再計算
+  - 差分の良否・品質判断
+  - run 間の直接比較
+- 初回 Evaluation Run 向けチェックリスト v0.1 を整備
+  - 手順逸脱・責務越境防止を目的とした初回専用ガードとして位置づけ
+
+※ 本フェーズでは Evaluation の実行そのものは行っていない  
+※ 実装・観測ロジック・成果物仕様の変更はなし
+
+---
+
 ### 再現性事故と復旧（2026-01）【重要な知見として固定】
 
 - パッケージ名衝突により新端末 / CI 環境で import が破綻
@@ -139,13 +158,11 @@ tags:
 
 ## 4. Next Action（次に唯一実施すべきタスク）
 
-**Evaluation 実行準備フェーズ**
+**Evaluation 実行フェーズの開始**
 
-- Observation 成果物を前提とした Evaluation 実行手順の明文化
-- Evaluation Framework における入力前提・読む順番・禁止事項の整理
-- 初回 Evaluation run の実施準備
-
-※ Observation / convert / validate の仕様変更は行わない
+- v0.1 手順に基づく初回 Evaluation run の実施
+- Gate 判定結果・所見の記録
+- Evaluation Framework 運用上の課題抽出
 
 ---
 
