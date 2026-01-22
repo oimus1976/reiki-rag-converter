@@ -4,6 +4,38 @@
 
 ---
 
+## v1.11 (2026-01-23)
+
+### Added
+
+- Judgment JSON v0.2 を設計・実体化
+  - 判断対象・判断結果・参照 Evaluation を機械可読で固定
+  - Judgment Markdown 正本との責務分離を確立
+- Bundle v0.2 を設計・成立
+  - bundle_manifest.json v0.2 により Bundle の構成と状態を明示
+  - Judgment JSON を Bundle 直下に同梱する設計を FIX
+- Bundle v0.2 完了宣言文書を追加
+  - Evaluation → Judgment → 終端 の到達状態を明文化
+- 正本形式選択 Judgment（Markdown 採用）を確定
+  - HUMAN Evaluation Record v0.2 に Evidence を記録
+  - Judgment 文書および JSON により判断を固定
+
+### Changed
+
+- Evaluation のライフサイクルを拡張
+  - v0.1：評価完了単位
+  - v0.2：判断確定・Bundle 完結単位
+- docs / artifacts の役割分担を明確化
+  - artifacts：実行生成物・現在地
+  - docs：設計・判断・履歴の正本
+
+### Notes
+
+- Evaluation v0.1 の仕様・成果物に変更はない
+- v1.11 は **設計と判断の確定のみ**を対象とし、変換ロジックの変更は行っていない
+
+---
+
 ## v1.10 (2026-01-20)
 
 ### Added

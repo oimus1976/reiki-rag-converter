@@ -1,6 +1,6 @@
 ---
 title: PROJECT_STATUS
-version: v1.10
+version: v1.11
 doc_type: status
 project: reiki-rag-converter
 created: 2025-12-06
@@ -27,12 +27,12 @@ tags:
 
 ことを目的とする。
 
-また、生成された answer.md については、
+また、HTML / Markdown 形式差に起因する回答差異については、
 
-- HTML版 / Markdown版の違いを
-- **評価や是非判断に先立つ観測対象として整理・固定する**
+- 差分を即時に是非判断せず
+- **観測 → 評価 → 判断 → 正本化**
 
-という方針を採る。
+という段階的プロセスで整理・固定する。
 
 評価工程は以下の責務分離に基づく。
 
@@ -53,6 +53,9 @@ tags:
 - README を **実利用者向け手順書**として再定義
   - 実データ前提
   - synthetic_html は dev/test 限定と明示
+- docs / artifacts の責務分離を設計として固定
+  - docs：設計・正本・判断履歴
+  - artifacts：実行生成物・現在地
 
 ---
 
@@ -148,9 +151,10 @@ tags:
 
 ---
 
-### Evaluation v0.1（完了）【正式完了】
+### Evaluation v0.1（正式完了）【FIX】
 
-- Evaluation v0.1 を **設計・実行・配布可能な単位として正式に完了**
+- Observation / Evaluation AUTO / Evaluation HUMAN / Judgment を
+  **設計・実行・配布可能な単位として完結**
 - 以下の全フェーズを FIX
   - Observation（差分の事実観測）
   - Evaluation AUTO（事実集約・JSON 正本）
@@ -162,22 +166,48 @@ tags:
 - Evaluation Bundle v0.1 を正式成果物単位として確定
   - Observation / AUTO / HUMAN / Judgment を束ねる構造を固定
   - bundle_manifest.json による完全性検証を導入
-- Evaluation Bundle ZIP 配布仕様 v0.1 を確定
+- Evaluation Bundle ZIP 配布仕様 v0.1 を FIX
   - 単一 Bundle = 単一 ZIP
   - ZIP 内構造・命名規則・不変性ルールを設計として拘束
 - bundle_pack.py により
   - Bundle v0.1 の ZIP 自動生成を実装
   - pytest による内容検証を実施
+- Evaluation v0.1 は **再解釈・再生成を行わない成果物**として固定
 
-※ Evaluation v0.1 は「完了済み成果物」として固定し、
-　再生成・差替えは行わない
+---
+
+### Evaluation 拡張フェーズ（v0.2）【完了】
+
+#### Judgment 設計の確定
+
+- Judgment を Markdown 正本＋JSON 台帳に分離
+- Judgment JSON v0.2 を設計・実体化
+  - 判断対象
+  - 判断結果
+  - 参照 Evaluation / Judgment 文書
+  を機械可読で固定
+
+#### Bundle v0.2 の成立
+
+- Bundle v0.2 を **評価と判断を含む完結単位**として定義
+- `bundle_manifest.json v0.2` を設計・実体化
+  - Bundle の構成
+  - Evaluation / Judgment の状態
+  を一意に示す索引・状態表として位置づけ
+- Judgment JSON を Bundle 直下に同梱する設計を FIX
+
+#### 正本形式選択 Judgment
+
+- 観測軸（到達性 / 構造保持 / 補完耐性）に基づく Evidence を HUMAN Evaluation Record v0.2 に記録
+- 「プライベートナレッジにおける正本形式は Markdown とする」判断を確定
+- Judgment 文書（Markdown）および Judgment JSON v0.2 により固定
 
 ---
 
 ## 3. Pending（保留中タスク）
 
-- Bundle v0.2 設計
-  - 複数 Evaluation run の束ね
+- Bundle v0.3 設計
+  - 複数 Evaluation Run の束ね
   - Bundle 間差分比較
 - Reference Diff false 内容分析フェーズの別プロジェクト化
 - Evaluation Bundle 受領側検証 CLI（bundle_validate.py）
@@ -191,7 +221,7 @@ tags:
 
 ## 4. Next Action（次に唯一実施すべきタスク）
 
-**Bundle v0.2（差分比較・複数 run 対応）の設計開始**
+**Bundle v0.3（複数 run・差分比較対応）の設計検討**
 
 ---
 
@@ -228,8 +258,9 @@ tags:
 
 ---
 
-【運用ルール】
+## 7. 運用ルール（再確認）
 
 - 本ファイルは唯一の進行基準点（SSoT）
-- Next Action 以外の作業は原則行わない
-- commit 前に PROJECT_STATUS / CHANGELOG を必ず確認する
+- artifacts は履歴を持たない
+- 設計・判断・正本は docs 側で管理する
+- commit 前に PROJECT_STATUS / CHANGELOG を必ず更新する
