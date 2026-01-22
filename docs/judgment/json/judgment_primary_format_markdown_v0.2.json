@@ -1,0 +1,33 @@
+{
+  "schema_version": "judgment.v0.2",
+
+  "judgment_id": "judgment_primary_format_markdown_v0.2",
+
+  "decided_at": "2026-01-20",
+
+  "scope": {
+    "domain": "private_knowledge",
+    "target": "primary_format_selection",
+    "candidates": [
+      "html_converted",
+      "markdown_converted"
+    ]
+  },
+
+  "decision": {
+    "selected": "markdown",
+    "status": "decided"
+  },
+
+  "based_on": {
+    "evaluation_run_id": "2026-01-20_01",
+    "bundle_id": "bundle_2026-01-20_01",
+    "human_evaluation_record": "artifacts/evaluation/bundle_2026-01-20_01/human/HUMAN_Evaluation_Record_2026-01-20_01_v0.2.md",
+    "judgment_document": "docs/judgment/Judgment_Primary_Format_Selection_Markdown_v0.2.md"
+  },
+
+  "immutability": {
+    "appendable": false,
+    "superseded_by": null
+  }
+}
