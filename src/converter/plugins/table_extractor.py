@@ -10,6 +10,11 @@ class AnnexHeading:
     node: Tag
     text: str
 
+@dataclass
+class AnnexBlock:
+    heading: AnnexHeading
+    nodes: List[Tag]
+
 
 def _find_annex_headings(soup: BeautifulSoup) -> List[AnnexHeading]:
     """
@@ -71,3 +76,42 @@ def _has_table_in_following_elines(elines: List[Tag], start_idx: int) -> bool:
             return True
 
     return False
+
+def _iter_annex_blocks(soup, headings: List[AnnexHeading]):
+    """
+    Yield AnnexBlock objects.
+
+    Each block starts at an AnnexHeading node and continues
+    until:
+      - next AnnexHeading
+      - supplement (.s-head)
+      - end of document
+    """
+    elines = soup.select("div.eline")
+
+    # eline → index の逆引き
+    eline_index = {eline: idx for idx, eline in enumerate(elines)}
+
+    for i, heading in enumerate(headings):
+        start_idx = eline_index.get(heading.node)
+        if start_idx is None:
+            continue  # safety guard
+
+        nodes = [headings[i].node]
+
+        for eline in elines[start_idx + 1:]:
+            # stop: next annex heading
+            if any(eline is h.node for h in headings[i + 1:]):
+                break
+
+            # stop: supplement
+            if eline.select_one(".s-head"):
+                break
+
+            nodes.append(eline)
+
+        yield AnnexBlock(
+            heading=heading,
+            nodes=nodes,
+        )
+
