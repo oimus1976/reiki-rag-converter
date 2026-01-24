@@ -1,8 +1,20 @@
 # src/converter/plugins/table_extractor.py
 
 from dataclasses import dataclass
-from typing import List
+from typing import List, Union, Literal, Optional
 from bs4 import BeautifulSoup, Tag
+
+import re
+
+_ITEM_HEAD_RE = re.compile(r"^\s*(\d+)\s+")
+
+def _extract_item_no_from_text(text: str) -> Optional[str]:
+    """
+    Detect leading item number like '11　...' or '11 ...'.
+    Returns item number as string if detected.
+    """
+    m = _ITEM_HEAD_RE.match(text)
+    return m.group(1) if m else None
 
 
 @dataclass
@@ -15,6 +27,279 @@ class AnnexBlock:
     heading: AnnexHeading
     nodes: List[Tag]
 
+@dataclass
+class AnnexCandidateRegion:
+    start_idx: int
+    end_idx: int
+    heading: Optional[AnnexHeading]
+
+@dataclass
+class ExtractedTable:
+    table_node: Tag
+    order: int
+
+@dataclass
+class AnnexTextPart:
+    kind: Literal["text"]
+    content: str
+
+@dataclass
+class AnnexTablePart:
+    kind: Literal["table"]
+    content: ExtractedTable
+
+AnnexPart = Union[AnnexTextPart, AnnexTablePart]
+
+@dataclass
+class AnnexItem:
+    item_no: Optional[str]   # "11" など。取れない場合は None
+    order: int               # annex 内の順序
+    parts: List[AnnexPart]
+
+def render_annex_item_to_markdown(item: AnnexItem) -> str:
+    lines: List[str] = []
+
+    # item heading（1回だけ）
+    lines.append(f"#### {item.item_no}" if item.item_no else "#### （番号なし）")
+
+    for part in item.parts:
+        if part.kind == "text":
+            text = part.content.strip()
+            if text:
+                lines.append(text)
+
+        elif part.kind == "table":
+            table_md = render_table_to_markdown(part.content)
+            if table_md:
+                lines.append(table_md)
+
+    return "\n\n".join(lines).strip() + "\n"
+
+def render_annex_region_to_markdown(
+    soup: "BeautifulSoup",
+    region: "AnnexCandidateRegion",
+) -> str:
+    """
+    Render a single AnnexCandidateRegion (annex) into Markdown.
+    Minimal: heading + concatenated items, order-preserving.
+    """
+    lines: list[str] = []
+
+    # Annex heading
+    if region.heading is not None:
+        lines.append(f"### {region.heading.text}")
+    else:
+        # implicit annex fallback (should be rare for our golden)
+        lines.append("### 別表")
+
+    lines.append("")  # blank line
+
+    items = _iter_annex_items_from_region(soup, region)
+
+    for item in items:
+        item_md = render_annex_item_to_markdown(item).rstrip()
+        if item_md:
+            lines.append(item_md)
+            lines.append("")  # blank line between items
+
+    return "\n".join(lines).rstrip() + "\n"
+
+def render_table_to_markdown(table: ExtractedTable) -> str:
+    """
+    Temporary minimal table renderer.
+    """
+    return "| dummy |\n| --- |\n"
+
+def _iter_annex_items_from_region(
+    soup,
+    region: AnnexCandidateRegion
+) -> List[AnnexItem]:
+    """
+    Segment annex region into item-based structure.
+    - Item starts when text eline begins with an item number.
+    - Tables are attached to the most recent item.
+    """
+    elines = soup.select("div.eline")
+    items: List[AnnexItem] = []
+
+    current_item: Optional[AnnexItem] = None
+    order = 0
+
+    for eline in elines[region.start_idx : region.end_idx]:
+        # collect tables in this eline (non-nested)
+        tables = [
+            t for t in eline.select("table")
+            if t.find_parent("table") is None
+        ]
+
+        # extract visible text (rough, minimal)
+        text = eline.get_text(strip=True)
+
+        item_no = _extract_item_no_from_text(text)
+
+        # start a new item if item number detected
+        if item_no is not None:
+            current_item = AnnexItem(
+                item_no=item_no,
+                order=order,
+                parts=[],
+            )
+            order += 1
+            items.append(current_item)
+
+            # add text part (even if tables follow)
+            if text:
+                # text
+                current_item.parts.append(
+                    AnnexTextPart(kind="text", content=text)
+                )
+
+            # attach tables (if any)
+            for table in tables:
+                # table
+                current_item.parts.append(
+                    AnnexTablePart(
+                        kind="table",
+                        content=ExtractedTable(
+                            table_node=table,
+                            order=len([p for p in current_item.parts if p.kind == "table"])
+                        )
+                    )
+                )
+
+            continue
+
+        # no new item starts here
+        if current_item is None:
+            # ignore preamble noise safely (別表見出しなど)
+            continue
+
+        # attach text (if meaningful)
+        if text:
+            current_item.parts.append(
+                AnnexTextPart(kind="text", content=text)
+            )
+
+        # attach tables
+        for table in tables:
+            current_item.parts.append(
+                AnnexTablePart(
+                    kind="table",
+                    content=ExtractedTable(
+                        table_node=table,
+                        order=len([p for p in current_item.parts if p.kind == "table"])
+                    ),
+                )
+            )
+
+    return items
+
+def _extract_tables_from_region(soup, region: AnnexCandidateRegion) -> List[ExtractedTable]:
+    """
+    Extract tables from the given annex candidate region.
+    Pure extraction only; no semantic judgment.
+    """
+    elines = soup.select("div.eline")
+    tables: List[ExtractedTable] = []
+    order = 0
+
+    for eline in elines[region.start_idx : region.end_idx]:
+        # find tables directly under this eline
+        for table in eline.select("table"):
+            # ignore nested tables
+            if table.find_parent("table") is not None:
+                continue
+
+            tables.append(
+                ExtractedTable(
+                    table_node=table,
+                    order=order,
+                )
+            )
+            order += 1
+
+    return tables
+
+def _is_reference_only_annex_heading(heading_node) -> bool:
+    section = heading_node.select_one(".table_section")
+    if not section:
+        return False
+
+    # 同一 table_section 内に table がある = 参照用
+    return section.select_one("table") is not None
+
+def _region_contains_table(elines, start: int, end: int, *, skip_first: bool = False) -> bool:
+    begin = start + 1 if skip_first else start
+    return any(
+        elines[idx].select_one("table")
+        for idx in range(begin, end)
+    )
+
+
+def _detect_annex_candidate_regions(soup, headings: List[AnnexHeading]):
+    regions: List[AnnexCandidateRegion] = []
+
+    elines = soup.select("div.eline")
+    eline_index = {eline: idx for idx, eline in enumerate(elines)}
+
+    # --- Case A: explicit annex headings (keep only regions that actually contain tables) ---
+    for i, heading in enumerate(headings):
+        # 参照用別表（使用料条例パターン）を除外
+        if _is_reference_only_annex_heading(heading.node):
+            continue
+        start = eline_index.get(heading.node)
+        if start is None:
+            continue
+
+        end = len(elines)
+
+        # next annex heading
+        if i + 1 < len(headings):
+            next_start = eline_index.get(headings[i + 1].node)
+            if next_start is not None:
+                end = min(end, next_start)
+
+        # supplement
+        for idx in range(start + 1, len(elines)):
+            if elines[idx].select_one(".s-head"):
+                end = min(end, idx)
+                break
+
+        if start < end and _region_contains_table(elines, start, end):
+            regions.append(
+                AnnexCandidateRegion(
+                    start_idx=start,
+                    end_idx=end,
+                    heading=heading,
+                )
+            )
+
+    # --- Case B: implicit annex region (fallback only) ---
+    if not regions:
+        last_article_idx = None
+        for idx, eline in enumerate(elines):
+            if eline.select_one(".article, .clause, .item"):
+                last_article_idx = idx
+
+        if last_article_idx is not None:
+            start = last_article_idx + 1
+            end = len(elines)
+
+            for idx in range(start, len(elines)):
+                if elines[idx].select_one(".s-head"):
+                    end = idx
+                    break
+
+            if start < end and _region_contains_table(elines, start, end, skip_first=True):
+                regions.append(
+                    AnnexCandidateRegion(
+                        start_idx=start,
+                        end_idx=end,
+                        heading=None,
+                    )
+                )
+
+    return regions
 
 def _find_annex_headings(soup: BeautifulSoup) -> List[AnnexHeading]:
     """
