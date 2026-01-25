@@ -94,6 +94,18 @@ AnnexBlock
 - table 抽出ロジックを「範囲処理」として独立させるため
 - Golden Spec §4（探索範囲定義）をコード構造に直接反映するため
 
+### implicit annex region の扱い（fallback）
+
+HTML 上に明示的な AnnexHeading（別表第◯）が存在しない場合でも、
+
+- 条文末尾
+- 附則直前
+
+に table が連続して出現する場合は、  
+**implicit annex region** として 1 つの AnnexRegion を生成する。
+
+この挙動は **fallback であり、明示的見出しが存在する場合は常にそちらを優先する**。
+
 ---
 
 ## 4. 処理フェーズの分離
@@ -118,6 +130,31 @@ table_extractor は、以下の4段階に責務を分離する。
 - grep では切れなかった責務境界を明示するため
 - 後続フェーズ（rowspan/colspan対応）を局所化するため
 - 各段階を単体テスト可能にするため
+
+---
+
+### 4.1 Phase 1: Annex Markdown Rendering（v0.1）
+
+Phase 1 では、別表の **意味構造を失わずに Markdown として表現できる状態** をゴールとする。
+
+#### Phase 1 のスコープ
+
+- AnnexRegion / AnnexItem / AnnexPart を用いて別表構造を保持する
+- AnnexItem は text / table を **順序付きで保持**する
+- table の内部構造（行・列・金額意味）は **解釈しない**
+- Markdown 出力では table は **dummy placeholder** とする  
+  （例：`| dummy |`）
+
+#### Phase 1 の目的
+
+- 別表が「条文の延長」ではなく **構造化された意味単位**であることを保存する
+- RAG 登録前の **正規化・CSV分離フェーズ**の前提を作る
+
+#### Phase 1 の非目標
+
+- table を Markdown 表として正確に再現すること
+- table を CSV に変換すること
+- 金額・税率などの意味解釈
 
 ---
 
