@@ -1,18 +1,16 @@
 ---
 title: PROJECT_STATUS
-version: v1.11
+version: v1.12
 doc_type: status
 project: reiki-rag-converter
 created: 2025-12-06
-updated: 2026-01-20
+updated: 2026-01-25
 author: Sumio Nishioka + ChatGPT
 tags:
   - project-management
   - oss
   - reiki-rag-converter
 ---
-
-# PROJECT STATUS（reiki-rag-converter）
 
 ## 1. Purpose
 
@@ -27,7 +25,7 @@ tags:
 
 ことを目的とする。
 
-また、HTML / Markdown 形式差に起因する回答差異については、
+HTML / Markdown / CSV 形式差に起因する回答差異については、
 
 - 差分を即時に是非判断せず
 - **観測 → 評価 → 判断 → 正本化**
@@ -204,8 +202,43 @@ tags:
 
 ---
 
+### **Phase 3 Evaluation Design（NEW / FIX）**
+
+- **Phase 3 Evaluation Brief v0.1 を設計文書として新規追加**
+  - Markdown 単独 vs Markdown＋CSV 併用を比較する評価設計を定義
+  - 「正答率」ではなく **誤回答の性質変化** を評価対象とする方針を固定
+  - 判定・合否・最適化を行わない設計フェーズとして明確化
+- 評価軸を以下に分離して定義
+  - 主評価軸：致命誤り回避性 / 条件対応づけ精度 / 参照行動の健全性
+  - 観測補助軸：説明可能性（条文＋表の併用状況）
+- 最小評価シナリオ（S1–S3）を設計として固定
+- 本ブリーフは **Phase 3 完了時点で design frozen（改訂不可）** とすることを明文化
+
+---
+
+### **Phase 2 CSV Table Extraction（設計＋実装）【完了】**
+
+#### 設計
+
+- Phase 2 CSV 抽出に関する設計ブリーフを整理・追加
+  - Table Extractor の責務
+  - Annex / Item / Table 文脈での CSV 生成方針
+  - CSV v0.1 スキーマ（フラット・順序保持・冗長許容）の位置づけを明確化
+
+#### 実装
+
+- Table Extractor による CSV 抽出処理を実装
+- Annex / Item / Table 文脈を保持した CSV 生成を実現
+- 実条例および synthetic ケースを用いた pytest を追加
+- 補助スクリプト（render_annex.py）を追加し検証導線を整備
+
+---
+
 ## 3. Pending（保留中タスク）
 
+- **Phase 3.5 Evaluation Execution**
+  - Phase 3 Evaluation Brief に基づく評価実行
+  - シナリオ別観測ログの生成
 - Bundle v0.3 設計
   - 複数 Evaluation Run の束ね
   - Bundle 間差分比較
@@ -221,28 +254,17 @@ tags:
 
 ## 4. Next Action（次に唯一実施すべきタスク）
 
-次フェーズでは、Evaluation の拡張（Bundle v0.3）には直ちに進まず、
-主戦場である **Converter（HTML → Markdown 変換）主線に回帰する**。
+次フェーズでは、Evaluation の拡張（Bundle v0.3）に直ちに進まず、
+**Phase 3.5（Evaluation Execution）** に着手する。
 
-これまでの Evaluation により、
-**一般的な条例本文においては Markdown 形式が HTML 形式より
-RAG 適性に優れる**ことは十分に示唆された。
+- Phase 3 Evaluation Brief v0.1 を前提に、
+  - 評価シナリオの実行
+  - 観測ログの取得
+  - 誤回答の性質変化の記録
+    を行う。
 
-一方で、条例に頻出する以下の領域は未評価であり、
-Markdown 正本形式選択 Judgment を一般化するうえで
-設計判断を左右しうる重要な未検証領域として残っている。
-
-- 別表・様式・付表等の **表形式構造**
-- 金額表・定員表・点数表などの数表
-
-次の作業では、これら **表形式を含む条例構造を
-どのように Markdown / CSV 等へ変換・表現するか**を検討・実装し、
-表形式を含めた場合においても
-Markdown 形式が HTML 形式より RAG 適性を持つかを
-再評価可能な状態を作る。
-
-Evaluation / Judgment / Bundle v0.2 の成果は再解釈・後戻りせず、
-Converter 機能拡張の検証材料としてのみ利用する。
+Phase 3 までの設計成果は再解釈せず、
+Execution フェーズの前提条件としてのみ利用する。
 
 ---
 

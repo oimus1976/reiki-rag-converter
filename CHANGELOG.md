@@ -4,6 +4,33 @@
 
 ---
 
+## v1.12 (2026-01-25)
+
+### Added
+
+- Phase 3 Evaluation Brief v0.1 を追加
+  - Markdown 単独 vs Markdown＋CSV 併用を比較する評価設計を定義
+  - 正答率ではなく「誤回答の性質変化」を評価対象とする方針を固定
+  - 判定・合否・最適化を行わない設計フェーズとして明確化
+- Phase 2 CSV Table Extraction の実装を追加
+  - Annex / Item / Table 文脈を保持した CSV 抽出処理
+  - 実条例および synthetic ケースに対する pytest を追加
+  - 検証補助スクリプト（render_annex.py）を追加
+
+### Changed
+
+- Phase 2 CSV Table Extraction に関する設計文書を整理・明確化
+- PROJECT_STATUS を更新し、
+  - Phase 3（Evaluation Design）を完了・FIX としてクローズ
+  - 次フェーズを Phase 3.5（Evaluation Execution）に設定
+
+### Notes
+
+- 本バージョンでは Evaluation Judgment / Bundle v0.2 の再解釈・変更は行っていない
+- Phase 3 Evaluation Brief v0.1 は design frozen として固定される
+
+---
+
 ## v1.11 (2026-01-23)
 
 ### Added
