@@ -56,59 +56,21 @@ class AnnexItem:
     order: int               # annex 内の順序
     parts: List[AnnexPart]
 
-def render_annex_item_to_markdown(item: AnnexItem) -> str:
-    lines: List[str] = []
+@dataclass(frozen=True)
+class CsvTableContext:
+    table: ExtractedTable
+    annex_no: Optional[str]
+    item_no: Optional[str]
+    table_no: int
 
-    # item heading（1回だけ）
-    lines.append(f"#### {item.item_no}" if item.item_no else "#### （番号なし）")
-
-    for part in item.parts:
-        if part.kind == "text":
-            text = part.content.strip()
-            if text:
-                lines.append(text)
-
-        elif part.kind == "table":
-            table_md = render_table_to_markdown(part.content)
-            if table_md:
-                lines.append(table_md)
-
-    return "\n\n".join(lines).strip() + "\n"
-
-def render_annex_region_to_markdown(
-    soup: "BeautifulSoup",
-    region: "AnnexCandidateRegion",
-) -> str:
-    """
-    Render a single AnnexCandidateRegion (annex) into Markdown.
-    Minimal: heading + concatenated items, order-preserving.
-    """
-    lines: list[str] = []
-
-    # Annex heading
-    if region.heading is not None:
-        lines.append(f"### {region.heading.text}")
-    else:
-        # implicit annex fallback (should be rare for our golden)
-        lines.append("### 別表")
-
-    lines.append("")  # blank line
-
-    items = _iter_annex_items_from_region(soup, region)
-
-    for item in items:
-        item_md = render_annex_item_to_markdown(item).rstrip()
-        if item_md:
-            lines.append(item_md)
-            lines.append("")  # blank line between items
-
-    return "\n".join(lines).rstrip() + "\n"
-
-def render_table_to_markdown(table: ExtractedTable) -> str:
-    """
-    Temporary minimal table renderer.
-    """
-    return "| dummy |\n| --- |\n"
+@dataclass(frozen=True)
+class CsvCell:
+    annex_no: Optional[str]
+    item_no: Optional[str]
+    table_no: int
+    row_no: int
+    col_no: int
+    value: str
 
 def _iter_annex_items_from_region(
     soup,
@@ -193,6 +155,127 @@ def _iter_annex_items_from_region(
             )
 
     return items
+
+def extract_csv_cells_from_annex_region(
+    annex_no: Optional[str],
+    soup: BeautifulSoup,
+    region: AnnexCandidateRegion,
+) -> list[CsvCell]:
+    cells: list[CsvCell] = []
+
+    for item in _iter_annex_items_from_region(soup, region):
+        contexts = iter_csv_table_contexts_from_annex_item(
+            annex_no=annex_no,
+            item=item,
+        )
+
+        for ctx in contexts:
+            cells.extend(extract_table_to_csv(ctx))
+
+    return cells
+
+def iter_csv_table_contexts_from_annex_item(
+    annex_no: Optional[str],
+    item: AnnexItem,
+) -> list[CsvTableContext]:
+    contexts: list[CsvTableContext] = []
+    table_no = 0
+
+    for part in item.parts:
+        if part.kind != "table":
+            continue
+
+        table_no += 1
+
+        contexts.append(
+            CsvTableContext(
+                table=part.content,   # ExtractedTable
+                annex_no=annex_no,
+                item_no=item.item_no,
+                table_no=table_no,
+            )
+        )
+
+    return contexts
+
+def extract_table_to_csv(ctx: CsvTableContext) -> list[CsvCell]:
+    table_node = ctx.table.table_node
+    cells: list[CsvCell] = []
+
+    if table_node is None:
+        return cells
+
+    rows = table_node.find_all("tr")
+    for row_idx, tr in enumerate(rows, start=1):
+        cols = tr.find_all(["td", "th"])
+        for col_idx, td in enumerate(cols, start=1):
+            text = td.get_text(strip=True)
+            cells.append(
+                CsvCell(
+                    annex_no=ctx.annex_no,
+                    item_no=ctx.item_no,
+                    table_no=ctx.table_no,
+                    row_no=row_idx,
+                    col_no=col_idx,
+                    value=text,
+                )
+            )
+    return cells
+
+
+def render_annex_item_to_markdown(item: AnnexItem) -> str:
+    lines: List[str] = []
+
+    # item heading（1回だけ）
+    lines.append(f"#### {item.item_no}" if item.item_no else "#### （番号なし）")
+
+    for part in item.parts:
+        if part.kind == "text":
+            text = part.content.strip()
+            if text:
+                lines.append(text)
+
+        elif part.kind == "table":
+            table_md = render_table_to_markdown(part.content)
+            if table_md:
+                lines.append(table_md)
+
+    return "\n\n".join(lines).strip() + "\n"
+
+def render_annex_region_to_markdown(
+    soup: "BeautifulSoup",
+    region: "AnnexCandidateRegion",
+) -> str:
+    """
+    Render a single AnnexCandidateRegion (annex) into Markdown.
+    Minimal: heading + concatenated items, order-preserving.
+    """
+    lines: list[str] = []
+
+    # Annex heading
+    if region.heading is not None:
+        lines.append(f"### {region.heading.text}")
+    else:
+        # implicit annex fallback (should be rare for our golden)
+        lines.append("### 別表")
+
+    lines.append("")  # blank line
+
+    items = _iter_annex_items_from_region(soup, region)
+
+    for item in items:
+        item_md = render_annex_item_to_markdown(item).rstrip()
+        if item_md:
+            lines.append(item_md)
+            lines.append("")  # blank line between items
+
+    return "\n".join(lines).rstrip() + "\n"
+
+def render_table_to_markdown(table: ExtractedTable) -> str:
+    """
+    Temporary minimal table renderer.
+    """
+    return "| dummy |\n| --- |\n"
 
 def _extract_tables_from_region(soup, region: AnnexCandidateRegion) -> List[ExtractedTable]:
     """
