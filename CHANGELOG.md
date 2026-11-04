@@ -6,8 +6,23 @@
 
 ## Unreleased
 
+### Changed
+
+- Annex / CSV 表抽出系 pytest 10 件の実条例 HTML 参照先を
+  `reiki-html/`（`.gitignore` 対象・CI 不在）から `tests/fixtures/reiki_html/` に変更
+  - 対象：test_detect_annex_candidate_regions / test_extract_csv_cells_from_real_annex2 /
+    test_extract_tables_from_region / test_find_annex_headings / test_iter_annex_blocks /
+    test_iter_annex_items_fee_ordinance_annex2 / test_render_annex_region_to_markdown
+  - 参照パスはテストファイル基準の絶対パスとし、実行ディレクトリに依存しない
+- 検証補助スクリプト `scripts/render_annex.py` の入力を `reiki-html/` から `tests/fixtures/reiki_html/` に変更
+  - 入出力パスをリポジトリルート基準で解決し、実行ディレクトリに依存しない
+
 ### Added
 
+- `tests/fixtures/reiki_html/` に実条例 HTML fixture 3 件を追加
+  - k518RG00000219（使用料、手数料、督促及び延滞金条例）/ k518RG00000205（税条例）/ k518RG00000030（地籍調査推進委員会規則）
+  - かつらぎ町例規集の公開サイトから無加工で取得
+- `tests/fixtures/reiki_html/README.md`：CI 用実条例 HTML fixture の方針・必要ファイル・取り扱いを記載
 - Phase 3.5 Observation Log（Q2 / S1）用 CLI `scripts/observation_log_q2.py` を追加
   - 仕様: `docs/eval/log_schema/Phase_3_5_Observation_Log_Schema_Q2_v0.1.md`
   - `validate`：JSON 正本ログのスキーマ・命名規約検証
@@ -19,7 +34,9 @@
 
 ### Notes
 
-- Phase 3 設計の再解釈、converter の改修、実行データの作成は行っていない
+- CI 方針として、実HTML依存テストは skip / deselect せず、必要最小限の HTML を fixture として追跡する
+- converter 本体は変更していない
+- Observation Log CLI では Phase 3 設計の再解釈、実行データの作成は行っていない
 - CSV / Markdown は JSON 正本の派生物として生成し、JSON は変更しない
 
 ---

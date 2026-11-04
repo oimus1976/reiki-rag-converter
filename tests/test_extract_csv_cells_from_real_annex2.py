@@ -7,10 +7,13 @@ from converter.plugins.table_extractor import (
     extract_csv_cells_from_annex_region,
 )
 
+# 実条例HTML fixture（CI でも利用するため Git 追跡対象。tests/fixtures/reiki_html/README.md 参照）
+REIKI_HTML_FIXTURES = Path(__file__).resolve().parent / "fixtures" / "reiki_html"
+
 
 def test_extract_csv_cells_from_real_fee_ordinance_annex2():
     # 実DOM読み込み
-    html_path = Path("reiki-html/k518RG00000219.html")
+    html_path = REIKI_HTML_FIXTURES / "k518RG00000219.html"
     html = html_path.read_text(encoding="utf-8")
     soup = BeautifulSoup(html, "html.parser")
 

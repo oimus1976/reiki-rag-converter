@@ -253,6 +253,22 @@ HTML / Markdown / CSV 形式差に起因する回答差異については、
 
 ---
 
+### CI 実HTML fixture 方針（2026-11-04）【決定】
+
+- Annex / CSV 表抽出系 pytest 10 件が `.gitignore` 対象の `reiki-html/` を参照しており、
+  CI（ci.yml / e2e.yml）で FileNotFoundError となっていた
+- 決定：必要な実条例 HTML 3 件（k518RG00000219 / 205 / 030）を
+  `tests/fixtures/reiki_html/` に Git 追跡 fixture として固定し、CI でも全件実行する
+  - skip / marker による CI 除外は採らない
+  - `reiki-html/` は引き続きローカル専用
+- テスト側の参照パスは `tests/fixtures/reiki_html/` に変更済み（converter は無変更）
+- fixture 3 件はかつらぎ町例規集の公開サイトから無加工で取得・投入済み（2026-11-04）
+- ローカルで pytest 47 passed / 3 skipped を確認
+- 検証補助スクリプト `scripts/render_annex.py` も同 fixture を参照するよう変更（`reiki-html/` 参照を解消）
+- 詳細：`tests/fixtures/reiki_html/README.md`
+
+---
+
 ## 3. Pending（保留中タスク）
 
 - **Phase 3.5 Evaluation Execution**
