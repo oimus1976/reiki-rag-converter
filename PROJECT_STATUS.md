@@ -4,7 +4,7 @@ version: v1.12
 doc_type: status
 project: reiki-rag-converter
 created: 2025-12-06
-updated: 2026-01-25
+updated: 2026-11-04
 author: Sumio Nishioka + ChatGPT
 tags:
   - project-management
@@ -216,6 +216,25 @@ HTML / Markdown / CSV 形式差に起因する回答差異については、
 
 ---
 
+### **Phase 3.5 Observation Log Tooling（Q2 / S1）【実装・ドラフトPR】**
+
+- `docs/eval/log_schema/Phase_3_5_Observation_Log_Schema_Q2_v0.1.md` に従う CLI
+  `scripts/observation_log_q2.py` を追加
+  - `validate`：JSON 正本ログのスキーマ検証（必須キー・型・固定値・未定義キー・
+    expected_rows の Q2 固定値・区分ごと 1 要素・source / extraction_status の値域・
+    notes / meta.notes の判断語）と命名規約検証（run_id 形式、ファイル名と内容の一致）
+  - `summarize`：run 単位の JSON から `observation_summary_<run_id>.csv` を生成（§5.2 の列順）
+  - `render-md`：JSON から `observation_<run_id>_<mode>.md` を生成（§6.2 の必須構成）
+- A_md / B_md_csv の扱い
+  - `reference_behavior.csv_used` は A_md=false / B_md_csv=true を検証で拘束
+  - 1 run 内の同一 mode 重複・run_id 混在を集計時に拒否
+- 質問本文は JSON スキーマに含まれないため、`render-md` の `--question-file` で外部から与える
+- pytest（`tests/test_observation_log_q2.py`）で
+  スキーマ違反の検出・命名規約・A_md / B_md_csv の扱いを拘束
+- 本作業では Phase 3 設計の再解釈、converter の改修、実行データの作成を行っていない
+
+---
+
 ### **Phase 2 CSV Table Extraction（設計＋実装）【完了】**
 
 #### 設計
@@ -239,6 +258,7 @@ HTML / Markdown / CSV 形式差に起因する回答差異については、
 - **Phase 3.5 Evaluation Execution**
   - Phase 3 Evaluation Brief に基づく評価実行
   - シナリオ別観測ログの生成
+    - Q2 / S1 の観測ログ検証・派生生成 CLI は実装済み（実行データは未作成）
 - Bundle v0.3 設計
   - 複数 Evaluation Run の束ね
   - Bundle 間差分比較

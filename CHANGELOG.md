@@ -4,6 +4,26 @@
 
 ---
 
+## Unreleased
+
+### Added
+
+- Phase 3.5 Observation Log（Q2 / S1）用 CLI `scripts/observation_log_q2.py` を追加
+  - 仕様: `docs/eval/log_schema/Phase_3_5_Observation_Log_Schema_Q2_v0.1.md`
+  - `validate`：JSON 正本ログのスキーマ・命名規約検証
+  - `summarize`：`observation_summary_<run_id>.csv` の生成
+  - `render-md`：人間レビュー用 `observation_<run_id>_<mode>.md` の生成
+- `tests/test_observation_log_q2.py` を追加
+  - スキーマ違反の検出、run_id / ファイル名の命名規約、
+    A_md / B_md_csv の扱い（csv_used、mode 重複）を拘束
+
+### Notes
+
+- Phase 3 設計の再解釈、converter の改修、実行データの作成は行っていない
+- CSV / Markdown は JSON 正本の派生物として生成し、JSON は変更しない
+
+---
+
 ## v1.12 (2026-01-25)
 
 ### Added
