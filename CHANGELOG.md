@@ -4,6 +4,29 @@
 
 ---
 
+## Unreleased
+
+### Changed
+
+- Annex / CSV 表抽出系 pytest 10 件の実条例 HTML 参照先を
+  `reiki-html/`（`.gitignore` 対象・CI 不在）から `tests/fixtures/reiki_html/` に変更
+  - 対象：test_detect_annex_candidate_regions / test_extract_csv_cells_from_real_annex2 /
+    test_extract_tables_from_region / test_find_annex_headings / test_iter_annex_blocks /
+    test_iter_annex_items_fee_ordinance_annex2 / test_render_annex_region_to_markdown
+  - 参照パスはテストファイル基準の絶対パスとし、実行ディレクトリに依存しない
+
+### Added
+
+- `tests/fixtures/reiki_html/README.md`：CI 用実条例 HTML fixture の方針・必要ファイル・取り扱いを記載
+
+### Notes
+
+- CI 方針として、実HTML依存テストは skip / deselect せず、必要最小限の HTML を fixture として追跡する
+- converter 本体は変更していない
+- HTML fixture 本体（3 件）の投入をもって CI green となる
+
+---
+
 ## v1.12 (2026-01-25)
 
 ### Added

@@ -4,7 +4,7 @@ version: v1.12
 doc_type: status
 project: reiki-rag-converter
 created: 2025-12-06
-updated: 2026-01-25
+updated: 2026-11-04
 author: Sumio Nishioka + ChatGPT
 tags:
   - project-management
@@ -234,8 +234,24 @@ HTML / Markdown / CSV 形式差に起因する回答差異については、
 
 ---
 
+### CI 実HTML fixture 方針（2026-11-04）【決定】
+
+- Annex / CSV 表抽出系 pytest 10 件が `.gitignore` 対象の `reiki-html/` を参照しており、
+  CI（ci.yml / e2e.yml）で FileNotFoundError となっていた
+- 決定：必要な実条例 HTML 3 件（k518RG00000219 / 205 / 030）を
+  `tests/fixtures/reiki_html/` に Git 追跡 fixture として固定し、CI でも全件実行する
+  - skip / marker による CI 除外は採らない
+  - `reiki-html/` は引き続きローカル専用
+- テスト側の参照パスは `tests/fixtures/reiki_html/` に変更済み（converter は無変更）
+- 詳細：`tests/fixtures/reiki_html/README.md`
+
+---
+
 ## 3. Pending（保留中タスク）
 
+- **CI 実HTML fixture の投入**
+  - `tests/fixtures/reiki_html/` に k518RG00000219 / 205 / 030 の HTML をコミットする
+  - 投入後、main の CI が green であることを確認する
 - **Phase 3.5 Evaluation Execution**
   - Phase 3 Evaluation Brief に基づく評価実行
   - シナリオ別観測ログの生成
