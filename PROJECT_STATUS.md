@@ -245,6 +245,7 @@ HTML / Markdown / CSV 形式差に起因する回答差異については、
 - テスト側の参照パスは `tests/fixtures/reiki_html/` に変更済み（converter は無変更）
 - fixture 3 件はかつらぎ町例規集の公開サイトから無加工で取得・投入済み（2026-11-04）
 - ローカルで pytest 47 passed / 3 skipped を確認
+- 検証補助スクリプト `scripts/render_annex.py` も同 fixture を参照するよう変更（`reiki-html/` 参照を解消）
 - 詳細：`tests/fixtures/reiki_html/README.md`
 
 ---

@@ -14,6 +14,8 @@
     test_extract_tables_from_region / test_find_annex_headings / test_iter_annex_blocks /
     test_iter_annex_items_fee_ordinance_annex2 / test_render_annex_region_to_markdown
   - 参照パスはテストファイル基準の絶対パスとし、実行ディレクトリに依存しない
+- 検証補助スクリプト `scripts/render_annex.py` の入力を `reiki-html/` から `tests/fixtures/reiki_html/` に変更
+  - 入出力パスをリポジトリルート基準で解決し、実行ディレクトリに依存しない
 
 ### Added
 
