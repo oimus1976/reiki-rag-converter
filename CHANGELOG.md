@@ -23,11 +23,21 @@
   - k518RG00000219（使用料、手数料、督促及び延滞金条例）/ k518RG00000205（税条例）/ k518RG00000030（地籍調査推進委員会規則）
   - かつらぎ町例規集の公開サイトから無加工で取得
 - `tests/fixtures/reiki_html/README.md`：CI 用実条例 HTML fixture の方針・必要ファイル・取り扱いを記載
+- Phase 3.5 Observation Log（Q2 / S1）用 CLI `scripts/observation_log_q2.py` を追加
+  - 仕様: `docs/eval/log_schema/Phase_3_5_Observation_Log_Schema_Q2_v0.1.md`
+  - `validate`：JSON 正本ログのスキーマ・命名規約検証
+  - `summarize`：`observation_summary_<run_id>.csv` の生成
+  - `render-md`：人間レビュー用 `observation_<run_id>_<mode>.md` の生成
+- `tests/test_observation_log_q2.py` を追加
+  - スキーマ違反の検出、run_id / ファイル名の命名規約、
+    A_md / B_md_csv の扱い（csv_used、mode 重複）を拘束
 
 ### Notes
 
 - CI 方針として、実HTML依存テストは skip / deselect せず、必要最小限の HTML を fixture として追跡する
 - converter 本体は変更していない
+- Observation Log CLI では Phase 3 設計の再解釈、実行データの作成は行っていない
+- CSV / Markdown は JSON 正本の派生物として生成し、JSON は変更しない
 
 ---
 
