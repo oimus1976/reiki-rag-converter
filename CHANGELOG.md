@@ -17,13 +17,15 @@
 
 ### Added
 
+- `tests/fixtures/reiki_html/` に実条例 HTML fixture 3 件を追加
+  - k518RG00000219（使用料、手数料、督促及び延滞金条例）/ k518RG00000205（税条例）/ k518RG00000030（地籍調査推進委員会規則）
+  - かつらぎ町例規集の公開サイトから無加工で取得
 - `tests/fixtures/reiki_html/README.md`：CI 用実条例 HTML fixture の方針・必要ファイル・取り扱いを記載
 
 ### Notes
 
 - CI 方針として、実HTML依存テストは skip / deselect せず、必要最小限の HTML を fixture として追跡する
 - converter 本体は変更していない
-- HTML fixture 本体（3 件）の投入をもって CI green となる
 
 ---
 

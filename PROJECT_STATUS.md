@@ -243,15 +243,14 @@ HTML / Markdown / CSV 形式差に起因する回答差異については、
   - skip / marker による CI 除外は採らない
   - `reiki-html/` は引き続きローカル専用
 - テスト側の参照パスは `tests/fixtures/reiki_html/` に変更済み（converter は無変更）
+- fixture 3 件はかつらぎ町例規集の公開サイトから無加工で取得・投入済み（2026-11-04）
+- ローカルで pytest 47 passed / 3 skipped を確認
 - 詳細：`tests/fixtures/reiki_html/README.md`
 
 ---
 
 ## 3. Pending（保留中タスク）
 
-- **CI 実HTML fixture の投入**
-  - `tests/fixtures/reiki_html/` に k518RG00000219 / 205 / 030 の HTML をコミットする
-  - 投入後、main の CI が green であることを確認する
 - **Phase 3.5 Evaluation Execution**
   - Phase 3 Evaluation Brief に基づく評価実行
   - シナリオ別観測ログの生成
