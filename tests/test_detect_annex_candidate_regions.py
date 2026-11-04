@@ -8,14 +8,17 @@ from converter.plugins.table_extractor import (
     _detect_annex_candidate_regions,
 )
 
+# 実条例HTML fixture（CI でも利用するため Git 追跡対象。tests/fixtures/reiki_html/README.md 参照）
+REIKI_HTML_FIXTURES = Path(__file__).resolve().parent / "fixtures" / "reiki_html"
 
-def load_soup(path: str) -> BeautifulSoup:
+
+def load_soup(path: Path) -> BeautifulSoup:
     html = Path(path).read_text(encoding="utf-8")
     return BeautifulSoup(html, "html.parser")
 
 
 def test_regions_with_explicit_annex():
-    soup = load_soup("reiki-html/k518RG00000205.html")
+    soup = load_soup(REIKI_HTML_FIXTURES / "k518RG00000205.html")
     headings = _find_annex_headings(soup)
     regions = _detect_annex_candidate_regions(soup, headings)
 
@@ -24,7 +27,7 @@ def test_regions_with_explicit_annex():
 
 
 def test_regions_with_multiple_annexes_in_fee_ordinance():
-    soup = load_soup("reiki-html/k518RG00000219.html")
+    soup = load_soup(REIKI_HTML_FIXTURES / "k518RG00000219.html")
     headings = _find_annex_headings(soup)
 
     # AnnexHeading は存在する（HTML事実）
